@@ -1,66 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import fire from './fire';
-import { createGoal } from './utils';
-
+import GoalsList from './GoalList';
+import { AppStateProvider } from './app-state';
+import appReducer, { initialState } from './appReducer'
 
 function App() {
-  const [list, setList] = useState([])
+  // Ask Ali or someone about this
+  // const [myGoals, setMyGoals] = useState(fetchGoals())
 
-  useEffect(() => {
-    
-  })
+  // const [myGoals, setMyGoals] = useState(["Workout", "Meditate", "Eat Healthy"]);
+  // const [newGoal, setNewGoal] = useState('');
 
-  function addNewGoal() {
-    createGoal({Message: "Owen message"})
-  }
+  // const [{}]
+
+  // const dummyGoals = ["Workout", "Meditate", "Eat Healthy"];
 
   return (
-    <div>
-      <button onClick={() => createGoal()}>
-        Click me
-      </button>
-      <h1>Sup</h1>
-      <p>
-        {list}
-      </p>
-    </div>
+    <React.Fragment>
+      <GoalsList />
+    </React.Fragment>
   )
 }
 
-// class App extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = { messages: [] }; // <- set up react state
-//   }
-
-  
-//   addMessage(e){
-//     e.preventDefault(); // <- prevent form submit from reloading the page
-//     /* Send the message to Firebase */
-//     fire.database().ref('messages').push( this.inputEl.value );
-//     this.inputEl.value = ''; // <- clear the input
-
-//     const db = fire.firestore();
-    
-//     const commentRef = db.collection("messages").add({
-//       Message: 'whats up'
-//     });
-
-
-//   }
-//   render() {
-//     return (
-//       <form onSubmit={this.addMessage.bind(this)}>
-//         <input type="text" ref={ el => this.inputEl = el }/>
-//         <input type="submit"/>
-//         <ul>
-//           { /* Render the list of messages */
-//             this.state.messages.map( message => <li key={message.id}>{message.text}</li> )
-//           }
-//         </ul>
-//       </form>
-//     );
-//   }
-// }
-
-export default App;
+export default () => (
+  <AppStateProvider reducer={appReducer} initialState={initialState}>
+    <App />
+  </AppStateProvider>
+);
