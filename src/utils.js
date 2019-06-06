@@ -2,20 +2,20 @@ import { db } from "./fire";
 import { GoalsSelectedMap } from "./MockDB";
 import { useAppState } from "./app-state";
 
-export async function loadGoals() {
-  let goals = [];
-  db.collection("Goals")
-    .get()
-    .then(snapshot => {
-      snapshot.docs.forEach(doc => {
-        goals.push(doc.data().Goal);
-      });
-    });
-  return goals;
-}
+// export async function loadGoals() {
+//   let goals = [];
+//   db.collection("Goals")
+//     .get()
+//     .then(snapshot => {
+//       snapshot.docs.forEach(doc => {
+//         goals.push(doc.data().goal);
+//       });
+//     });
+//   return goals;
+// }
 
 export async function createGoal(goal) {
-  return db.collection("Goals").add({ Goal: goal });
+  return db.collection("Goals").add({ goal: goal });
 }
 
 export async function retrieveSelectedDays(goal) {

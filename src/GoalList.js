@@ -1,84 +1,105 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { createGoal, retrieveSelectedDays } from "./utils";
+import { createGoal } from "./utils";
 import { useAppState } from "./app-state";
 import { GoalsSelectedMap } from "./MockDB";
 import { db } from "./fire";
+import Calendar from "./Calendar";
 
 export default function GoalsList() {
-  const [{ goals, selectedGoal, selectedDays }, dispatch] = useAppState();
+  const [{}, dispatch] = useAppState();
 
   const [newGoal, setNewGoal] = useState("");
-
-  const [myGoals, setMyGoals] = useState([]);
-
+  const [goals, setGoals] = useState([]);
   const [selected, setSelected] = useState(goals[0]);
+  const [goalToMonthMap, setGoalToMonthMap] = useState({});
 
   async function loadGoals() {
     db.collection("Goals")
       .get()
       .then(snapshot => {
+        const items = [];
         snapshot.docs.forEach(doc => {
-          // goals.push(doc.data().Goal);
-          setMyGoals([...myGoals, doc.data().Goal]);
+          items.push(doc.data().goal);
         });
+
+        setGoals(items);
       });
   }
 
+  // Pull the goals from state and set the first one as selected.
   useEffect(() => {
     loadGoals();
   }, []);
 
-  useEffect(() => {
-    //console.log('Goals: ', goals.map((goal) => {console.log(goal)}))
-    // console.log("selected days: ", selectedDays);
-    console.log("myGoals", myGoals.length);
+  // Whenver a goal is added. Add a mappping of that goal to the current month.
+  // As the user looks to different months on different goals, that will be saved
+  // in state.
 
-    myGoals.forEach(goal => console.log("Here: ", goal));
+  // TODO UPDATE THE goalToMonthMap state whenever the month is changed for
+  // a given goal.
+  useEffect(() => {
+    goals.forEach(goal => {
+      let curMap = goalToMonthMap;
+
+      if (!curMap[goal]) {
+        const today = new Date();
+        curMap[goal] = today.getMonth() + 1;
+      }
+    });
+  }, [goals, goalToMonthMap]);
+
+  useEffect(() => {
+    console.log("month map: ", goalToMonthMap);
   });
 
-  return (
-    <ListRowContainer>
-      <Input type="text" onChange={e => setNewGoal(e.target.value)} />
-      <Button
-        onClick={() => {
-          createGoal(newGoal);
-          dispatch({ type: "GOAL_ADDED", newGoal });
-          setNewGoal("");
-        }}
-      >
-        Add goal
-      </Button>
+  // TODO -- Just render one calendar. Give it props
+  // for completedDays and currentMonth.
 
-      {myGoals.map((goal, idx) => {
-        return (
-          <ListRow
-            style={goals[idx + 1] ? null : { borderWidth: "5px" }}
-            selected={goal === selected}
-            onClick={() => {
-              setSelected(goal);
-              const selectedDays = GoalsSelectedMap[goal];
-              // Not hooked to firebase yet. Just mocking the backend
-              dispatch({ type: "SELECTED_DAYS_LOADED", selectedDays });
-            }}
-          >
-            {" "}
-            {goal}
-          </ListRow>
-        );
-      })}
-    </ListRowContainer>
+  // Keep the mapping of goal to current month in this components
+  // local state.
+
+  return (
+    <OverallContainer>
+      <GoalListContainer>
+        <Input type="text" onChange={e => setNewGoal(e.target.value)} />
+        <Button
+          onClick={() => {
+            if (newGoal.length > 0) {
+              createGoal(newGoal);
+              dispatch({ type: "GOAL_ADDED", newGoal });
+              setNewGoal("");
+              setGoals([...goals, newGoal]);
+            }
+          }}
+        >
+          Add goal
+        </Button>
+
+        {goals.map((goal, idx) => {
+          return (
+            <ListRow
+              style={goals[idx + 1] ? null : { borderWidth: "5px" }} // Check if it's the last goal in the list.
+              selected={goal === selected}
+              onClick={() => {
+                setSelected(goal);
+                // forceUpdate();
+                const selectedDays = GoalsSelectedMap[goal];
+                // Not hooked to firebase yet. Just mocking the backend
+                dispatch({ type: "SELECTED_DAYS_LOADED", selectedDays });
+              }}
+            >
+              {" "}
+              {goal}
+            </ListRow>
+          );
+        })}
+      </GoalListContainer>
+
+      <Calendar startingMonth={5} />
+    </OverallContainer>
   );
 }
-
-const Input = styled.input`
-  padding: 0.5em;
-  margin: 0.5em;
-  color: white;
-  background: black;
-  border: none;
-  border-radius: 3px;
-`;
 
 const Button = styled.button`
   display: inline-block;
@@ -91,12 +112,27 @@ const Button = styled.button`
   display: inline-block;
 `;
 
-const ListRowContainer = styled.div`
+const GoalListContainer = styled.div`
   flex-basis: "33.3%";
   max-width: "33.3%";
-  padding-right: 1em;
+  padding-right: 10em;
   padding-left: 6em;
   padding-top: 6em;
+`;
+
+const OverallContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 3rem;
+`;
+
+const Input = styled.input`
+  padding: 0.5em;
+  margin: 0.5em;
+  color: white;
+  background: black;
+  border: none;
+  border-radius: 3px;
 `;
 
 const ListRow = styled.div`

@@ -9,12 +9,16 @@ import { useAppState } from "./app-state";
  * the future button is clicked, then set the current month
  */
 
-export default function Calendar() {
+export default function Calendar({ startingMonth }) {
   // The GoalsList sets the Global state's value of selectedDays.
   // I pull it from the global state here.
   const [{ selectedDays }, dispatch] = useAppState();
 
-  const [curMonth, setCurMonth] = useState(1);
+  const [curMonth, setCurMonth] = useState(startingMonth);
+
+  useEffect(() => {
+    console.log("MOUNTED NEW CALENDAR", startingMonth);
+  }, []);
 
   const monthDays = {
     "01": 31,
@@ -56,7 +60,9 @@ export default function Calendar() {
     // const curDay = mm + "/" + dd + "/" + yyyy;
 
     var today = new Date();
-    setCurMonth(today.getMonth() + 1);
+
+    console.log("MOUNTED");
+    // setCurMonth(today.getMonth() + 1);
   }, []);
 
   function getMonth(month) {
@@ -70,14 +76,11 @@ export default function Calendar() {
         dayOfWeek = 1;
         week = [];
       }
-
       // TODO -- INSTEAD OF PASSING JUST PASSING A DAY OF THE MONTH
       // TO THE DAY COMPONENT, PASS A DD-MM-YYYY TO USE AS AN ID.
-
       week.push(<Day day={i} month={parseInt(month)} year={2019} />);
       dayOfWeek += 1;
     }
-
     myMonth.push(week);
     return myMonth;
   }
