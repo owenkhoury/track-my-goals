@@ -1,15 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import GoalsList from "./GoalList";
-import Calendar from "./Calendar";
 import styled from "styled-components";
-import { AppStateProvider } from "./app-state";
+import { AppStateProvider, useAppState } from "./app-state";
 import appReducer, { initialState } from "./appReducer";
+import LoggedOut from "./LoggedOut";
+
+import useAuth from "./useAuth";
 
 function App() {
+  const { authAttempted, auth } = useAuth();
+  if (!authAttempted) return null;
+
   return (
-    <AppContainer>
-      <GoalsList />
-    </AppContainer>
+    <div>
+      {auth ? (
+        <AppContainer>
+          <GoalsList />
+        </AppContainer>
+      ) : (
+        <LoggedOut />
+      )}
+    </div>
   );
 }
 

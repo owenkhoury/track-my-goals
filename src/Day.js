@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAppState } from "./app-state";
 import styled from "styled-components";
+import useAuth from "./useAuth";
+import { db } from "./fire";
 
 const monthMap = {
   0: "Jan",
@@ -18,32 +20,56 @@ const monthMap = {
 };
 
 export default function Day({ day, month, year }) {
+  const { auth } = useAuth();
+
   const [completed, setCompleted] = useState(false);
 
   const [{ goals, selectedGoal, selectedDays }, dispatch] = useAppState();
 
-  // useEffect(() => {
-  //   console.log(
-  //     month.toString() +
-  //       "-" +
-  //       day.toString().padStart(2, "0") +
-  //       "-" +
-  //       year.toString()
-  //   );
-  // }, [day, month, year]);
+  useEffect(() => {
+    console.log(
+      month.toString() +
+        "-" +
+        day.toString().padStart(2, "0") +
+        "-" +
+        year.toString()
+    );
+  }, [day, month, year]);
+
+  async function addCompletedDay() {
+    const date =
+      month.toString() +
+      "-" +
+      day.toString().padStart(2, "0") +
+      "-" +
+      year.toString();
+
+    // let query = db.collection("goals").doc("B9RBqWiqJQHzV4lRuB1U");
+    // // query = query.where("uid", "==", auth.uid);
+    // // query = query.where("goal", "==", "new type of goal");
+
+    // await query.set({ datesCompleted: [date] }, { merge: true });
+
+    db.runTransaction(transaction => {
+      return transaction.get("goals/B9RBqWiqJQHzV4lRuB1U").then(snapshot => {
+        const updatedArray = snapshot.get("daysCompleteed");
+        updatedArray.push(date);
+        transaction.update(
+          "B9RBqWiqJQHzV4lRuB1U",
+          "daysCompleted",
+          updatedArray
+        );
+      });
+    });
+  }
 
   return (
     <Button
       completed={completed}
       onClick={() => {
         setCompleted(!completed);
-
-        // UPDATE GLOBAL STATE OF MAPPING OF GOALS TO DATES COMPLETED.
-        // dispatch({
-        //   type: "DAY_SELECTED",
-        //   goal: "workout",
-        //   selectedDay: "01-05-19"
-        // });
+        addCompletedDay();
+        // TODO -- MAKE REQUEST TO SAVE THIS DAY
       }}
     >
       {day}

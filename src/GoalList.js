@@ -1,29 +1,54 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { createGoal } from "./utils";
+import { createGoal, logout } from "./utils";
 import { useAppState } from "./app-state";
 import { GoalsSelectedMap } from "./MockDB";
 import { db } from "./fire";
 import Calendar from "./Calendar";
+import useAuth from "./useAuth";
+
+// NOTE -- I HAVE A MAPPING OF GOAL NAMES TO DOCUMENT IDS. USE
+// THESE IDS TO UPDATE THEIR COMPLETED DAYS.
 
 export default function GoalsList() {
+  const { auth } = useAuth();
+
   const [{}, dispatch] = useAppState();
 
   const [newGoal, setNewGoal] = useState("");
   const [goals, setGoals] = useState([]);
   const [selected, setSelected] = useState(goals[0]);
   const [goalToMonthMap, setGoalToMonthMap] = useState({});
+  const [goalToDates, setGoalToDates] = useState({});
 
+  const [goalToDocId, setGoalToDocId] = useState({});
+
+  /**
+   * Pull in the existing habits from the database that have the
+   * logged in user's uid.
+   */
   async function loadGoals() {
-    db.collection("Goals")
+    db.collection("goals")
+      .where("uid", "==", auth.uid)
       .get()
       .then(snapshot => {
-        const items = [];
+        const existingGoals = [];
+        const goalToDaysSelected = {};
+        const goalToIdMapping = [];
+
         snapshot.docs.forEach(doc => {
-          items.push(doc.data().goal);
+          const docId = doc.id;
+          const goal = doc.data().goal;
+          const datesCompleted = doc.data().datesCompleted;
+
+          goalToIdMapping[goal] = docId;
+          existingGoals.push(goal);
+          goalToDaysSelected[goal] = datesCompleted;
         });
 
-        setGoals(items);
+        setGoalToDocId(goalToIdMapping);
+        setGoals(existingGoals);
+        setGoalToDates(goalToDaysSelected);
       });
   }
 
@@ -31,6 +56,10 @@ export default function GoalsList() {
   useEffect(() => {
     loadGoals();
   }, []);
+
+  useEffect(() => {
+    console.log("yo yo yo");
+  });
 
   // Whenver a goal is added. Add a mappping of that goal to the current month.
   // As the user looks to different months on different goals, that will be saved
@@ -53,20 +82,19 @@ export default function GoalsList() {
     console.log("month map: ", goalToMonthMap);
   });
 
-  // TODO -- Just render one calendar. Give it props
-  // for completedDays and currentMonth.
-
-  // Keep the mapping of goal to current month in this components
-  // local state.
-
   return (
     <OverallContainer>
       <GoalListContainer>
+        <Button onClick={logout}>yo yo yo</Button>
+
         <Input type="text" onChange={e => setNewGoal(e.target.value)} />
         <Button
           onClick={() => {
-            if (newGoal.length > 0) {
-              createGoal(newGoal);
+            if (newGoal.length > 0 && !goals.includes(newGoal)) {
+              createGoal({
+                uid: auth.uid,
+                goal: newGoal
+              });
               dispatch({ type: "GOAL_ADDED", newGoal });
               setNewGoal("");
               setGoals([...goals, newGoal]);
