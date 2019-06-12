@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { createGoal, logout } from "./utils";
+import { createGoal, logout, loadCompletedDays } from "./utils";
 import { useAppState } from "./app-state";
 import { GoalsSelectedMap } from "./MockDB";
 import { db } from "./fire";
@@ -15,51 +15,158 @@ export default function GoalsList() {
 
   const [{}, dispatch] = useAppState();
 
+  // This is the goal that is currently typed into the new goal input.
   const [newGoal, setNewGoal] = useState("");
-  const [goals, setGoals] = useState([]);
-  const [selected, setSelected] = useState(goals[0]);
-  const [goalToMonthMap, setGoalToMonthMap] = useState({});
-  const [goalToDates, setGoalToDates] = useState({});
 
-  const [goalToDocId, setGoalToDocId] = useState({});
+  // The list of the existing goals.
+  const [goals, setGoals] = useState(["asdfasd"]);
+
+  // The currently selected goal.
+  const [selected, setSelected] = useState("asdfasd");
+
+  // Tracks the month that was last viewed for each of the goals.
+  // const [goalToMonthMap, setGoalToMonthMap] = useState({});
+
+  // map of each goal to the dates that have been selected
+  const [goalToDatesCompleted, setGoalToDatesCompleted] = useState({});
+
+  // useEffect(() => {
+  //   console.log(goalToMonthMap);
+  //   console.log(selected);
+  //   console.log(
+  //     "IS IT TRUE? ",
+  //     selected,
+  //     goalToMonthMap,
+  //     selected ? goalToMonthMap[selected] : "not found"
+  //   );
+  // });
+
+  // CREATE AND UPDATE THE MAPPING OF GOAL -> LAST VIEWED MONTH.
+  // useEffect(() => {
+  //   let curMap = goalToMonthMap;
+
+  //   goals.forEach(goal => {
+  //     if (!curMap[goal]) {
+  //       const today = new Date();
+  //       curMap[goal] = today.getMonth() + 1;
+  //     }
+  //   });
+  //   setGoalToMonthMap(curMap);
+  // }, [goals, goalToMonthMap]);
+
+  useEffect(() => {
+    console.log("LOADED COMPLETED DAYS: ", goalToDatesCompleted);
+  });
+
+  // LOAD THE EXISTING GOALS INTO STATE.
+  useEffect(() => {
+    const fetchGoals = db
+      .collection("goals")
+      .where("uid", "==", auth.uid)
+      .get()
+      .then(snapshot => {
+        const existingGoals = [];
+        snapshot.docs.forEach(doc => {
+          existingGoals.push(doc.data().goal);
+        });
+
+        setSelected(existingGoals[0]);
+        setGoals(existingGoals);
+      });
+
+    return () => fetchGoals();
+  }, []);
+
+  // LOAD THE COMPLETED DAYS INTO STATE.
+  useEffect(() => {
+    const fetchCompletedDays = db
+      .collection(`daysCompleted-${auth.uid}`)
+      .get()
+      .then(snapshot => {
+        const datesCompleted = [];
+
+        snapshot.docs.forEach(doc => {
+          const goal = doc.data().goal;
+          const date = doc.data().date;
+
+          datesCompleted.push({ goal: goal, date: date });
+        });
+
+        console.log("here, ", datesCompleted);
+
+        const datesCompletedMap = {};
+
+        datesCompleted.forEach(data => {
+          if (data.goal in datesCompletedMap) {
+            console.log("yo: ", datesCompletedMap, data.goal);
+            datesCompletedMap[data.goal].push(data.date);
+          } else {
+            datesCompletedMap[data.goal] = [data.date];
+          }
+        });
+
+        setGoalToDatesCompleted(datesCompletedMap);
+      });
+
+    return () => fetchCompletedDays();
+  }, []);
+
+  // Pull the goals from state and set the first one as selected.
+
+  // await loadGoals();
+
+  // // Make this call inside of here and save it into local state.
+  // await loadCompletedDays(auth.uid);
+
+  // console.log("MOUNT: ", goalToDatesCompleted);
 
   /**
    * Pull in the existing habits from the database that have the
    * logged in user's uid.
    */
-  async function loadGoals() {
-    db.collection("goals")
-      .where("uid", "==", auth.uid)
-      .get()
-      .then(snapshot => {
-        const existingGoals = [];
-        const goalToDaysSelected = {};
-        const goalToIdMapping = [];
+  // async function loadGoals() {
+  //   db.collection("goals")
+  //     .where("uid", "==", auth.uid)
+  //     .get()
+  //     .then(snapshot => {
+  //       const existingGoals = [];
 
-        snapshot.docs.forEach(doc => {
-          const docId = doc.id;
-          const goal = doc.data().goal;
-          const datesCompleted = doc.data().datesCompleted;
+  //       snapshot.docs.forEach(doc => {
+  //         const goal = doc.data().goal;
+  //         existingGoals.push(goal);
+  //       });
 
-          goalToIdMapping[goal] = docId;
-          existingGoals.push(goal);
-          goalToDaysSelected[goal] = datesCompleted;
-        });
+  //       // First render have first goal selected.
+  //       setSelected(existingGoals[0]);
+  //       setGoals(existingGoals);
+  //     });
+  // }
 
-        setGoalToDocId(goalToIdMapping);
-        setGoals(existingGoals);
-        setGoalToDates(goalToDaysSelected);
-      });
-  }
+  //   async function loadCompletedDays() {
+  //     await db
+  //       .collection(`daysCompleted-${auth.uid}`)
+  //       .get()
+  //       .then(snapshot => {
+  //         const datesCompleted = [];
 
-  // Pull the goals from state and set the first one as selected.
-  useEffect(() => {
-    loadGoals();
-  }, []);
+  //         snapshot.docs.forEach(doc => {
+  //           const goal = doc.data().goal;
+  //           const date = doc.data().date;
 
-  useEffect(() => {
-    console.log("yo yo yo");
-  });
+  //           datesCompleted.push({ goal: goal, date: date });
+  //         });
+
+  //         // setGoalToDatesCompleted(datesCompleted);
+
+  //         return datesCompleted;
+  //       });
+  //   }
+
+  //   loadGoals();
+  //   const datesCompleted = loadCompletedDays();
+
+  //   console.log("DATES COMPLETED: ", datesCompleted);
+  // }, []);
 
   // Whenver a goal is added. Add a mappping of that goal to the current month.
   // As the user looks to different months on different goals, that will be saved
@@ -67,20 +174,47 @@ export default function GoalsList() {
 
   // TODO UPDATE THE goalToMonthMap state whenever the month is changed for
   // a given goal.
-  useEffect(() => {
-    goals.forEach(goal => {
-      let curMap = goalToMonthMap;
 
-      if (!curMap[goal]) {
-        const today = new Date();
-        curMap[goal] = today.getMonth() + 1;
-      }
-    });
-  }, [goals, goalToMonthMap]);
+  // function initMonthMap() {
+  //   let curMap = goalToMonthMap;
+  //   const today = new Date();
 
-  useEffect(() => {
-    console.log("month map: ", goalToMonthMap);
-  });
+  //   goals.forEach(goal => {
+  //     curMap[goal] = today.getMonth() + 1;
+  //   });
+
+  //   setGoalToMonthMap(curMap);
+  // }
+
+  // TODO -- AT THE TIME OF LOADING, SHIT IS ASYNC, CANT SORT IT HERE. PUSH IT ALL INTO AN ARRAY OF OBJECTS,
+  // THEN SORT IT OUT AFTERWARD.
+  async function loadCompletedDays() {
+    db.collection(`daysCompleted-${auth.uid}`)
+      .get()
+      .then(snapshot => {
+        const datesCompleted = [];
+
+        snapshot.docs.forEach(doc => {
+          const goal = doc.data().goal;
+          const date = doc.data().date;
+
+          datesCompleted.push({ goal: goal, date: date });
+        });
+
+        setGoalToDatesCompleted(datesCompleted);
+
+        console.log("goalToDatesCompleted: ", datesCompleted);
+      });
+  }
+
+  // function handleMonthChange(monthNum) {
+  //   let monthMapping = goalToMonthMap;
+  //   monthMapping[selected] = monthNum;
+
+  //   console.log("monthMapping: ", monthMapping);
+
+  //   return monthMapping;
+  // }
 
   return (
     <OverallContainer>
@@ -124,7 +258,14 @@ export default function GoalsList() {
         })}
       </GoalListContainer>
 
-      <Calendar startingMonth={5} />
+      {/* TODO -- THIS CONDITION STOPPED GETTING SET TO TRUE */}
+      <Calendar
+        curGoal={selected}
+        completedDays={
+          goalToDatesCompleted[selected] ? goalToDatesCompleted[selected] : []
+        }
+        startingMonth={6}
+      />
     </OverallContainer>
   );
 }

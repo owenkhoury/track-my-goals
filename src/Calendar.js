@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Day from "./Day";
-import { useAppState } from "./app-state";
+import { addCompletedDay } from "./utils";
+import useAuth from "./useAuth";
+
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
 
 /**
  * Get the current month. Render all of it's days on the screen. Any
@@ -9,16 +18,27 @@ import { useAppState } from "./app-state";
  * the future button is clicked, then set the current month
  */
 
-export default function Calendar({ startingMonth }) {
-  // The GoalsList sets the Global state's value of selectedDays.
-  // I pull it from the global state here.
-  const [{ selectedDays }, dispatch] = useAppState();
+export default function Calendar({ curGoal, completedDays }) {
+  const { auth } = useAuth();
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  );
 
-  const [curMonth, setCurMonth] = useState(startingMonth);
+  const [curMonth, setCurMonth] = useState(null);
 
   useEffect(() => {
-    console.log("MOUNTED NEW CALENDAR", startingMonth);
+    const today = new Date();
+    setCurMonth(today.getMonth() + 1);
   }, []);
+
+  useEffect(() => {
+    setWindowDimensions(getWindowDimensions());
+    console.log("dimensions: ", windowDimensions);
+  });
+
+  async function handleDayCompleted(date) {
+    addCompletedDay(auth.uid, curGoal, date);
+  }
 
   const monthDays = {
     "01": 31,
@@ -50,35 +70,48 @@ export default function Calendar({ startingMonth }) {
     12: "December"
   };
 
-  // On the component mount. Get the current month number, and set it
-  // in local state.
-  useEffect(() => {
-    // var dd = String(today.getDate()).padStart(2, "0");
-    // var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    // var yyyy = today.getFullYear();
-
-    // const curDay = mm + "/" + dd + "/" + yyyy;
-
-    var today = new Date();
-
-    console.log("MOUNTED");
-    // setCurMonth(today.getMonth() + 1);
-  }, []);
-
   function getMonth(month) {
     const myMonth = [[]];
     let dayOfWeek = 1;
     let week = [];
 
+    const daysPerRow = Math.floor(windowDimensions.width / 220);
+
     for (let i = 1; i <= monthDays[month]; i++) {
-      if (dayOfWeek === 8) {
+      if (dayOfWeek === daysPerRow) {
         myMonth.push(week);
         dayOfWeek = 1;
         week = [];
       }
-      // TODO -- INSTEAD OF PASSING JUST PASSING A DAY OF THE MONTH
-      // TO THE DAY COMPONENT, PASS A DD-MM-YYYY TO USE AS AN ID.
-      week.push(<Day day={i} month={parseInt(month)} year={2019} />);
+
+      // TODO -- Only the last one is getting set as selected
+
+      const date =
+        month.toString().padStart(2, "0") +
+        "-" +
+        i
+          .toString()
+          .toString()
+          .padStart(2, "0") +
+        "-" +
+        "2019";
+
+      // console.log(
+      //   "YOOOO: ",
+      //   completedDays,
+      //   date,
+      //   completedDays.indexOf(date) > -1
+      // );
+
+      week.push(
+        <Day
+          day={i}
+          month={parseInt(month)}
+          year={2019}
+          handleDayCompleted={handleDayCompleted}
+          isCompleted={completedDays.indexOf(date) > -1}
+        />
+      );
       dayOfWeek += 1;
     }
     myMonth.push(week);
@@ -87,27 +120,15 @@ export default function Calendar({ startingMonth }) {
 
   function getYear() {
     const calendarYear = {};
-
     for (let i = 1; i <= 12; i++) {
       let monthNum = i.toString();
       monthNum = monthNum.length === 1 ? "0" + monthNum : monthNum;
 
       const month = getMonth(monthNum);
-
       calendarYear[i] = month;
     }
-
     return calendarYear;
   }
-
-  // Need to associate a Date with each of these Days
-  // so that I can distinguish the ones that need to be
-  // rendered as selected.
-
-  // On initial load --> get the current month. Use that to
-  // decide how many days / what month to render. Keep the
-  // Month and year in local state, so that I can update it
-  // as the user goes forward and backward in time.
 
   const calendarYear = getYear();
 
@@ -130,9 +151,12 @@ export default function Calendar({ startingMonth }) {
           next month
         </ChangeMonthButton>
       </MonthInfo>
-      {calendarYear[curMonth].map(week => {
-        return <div>{week}</div>;
-      })}
+
+      {calendarYear[curMonth]
+        ? calendarYear[curMonth].map(week => {
+            return <div>{week}</div>;
+          })
+        : null}
     </Container>
   );
 }

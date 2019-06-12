@@ -1,6 +1,5 @@
 import { db } from "./fire";
 import { auth } from "firebase";
-import { domainToASCII } from "url";
 
 export async function loadGoals() {
   let goals = [];
@@ -18,11 +17,35 @@ export async function createGoal(goalData) {
   });
 }
 
-export async function retrieveSelectedDays(goal) {
-  // console.log(GoalsSelectedMap[goal], goal);
-  // const selectedDays = GoalsSelectedMap[goal];
-  // // Not hooked to firebase yet. Just mocking the backend
-  // dispatch({ type: "SELECTED_DAYS_LOADED", selectedDays });
+export async function addCompletedDay(uid, goal, date) {
+  return db.collection(`daysCompleted-${uid}`).add({
+    goal: goal,
+    date: date
+  });
+}
+
+export async function loadCompletedDays(uid) {
+  // TODO -- Upon initial load, get all of the days that have currently been selected
+  // for each goal
+  // Return a mapping of each goal to its list of dates completed.
+  db.collection(`daysCompleted-${uid}`)
+    .get()
+    .then(snapshot => {
+      const goalToDatesCompleted = {};
+
+      snapshot.docs.forEach(doc => {
+        const goal = doc.data().goal;
+        const date = doc.data().date;
+
+        if (goal in goalToDatesCompleted) {
+          goalToDatesCompleted[goal].push(date);
+        } else {
+          goalToDatesCompleted[goal] = [date];
+        }
+      });
+
+      console.log("goalToDatesCompleted: ", goalToDatesCompleted);
+    });
 }
 
 export async function signup({ email, password }) {
