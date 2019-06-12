@@ -75,7 +75,7 @@ export default function Calendar({ curGoal, completedDays }) {
     let dayOfWeek = 1;
     let week = [];
 
-    const daysPerRow = Math.floor(windowDimensions.width / 220);
+    const daysPerRow = Math.floor(windowDimensions.width / 180);
 
     for (let i = 1; i <= monthDays[month]; i++) {
       if (dayOfWeek === daysPerRow) {

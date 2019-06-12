@@ -24,35 +24,8 @@ export default function GoalsList() {
   // The currently selected goal.
   const [selected, setSelected] = useState("asdfasd");
 
-  // Tracks the month that was last viewed for each of the goals.
-  // const [goalToMonthMap, setGoalToMonthMap] = useState({});
-
   // map of each goal to the dates that have been selected
   const [goalToDatesCompleted, setGoalToDatesCompleted] = useState({});
-
-  // useEffect(() => {
-  //   console.log(goalToMonthMap);
-  //   console.log(selected);
-  //   console.log(
-  //     "IS IT TRUE? ",
-  //     selected,
-  //     goalToMonthMap,
-  //     selected ? goalToMonthMap[selected] : "not found"
-  //   );
-  // });
-
-  // CREATE AND UPDATE THE MAPPING OF GOAL -> LAST VIEWED MONTH.
-  // useEffect(() => {
-  //   let curMap = goalToMonthMap;
-
-  //   goals.forEach(goal => {
-  //     if (!curMap[goal]) {
-  //       const today = new Date();
-  //       curMap[goal] = today.getMonth() + 1;
-  //     }
-  //   });
-  //   setGoalToMonthMap(curMap);
-  // }, [goals, goalToMonthMap]);
 
   useEffect(() => {
     console.log("LOADED COMPLETED DAYS: ", goalToDatesCompleted);
@@ -74,7 +47,9 @@ export default function GoalsList() {
         setGoals(existingGoals);
       });
 
-    return () => fetchGoals();
+    if (typeof fetchGoals === "function") {
+      return () => fetchGoals();
+    }
   }, []);
 
   // LOAD THE COMPLETED DAYS INTO STATE.
@@ -88,139 +63,28 @@ export default function GoalsList() {
         snapshot.docs.forEach(doc => {
           const goal = doc.data().goal;
           const date = doc.data().date;
-
           datesCompleted.push({ goal: goal, date: date });
         });
 
-        console.log("here, ", datesCompleted);
-
         const datesCompletedMap = {};
-
         datesCompleted.forEach(data => {
           if (data.goal in datesCompletedMap) {
-            console.log("yo: ", datesCompletedMap, data.goal);
             datesCompletedMap[data.goal].push(data.date);
           } else {
             datesCompletedMap[data.goal] = [data.date];
           }
         });
-
         setGoalToDatesCompleted(datesCompletedMap);
       });
 
-    return () => fetchCompletedDays();
+    if (typeof fetchCompletedDays === "function") {
+      return () => fetchCompletedDays();
+    }
   }, []);
-
-  // Pull the goals from state and set the first one as selected.
-
-  // await loadGoals();
-
-  // // Make this call inside of here and save it into local state.
-  // await loadCompletedDays(auth.uid);
-
-  // console.log("MOUNT: ", goalToDatesCompleted);
-
-  /**
-   * Pull in the existing habits from the database that have the
-   * logged in user's uid.
-   */
-  // async function loadGoals() {
-  //   db.collection("goals")
-  //     .where("uid", "==", auth.uid)
-  //     .get()
-  //     .then(snapshot => {
-  //       const existingGoals = [];
-
-  //       snapshot.docs.forEach(doc => {
-  //         const goal = doc.data().goal;
-  //         existingGoals.push(goal);
-  //       });
-
-  //       // First render have first goal selected.
-  //       setSelected(existingGoals[0]);
-  //       setGoals(existingGoals);
-  //     });
-  // }
-
-  //   async function loadCompletedDays() {
-  //     await db
-  //       .collection(`daysCompleted-${auth.uid}`)
-  //       .get()
-  //       .then(snapshot => {
-  //         const datesCompleted = [];
-
-  //         snapshot.docs.forEach(doc => {
-  //           const goal = doc.data().goal;
-  //           const date = doc.data().date;
-
-  //           datesCompleted.push({ goal: goal, date: date });
-  //         });
-
-  //         // setGoalToDatesCompleted(datesCompleted);
-
-  //         return datesCompleted;
-  //       });
-  //   }
-
-  //   loadGoals();
-  //   const datesCompleted = loadCompletedDays();
-
-  //   console.log("DATES COMPLETED: ", datesCompleted);
-  // }, []);
-
-  // Whenver a goal is added. Add a mappping of that goal to the current month.
-  // As the user looks to different months on different goals, that will be saved
-  // in state.
-
-  // TODO UPDATE THE goalToMonthMap state whenever the month is changed for
-  // a given goal.
-
-  // function initMonthMap() {
-  //   let curMap = goalToMonthMap;
-  //   const today = new Date();
-
-  //   goals.forEach(goal => {
-  //     curMap[goal] = today.getMonth() + 1;
-  //   });
-
-  //   setGoalToMonthMap(curMap);
-  // }
-
-  // TODO -- AT THE TIME OF LOADING, SHIT IS ASYNC, CANT SORT IT HERE. PUSH IT ALL INTO AN ARRAY OF OBJECTS,
-  // THEN SORT IT OUT AFTERWARD.
-  async function loadCompletedDays() {
-    db.collection(`daysCompleted-${auth.uid}`)
-      .get()
-      .then(snapshot => {
-        const datesCompleted = [];
-
-        snapshot.docs.forEach(doc => {
-          const goal = doc.data().goal;
-          const date = doc.data().date;
-
-          datesCompleted.push({ goal: goal, date: date });
-        });
-
-        setGoalToDatesCompleted(datesCompleted);
-
-        console.log("goalToDatesCompleted: ", datesCompleted);
-      });
-  }
-
-  // function handleMonthChange(monthNum) {
-  //   let monthMapping = goalToMonthMap;
-  //   monthMapping[selected] = monthNum;
-
-  //   console.log("monthMapping: ", monthMapping);
-
-  //   return monthMapping;
-  // }
 
   return (
     <OverallContainer>
       <GoalListContainer>
-        <Button onClick={logout}>yo yo yo</Button>
-
         <Input type="text" onChange={e => setNewGoal(e.target.value)} />
         <Button
           onClick={() => {
