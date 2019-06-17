@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { createGoal, deleteGoal } from "./utils";
-import { useAppState } from "./app-state";
-import { GoalsSelectedMap } from "./MockDB";
 import { db } from "./fire";
 import Calendar from "./Calendar";
 import useAuth from "./useAuth";
@@ -10,8 +8,6 @@ import HeaderBar from "./HeaderBar";
 
 export default function GoalsList() {
   const { auth } = useAuth();
-
-  const [{}, dispatch] = useAppState();
 
   // This is the goal that is currently typed into the new goal input.
   const [newGoal, setNewGoal] = useState("");
@@ -50,36 +46,6 @@ export default function GoalsList() {
 
     if (typeof fetchGoals === "function") {
       return () => fetchGoals();
-    }
-  }, []);
-
-  // LOAD THE COMPLETED DAYS INTO STATE.
-  useEffect(() => {
-    const fetchCompletedDays = db
-      .collection(`daysCompleted-${auth.uid}`)
-      .get()
-      .then(snapshot => {
-        const datesCompleted = [];
-
-        snapshot.docs.forEach(doc => {
-          const goal = doc.data().goal;
-          const date = doc.data().date;
-          datesCompleted.push({ goal: goal, date: date });
-        });
-
-        const datesCompletedMap = {};
-        datesCompleted.forEach(data => {
-          if (data.goal in datesCompletedMap) {
-            datesCompletedMap[data.goal].push(data.date);
-          } else {
-            datesCompletedMap[data.goal] = [data.date];
-          }
-        });
-        setGoalToDatesCompleted(datesCompletedMap);
-      });
-
-    if (typeof fetchCompletedDays === "function") {
-      return () => fetchCompletedDays();
     }
   }, []);
 
@@ -143,9 +109,9 @@ export default function GoalsList() {
         <HeaderBar />
         <Calendar
           curGoal={selected}
-          completedDays={
-            goalToDatesCompleted[selected] ? goalToDatesCompleted[selected] : []
-          }
+          // completedDaysMap={
+          //   goalToDatesCompleted[selected] ? goalToDatesCompleted : []
+          // }
           startingMonth={6}
         />
       </CalendarContainer>

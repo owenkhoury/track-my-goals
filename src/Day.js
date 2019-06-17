@@ -32,7 +32,7 @@ export default function Day({
             year.toString();
 
           // Either store or remove the day in the firstore.
-          completed ? handleDayCompleted(date) : handleDayCompleted(date);
+          completed ? handleDayRemoved(date) : handleDayCompleted(date);
         }
       }}
     >

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Day from "./Day";
+import { db } from "./fire";
 import { addCompletedDay, removeCompletedDay } from "./utils";
 import useAuth from "./useAuth";
 
@@ -12,11 +13,14 @@ function getWindowDimensions() {
   };
 }
 
-export default function Calendar({ curGoal, completedDays }) {
+export default function Calendar({ curGoal, completedDaysMap }) {
   const { auth } = useAuth();
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
   );
+
+  // Mapping of each goal to the days that are completed (selected).
+  const [completedDays, setCompletedDays] = useState({});
 
   const [curMonth, setCurMonth] = useState(null);
 
@@ -28,14 +32,69 @@ export default function Calendar({ curGoal, completedDays }) {
   useEffect(() => {
     // setWindowDimensions(getWindowDimensions());
     // console.log("dimensions: ", windowDimensions);
+
+    console.log("completedDays: ", completedDays);
   });
 
+  // LOAD THE COMPLETED DAYS INTO STATE.
+  useEffect(() => {
+    const fetchCompletedDays = db
+      .collection(`daysCompleted-${auth.uid}`)
+      .get()
+      .then(snapshot => {
+        const datesCompleted = [];
+
+        snapshot.docs.forEach(doc => {
+          const goal = doc.data().goal;
+          const date = doc.data().date;
+          datesCompleted.push({ goal: goal, date: date });
+        });
+
+        const datesCompletedMap = {};
+        datesCompleted.forEach(data => {
+          if (data.goal in datesCompletedMap) {
+            datesCompletedMap[data.goal].push(data.date);
+          } else {
+            datesCompletedMap[data.goal] = [data.date];
+          }
+        });
+        setCompletedDays(datesCompletedMap);
+      });
+
+    if (typeof fetchCompletedDays === "function") {
+      return () => fetchCompletedDays();
+    }
+  }, []);
+
+  // TODO -- BATCH THESE REQUESTS WHEN USER SWITCHES BETWEEN GOALS
+  // SAVE SOME READS AND WRITES
   async function handleDayCompleted(date) {
-    addCompletedDay(auth.uid, curGoal, date);
+    // addCompletedDay(auth.uid, curGoal, date);
+
+    console.log("Adding day: ", curGoal, completedDays, completedDays[curGoal]);
+
+    const updatedCompletedDays = completedDays;
+    updatedCompletedDays[curGoal] = [...completedDays[curGoal], date];
+
+    setCompletedDays(updatedCompletedDays);
   }
 
   async function handleDayRemoved(date) {
-    removeCompletedDay(auth.uid, curGoal, date);
+    // removeCompletedDay(auth.uid, curGoal, date);
+
+    console.log(
+      "Removing day: ",
+      curGoal,
+      completedDays,
+      completedDays[curGoal]
+    );
+
+    const updatedCompletedDays = completedDays;
+    updatedCompletedDays[curGoal] = updatedCompletedDays[curGoal].filter(
+      curDate => curDate !== date
+    );
+
+    setCompletedDays(updatedCompletedDays);
   }
 
   const monthDays = {
@@ -115,12 +174,23 @@ export default function Calendar({ curGoal, completedDays }) {
           year={2019}
           handleDayCompleted={handleDayCompleted}
           handleDayRemoved={handleDayRemoved}
-          isCompleted={completedDays.indexOf(date) > -1}
+          isCompleted={
+            completedDays[curGoal]
+              ? completedDays[curGoal].indexOf(date) > -1
+              : false
+          }
         />
       );
       dayOfWeek += 1;
     }
+
+    // fill out the last row with empty days
+    for (let unusedDay = 0; unusedDay < 8 - dayOfWeek; unusedDay++) {
+      week.push(<Day disabled={true} />);
+    }
+
     myMonth.push(week);
+
     return myMonth;
   }
 
