@@ -6,7 +6,6 @@ import appReducer, { initialState } from "./appReducer";
 import LoggedOut from "./LoggedOut";
 
 import useAuth from "./useAuth";
-import HeaderBar from "./HeaderBar";
 
 function App() {
   const { authAttempted, auth } = useAuth();
@@ -16,7 +15,7 @@ function App() {
     <div>
       {auth ? (
         <AppContainer>
-          <HeaderBar />
+          {/* <HeaderBar /> */}
           <GoalsList />
         </AppContainer>
       ) : (
@@ -29,7 +28,8 @@ function App() {
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #efe2ba;
+  margin: 0;
+  padding: 0;
 `;
 
 export default () => (

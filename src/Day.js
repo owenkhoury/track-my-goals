@@ -6,7 +6,9 @@ export default function Day({
   month,
   year,
   handleDayCompleted,
-  isCompleted
+  handleDayRemoved,
+  isCompleted,
+  disabled
 }) {
   const [completed, setCompleted] = useState(isCompleted);
 
@@ -17,33 +19,46 @@ export default function Day({
   return (
     <Button
       completed={completed}
+      disabled={disabled}
       onClick={() => {
-        setCompleted(!completed);
+        if (!disabled) {
+          setCompleted(!completed);
 
-        // Save this completed day in the database.
-        handleDayCompleted(
-          month.toString().padStart(2, "0") +
+          const date =
+            month.toString().padStart(2, "0") +
             "-" +
             day.toString().padStart(2, "0") +
             "-" +
-            year.toString()
-        );
+            year.toString();
+
+          // Either store or remove the day in the firstore.
+          completed ? handleDayCompleted(date) : handleDayCompleted(date);
+        }
       }}
     >
-      {day}
+      {disabled ? "0" : day}
     </Button>
   );
 }
 
 const Button = styled.button`
   display: inline-block;
-  height: 100px;
-  width: 100px;
-  color: ${props => (props.completed ? "black" : "black")};
+  height: 6rem;
+  width: 6rem;
+  -webkit-text-fill-color: ${props =>
+    props.disabled ? "transparent" : "none"};
+  color: ${props => (props.completed ? "white" : "black")};
   font-size: 1em;
-  margin: 1em;
-  padding: 0.25em 1em;
+  margin: 0.4375rem;
   border: 2px solid #5cc7ff;
   border-radius: 3px;
-  background-color: ${props => (props.completed ? "#99E897" : "white")};
+  background-color: ${props => (props.completed ? "#99E897" : "#D8D8D8")};
+  text-align: right;
+
+  &:hover {
+    background-color: ${props =>
+      props.disabled ? "#D8D8D8" : props.completed ? "#227c20" : "#c2c2c2"};
+  }
+
+  // old green color = #99E897
 `;
