@@ -1,6 +1,18 @@
 import { db } from "./fire";
 import { auth } from "firebase";
 
+export async function deleteGoal(uid, goal) {
+  let existingGoal = db.collection("goals");
+  existingGoal = existingGoal.where("goal", "==", goal);
+  existingGoal = existingGoal.where("uid", "==", uid);
+
+  existingGoal.get().then(snapshot => {
+    snapshot.docs.forEach(doc => {
+      doc.ref.delete();
+    });
+  });
+}
+
 export async function createGoal(goalData) {
   return db.collection("goals").add({
     uid: goalData.uid,

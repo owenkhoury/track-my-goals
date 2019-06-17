@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { createGoal } from "./utils";
+import { createGoal, deleteGoal } from "./utils";
 import { useAppState } from "./app-state";
 import { GoalsSelectedMap } from "./MockDB";
 import { db } from "./fire";
@@ -101,9 +101,9 @@ export default function GoalsList() {
                   uid: auth.uid,
                   goal: newGoal
                 });
-                dispatch({ type: "GOAL_ADDED", newGoal });
+                // dispatch({ type: "GOAL_ADDED", newGoal });
                 setNewGoal("");
-                setGoals([...goals, newGoal]);
+                setGoals([newGoal, ...goals]);
               }
             }}
           >
@@ -118,10 +118,6 @@ export default function GoalsList() {
                 selected={goal === selected}
                 onClick={() => {
                   setSelected(goal);
-                  // forceUpdate();
-                  // const selectedDays = GoalsSelectedMap[goal];
-                  // Not hooked to firebase yet. Just mocking the backend
-                  // dispatch({ type: "SELECTED_DAYS_LOADED", selectedDays });
                 }}
               >
                 {" "}
@@ -130,6 +126,8 @@ export default function GoalsList() {
                 <DeleteButton
                   onClick={() => {
                     console.log("yo: ", goal, auth.uid);
+                    deleteGoal(auth.uid, goal);
+                    setGoals(goals.filter(g => g !== goal));
                   }}
                 >
                   {" "}
