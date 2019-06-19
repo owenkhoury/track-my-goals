@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { AppStateProvider, useAppState } from "./app-state";
 import appReducer, { initialState } from "./appReducer";
 import LoggedOut from "./LoggedOut";
+import LoggedIn from "./LoggedIn";
 
 import useAuth from "./useAuth";
 
@@ -16,7 +17,8 @@ function App() {
       {auth ? (
         <AppContainer>
           {/* <HeaderBar /> */}
-          <GoalsList />
+          {/* <GoalsList /> */}
+          <LoggedIn />
         </AppContainer>
       ) : (
         <LoggedOut />

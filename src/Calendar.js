@@ -34,10 +34,17 @@ export default function Calendar({ curGoal, completedDaysMap }) {
     // console.log("dimensions: ", windowDimensions);
 
     console.log("completedDays: ", completedDays);
+    console.log(
+      "Completed days for cur goal: ",
+      curGoal,
+      completedDays[curGoal]
+    );
   });
 
   // LOAD THE COMPLETED DAYS INTO STATE.
   useEffect(() => {
+    console.log("LOADING COMPLETED DAYS");
+
     const fetchCompletedDays = db
       .collection(`daysCompleted-${auth.uid}`)
       .get()
@@ -74,7 +81,9 @@ export default function Calendar({ curGoal, completedDaysMap }) {
     console.log("Adding day: ", curGoal, completedDays, completedDays[curGoal]);
 
     const updatedCompletedDays = completedDays;
-    updatedCompletedDays[curGoal] = [...completedDays[curGoal], date];
+    updatedCompletedDays[curGoal] = completedDays[curGoal]
+      ? [...completedDays[curGoal], date]
+      : [date];
 
     setCompletedDays(updatedCompletedDays);
   }
@@ -144,7 +153,7 @@ export default function Calendar({ curGoal, completedDaysMap }) {
 
     // Add in blank days until the first day of the month.
     for (let unusedDay = 0; unusedDay < firstOfMonth; unusedDay++) {
-      week.push(<Day disabled={true} />);
+      week.push(<Day curGoal={curGoal} disabled={true} />);
     }
 
     dayOfWeek = firstOfMonth + 1;
@@ -167,18 +176,25 @@ export default function Calendar({ curGoal, completedDaysMap }) {
         week = [];
       }
 
+      if (month == "06") {
+        console.log(
+          "CREATING DAY",
+          date,
+          completedDays[curGoal]
+            ? completedDays[curGoal].indexOf(date) > -1
+            : false
+        );
+      }
+
       week.push(
         <Day
+          curGoal={curGoal}
           day={i}
           month={parseInt(month)}
           year={2019}
           handleDayCompleted={handleDayCompleted}
           handleDayRemoved={handleDayRemoved}
-          isCompleted={
-            completedDays[curGoal]
-              ? completedDays[curGoal].indexOf(date) > -1
-              : false
-          }
+          isCompleted={false}
         />
       );
       dayOfWeek += 1;
@@ -190,11 +206,12 @@ export default function Calendar({ curGoal, completedDaysMap }) {
     }
 
     myMonth.push(week);
-
     return myMonth;
   }
 
   function getYear() {
+    console.log("GET YEAR", curGoal, completedDays[curGoal]);
+
     const calendarYear = {};
     for (let i = 1; i <= 12; i++) {
       let monthNum = i.toString();
@@ -209,25 +226,26 @@ export default function Calendar({ curGoal, completedDaysMap }) {
   const calendarYear = getYear();
 
   return (
-    <Container>
-      {/* // TODO add a row with the days of the week */}
+    <div>
+      <Container>
+        {/* // TODO add a row with the days of the week */}
 
-      <DaysOfWeek>
-        <div>SUN</div>
-        <div>MON</div>
-        <div>TUE</div>
-        <div>WED</div>
-        <div>THU</div>
-        <div>FRI</div>
-        <div>SAT</div>
-      </DaysOfWeek>
+        <DaysOfWeek>
+          <div>SUN</div>
+          <div>MON</div>
+          <div>TUE</div>
+          <div>WED</div>
+          <div>THU</div>
+          <div>FRI</div>
+          <div>SAT</div>
+        </DaysOfWeek>
 
-      {calendarYear[curMonth]
-        ? calendarYear[curMonth].map(week => {
-            return <div>{week}</div>;
-          })
-        : null}
-
+        {calendarYear[curMonth]
+          ? calendarYear[curMonth].map(week => {
+              return <div>{week}</div>;
+            })
+          : null}
+      </Container>
       <MonthInfoContainer>
         <PrevMonth
           onClick={() => {
@@ -241,7 +259,7 @@ export default function Calendar({ curGoal, completedDaysMap }) {
           }}
         />
       </MonthInfoContainer>
-    </Container>
+    </div>
   );
 }
 
@@ -278,8 +296,7 @@ const PrevMonth = styled.button`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 0;
-  padding: 0;
+  align-items: space-between;
 `;
 
 const MonthInfoContainer = styled.div`

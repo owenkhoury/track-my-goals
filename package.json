@@ -34,5 +34,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "typescript": "^3.5.2",
+    "typings": "2.1.1",
+    "@types/react": "^16.8.20",
+    "@types/styled-components": "4.1.16",
+    "@typescript-eslint/eslint-plugin": "1.10.2",
+    "@typescript-eslint/parser": "1.10.2"
   }
 }

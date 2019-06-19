@@ -24,14 +24,33 @@ export default function GoalsList() {
   // Refs.
   let goalInputRef = React.createRef();
 
-  useEffect(() => {
-    console.log("LOADED COMPLETED DAYS: ", goalToDatesCompleted);
-  });
-
   // LOAD THE EXISTING GOALS INTO STATE.
   useEffect(() => {
-    const fetchGoals = db
-      .collection("goals")
+    console.log("FETCHING GOALS");
+
+    fetchGoals();
+
+    // const fetchGoals = db
+    //   .collection("goals")
+    //   .where("uid", "==", auth.uid)
+    //   .get()
+    //   .then(snapshot => {
+    //     const existingGoals = [];
+    //     snapshot.docs.forEach(doc => {
+    //       existingGoals.push(doc.data().goal);
+    //     });
+
+    //     setSelected(existingGoals[0]);
+    //     setGoals(existingGoals);
+    //   });
+
+    // if (typeof fetchGoals === "function") {
+    //   return () => fetchGoals();
+    // }
+  }, []);
+
+  function fetchGoals() {
+    db.collection("goals")
       .where("uid", "==", auth.uid)
       .get()
       .then(snapshot => {
@@ -43,11 +62,7 @@ export default function GoalsList() {
         setSelected(existingGoals[0]);
         setGoals(existingGoals);
       });
-
-    if (typeof fetchGoals === "function") {
-      return () => fetchGoals();
-    }
-  }, []);
+  }
 
   return (
     <OverallContainer>
