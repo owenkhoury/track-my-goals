@@ -12,8 +12,6 @@ export default function LoginForm() {
   const passwordRef = useRef();
 
   const handleLogin = async event => {
-    console.log("HANDLE LOGIN");
-
     event.preventDefault();
     setLoading(true);
     try {

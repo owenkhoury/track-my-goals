@@ -6,63 +6,18 @@ import Calendar from "./Calendar";
 import useAuth from "./useAuth";
 import HeaderBar from "./HeaderBar";
 
-export default function GoalsList() {
+export default function GoalsList({ existingGoals, selected, handleSelected }) {
   const { auth } = useAuth();
 
   // This is the goal that is currently typed into the new goal input.
   const [newGoal, setNewGoal] = useState("");
 
   // The list of the existing goals.
-  const [goals, setGoals] = useState(["asdfasd"]);
+  const [goals, setGoals] = useState(existingGoals);
 
-  // The currently selected goal.
-  const [selected, setSelected] = useState("asdfasd");
-
-  // map of each goal to the dates that have been selected
-  const [goalToDatesCompleted, setGoalToDatesCompleted] = useState({});
-
-  // Refs.
-  let goalInputRef = React.createRef();
-
-  // LOAD THE EXISTING GOALS INTO STATE.
   useEffect(() => {
-    console.log("FETCHING GOALS");
-
-    fetchGoals();
-
-    // const fetchGoals = db
-    //   .collection("goals")
-    //   .where("uid", "==", auth.uid)
-    //   .get()
-    //   .then(snapshot => {
-    //     const existingGoals = [];
-    //     snapshot.docs.forEach(doc => {
-    //       existingGoals.push(doc.data().goal);
-    //     });
-
-    //     setSelected(existingGoals[0]);
-    //     setGoals(existingGoals);
-    //   });
-
-    // if (typeof fetchGoals === "function") {
-    //   return () => fetchGoals();
-    // }
-  }, []);
-
-  function fetchGoals() {
-    db.collection("goals")
-      .where("uid", "==", auth.uid)
-      .get()
-      .then(snapshot => {
-        const existingGoals = [];
-        snapshot.docs.forEach(doc => {
-          existingGoals.push(doc.data().goal);
-        });
-
-        setSelected(existingGoals[0]);
-        setGoals(existingGoals);
-      });
-  }
+    setGoals(existingGoals);
+  }, [existingGoals]);
 
   return (
     <OverallContainer>
@@ -70,7 +25,6 @@ export default function GoalsList() {
         <AppTitle>Habit Tracker</AppTitle>
         <InputContainer>
           <GoalInput
-            ref={goalInputRef}
             type="text"
             placeholder="Enter your next habit"
             onChange={e => setNewGoal(e.target.value)}
@@ -82,7 +36,7 @@ export default function GoalsList() {
                   uid: auth.uid,
                   goal: newGoal
                 });
-                // dispatch({ type: "GOAL_ADDED", newGoal });
+
                 setNewGoal("");
                 setGoals([newGoal, ...goals]);
               }
@@ -92,53 +46,43 @@ export default function GoalsList() {
           </AddGoalButton>
         </InputContainer>
         <ListContainer>
-          {goals.map((goal, idx) => {
-            return (
-              <ListRow
-                style={goals[idx + 1] ? null : { borderWidth: "5px" }} // Check if it's the last goal in the list.
-                selected={goal === selected}
-                onClick={() => {
-                  setSelected(goal);
-                }}
-              >
-                {" "}
-                {goal}
-                {/* // TODO -- IMPORT ICONS, INCLUDING TRASH ICON FOR DELETING */}
-                <DeleteButton
-                  onClick={() => {
-                    console.log("yo: ", goal, auth.uid);
-                    deleteGoal(auth.uid, goal);
-                    setGoals(goals.filter(g => g !== goal));
-                  }}
-                >
-                  {" "}
-                  X{" "}
-                </DeleteButton>
-              </ListRow>
-            );
-          })}
+          {goals
+            ? goals.map((goal, idx) => {
+                return (
+                  <ListRow
+                    style={goals[idx + 1] ? null : { borderWidth: "5px" }} // Check if it's the last goal in the list.
+                    selected={goal === selected}
+                    onClick={() => {
+                      // setSelected(goal);
+                      handleSelected(goal);
+                    }}
+                  >
+                    {" "}
+                    {goal}
+                    {/* // TODO -- IMPORT ICONS, INCLUDING TRASH ICON FOR DELETING */}
+                    <DeleteButton
+                      onClick={() => {
+                        deleteGoal(auth.uid, goal);
+                        setGoals(goals.filter(g => g !== goal));
+                      }}
+                    >
+                      {" "}
+                      X{" "}
+                    </DeleteButton>
+                  </ListRow>
+                );
+              })
+            : null}
         </ListContainer>
       </GoalContainer>
-
-      <CalendarContainer>
-        <HeaderBar />
-        <Calendar
-          curGoal={selected}
-          // completedDaysMap={
-          //   goalToDatesCompleted[selected] ? goalToDatesCompleted : []
-          // }
-          startingMonth={6}
-        />
-      </CalendarContainer>
     </OverallContainer>
   );
 }
 
 const OverallContainer = styled.div`
   display: flex;
-  flex-direction: row;
-  min-height: 100vh;
-  min-width: 100vw; // TODO -- WHY DO I NEED THIS?
+  // min-height: 100vh;
+  // min-width: 100vw; // TODO -- WHY DO I NEED THIS?
 `;
 
 const GoalContainer = styled.div`
@@ -170,11 +114,6 @@ const ListContainer = styled.div`
   overflow-y: scroll;
 `;
 
-const CalendarContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 const AddGoalButton = styled.button`
   background-color: #227c20;
   display: inline-block;
@@ -203,7 +142,11 @@ const DeleteButton = styled.button`
   border: none;
 `;
 
-const ListRow = styled.div`
+interface ListRowProps {
+  selected: boolean;
+}
+
+const ListRow = styled.div<ListRowProps>`
   display: flex;
   flex-direction: row;
   justify-content: space-between
@@ -227,3 +170,43 @@ const ListRow = styled.div`
 const VerticalLine = styled.div`
   border-left: thick solid #ff0000;
 `;
+
+// LOAD THE EXISTING GOALS INTO STATE.
+// useEffect(() => {
+//   console.log("FETCHING GOALS");
+
+//   fetchGoals();
+
+//   // const fetchGoals = db
+//   //   .collection("goals")
+//   //   .where("uid", "==", auth.uid)
+//   //   .get()
+//   //   .then(snapshot => {
+//   //     const existingGoals = [];
+//   //     snapshot.docs.forEach(doc => {
+//   //       existingGoals.push(doc.data().goal);
+//   //     });
+
+//   //     setSelected(existingGoals[0]);
+//   //     setGoals(existingGoals);
+//   //   });
+
+//   // if (typeof fetchGoals === "function") {
+//   //   return () => fetchGoals();
+//   // }
+// }, []);
+
+// function fetchGoals() {
+//   db.collection("goals")
+//     .where("uid", "==", auth.uid)
+//     .get()
+//     .then(snapshot => {
+//       const existingGoals = [];
+//       snapshot.docs.forEach(doc => {
+//         existingGoals.push(doc.data().goal);
+//       });
+
+//       setSelected(existingGoals[0]);
+//       setGoals(existingGoals);
+//     });
+// }

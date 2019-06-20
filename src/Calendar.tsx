@@ -13,7 +13,16 @@ function getWindowDimensions() {
   };
 }
 
-export default function Calendar({ curGoal, completedDaysMap }) {
+/**
+ * NOTES -- Re-renders on every goal selection
+ */
+
+export default function Calendar({
+  curGoal,
+  completedDaysMap,
+  handleDayCompleted,
+  handleDayRemoved
+}) {
   const { auth } = useAuth();
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
@@ -25,86 +34,67 @@ export default function Calendar({ curGoal, completedDaysMap }) {
   const [curMonth, setCurMonth] = useState(null);
 
   useEffect(() => {
+    console.log("calendar re-render");
+  });
+
+  useEffect(() => {
     const today = new Date();
     setCurMonth(today.getMonth() + 1);
   }, []);
 
-  useEffect(() => {
-    // setWindowDimensions(getWindowDimensions());
-    // console.log("dimensions: ", windowDimensions);
+  // useEffect(() => {
+  //   // setWindowDimensions(getWindowDimensions());
+  //   // console.log("dimensions: ", windowDimensions);
 
-    console.log("completedDays: ", completedDays);
-    console.log(
-      "Completed days for cur goal: ",
-      curGoal,
-      completedDays[curGoal]
-    );
+  //   console.log("completedDays: ", completedDays);
+  //   console.log(
+  //     "Completed days for cur goal: ",
+  //     curGoal,
+  //     completedDays[curGoal]
+  //   );
+  // });
+
+  // MIGHT BE BAD DESIGN -- THIS SHOULD ONLY REALLY SET OUR LOCAL STATE ONCE.
+  useEffect(() => {
+    setCompletedDays(completedDaysMap);
+  }, [completedDaysMap]);
+
+  useEffect(() => {
+    console.log("Day updated: ", completedDays[curGoal]);
   });
 
-  // LOAD THE COMPLETED DAYS INTO STATE.
-  useEffect(() => {
-    console.log("LOADING COMPLETED DAYS");
+  // async function handleDayCompleted(date) {
+  //   // addCompletedDay(auth.uid, curGoal, date);
 
-    const fetchCompletedDays = db
-      .collection(`daysCompleted-${auth.uid}`)
-      .get()
-      .then(snapshot => {
-        const datesCompleted = [];
+  //   console.log("handleDayCompleted before: ", completedDays[curGoal]);
 
-        snapshot.docs.forEach(doc => {
-          const goal = doc.data().goal;
-          const date = doc.data().date;
-          datesCompleted.push({ goal: goal, date: date });
-        });
+  //   const updatedCompletedDays = completedDays;
+  //   updatedCompletedDays[curGoal] = completedDays[curGoal]
+  //     ? [...completedDays[curGoal], date]
+  //     : [date];
 
-        const datesCompletedMap = {};
-        datesCompleted.forEach(data => {
-          if (data.goal in datesCompletedMap) {
-            datesCompletedMap[data.goal].push(data.date);
-          } else {
-            datesCompletedMap[data.goal] = [data.date];
-          }
-        });
-        setCompletedDays(datesCompletedMap);
-      });
+  //   await setCompletedDays(updatedCompletedDays);
 
-    if (typeof fetchCompletedDays === "function") {
-      return () => fetchCompletedDays();
-    }
-  }, []);
+  //   console.log("handleDayCompleted after: ", completedDays[curGoal]);
+  // }
 
-  // TODO -- BATCH THESE REQUESTS WHEN USER SWITCHES BETWEEN GOALS
-  // SAVE SOME READS AND WRITES
-  async function handleDayCompleted(date) {
-    // addCompletedDay(auth.uid, curGoal, date);
+  // function handleDayRemoved(date) {
+  //   // removeCompletedDay(auth.uid, curGoal, date);
 
-    console.log("Adding day: ", curGoal, completedDays, completedDays[curGoal]);
+  //   console.log(
+  //     "Removing day: ",
+  //     curGoal,
+  //     completedDays,
+  //     completedDays[curGoal]
+  //   );
 
-    const updatedCompletedDays = completedDays;
-    updatedCompletedDays[curGoal] = completedDays[curGoal]
-      ? [...completedDays[curGoal], date]
-      : [date];
+  //   const updatedCompletedDays = completedDays;
+  //   updatedCompletedDays[curGoal] = updatedCompletedDays[curGoal].filter(
+  //     curDate => curDate !== date
+  //   );
 
-    setCompletedDays(updatedCompletedDays);
-  }
-
-  async function handleDayRemoved(date) {
-    // removeCompletedDay(auth.uid, curGoal, date);
-
-    console.log(
-      "Removing day: ",
-      curGoal,
-      completedDays,
-      completedDays[curGoal]
-    );
-
-    const updatedCompletedDays = completedDays;
-    updatedCompletedDays[curGoal] = updatedCompletedDays[curGoal].filter(
-      curDate => curDate !== date
-    );
-
-    setCompletedDays(updatedCompletedDays);
-  }
+  //   setCompletedDays(updatedCompletedDays);
+  // }
 
   const monthDays = {
     "01": 31,
@@ -139,7 +129,7 @@ export default function Calendar({ curGoal, completedDaysMap }) {
   // TODO -- ALWAYS RENDER 5 ROWS OF 7 DAYS. USE THE GETDAY() FUNCTION TO START
   // EACH MONTH ON THE DAY THAT IT ACTUALLY BEGINS.
 
-  function getMonth(month) {
+  function getMonth(month, completedDays) {
     const myMonth = [[]];
     let dayOfWeek = 1;
     let week = [];
@@ -148,12 +138,24 @@ export default function Calendar({ curGoal, completedDaysMap }) {
     // const daysPerRow = Math.floor(windowDimensions.width / 180);
     const daysPerRow = 7;
 
-    let firstOfMonth = month.toString().padStart(2, "0") + "-01-2019";
+    let firstOfMonth: any = month.toString().padStart(2, "0") + "-01-2019";
     firstOfMonth = new Date(firstOfMonth).getDay();
 
     // Add in blank days until the first day of the month.
     for (let unusedDay = 0; unusedDay < firstOfMonth; unusedDay++) {
-      week.push(<Day curGoal={curGoal} disabled={true} />);
+      week.push(
+        <Day
+          completedDays={null}
+          day={null}
+          month={null}
+          year={null}
+          handleDayCompleted={null}
+          handleDayRemoved={null}
+          isCompleted={false}
+          curGoal={curGoal}
+          disabled={true}
+        />
+      );
     }
 
     dayOfWeek = firstOfMonth + 1;
@@ -176,25 +178,31 @@ export default function Calendar({ curGoal, completedDaysMap }) {
         week = [];
       }
 
-      if (month == "06") {
-        console.log(
-          "CREATING DAY",
-          date,
-          completedDays[curGoal]
-            ? completedDays[curGoal].indexOf(date) > -1
-            : false
-        );
-      }
+      // if (month == "06") {
+      //   console.log(
+      //     "CREATING DAY",
+      //     date,
+      //     completedDays[curGoal]
+      //       ? completedDays[curGoal].indexOf(date) > -1
+      //       : false
+      //   );
+      // }
 
       week.push(
         <Day
+          completedDays={completedDays[curGoal]}
           curGoal={curGoal}
           day={i}
           month={parseInt(month)}
           year={2019}
           handleDayCompleted={handleDayCompleted}
           handleDayRemoved={handleDayRemoved}
-          isCompleted={false}
+          isCompleted={
+            completedDays[curGoal]
+              ? completedDays[curGoal].indexOf(date) > -1
+              : false
+          }
+          disabled={false}
         />
       );
       dayOfWeek += 1;
@@ -202,28 +210,38 @@ export default function Calendar({ curGoal, completedDaysMap }) {
 
     // fill out the last row with empty days
     for (let unusedDay = 0; unusedDay < 8 - dayOfWeek; unusedDay++) {
-      week.push(<Day disabled={true} />);
+      week.push(
+        <Day
+          completedDays={null}
+          day={null}
+          month={null}
+          year={null}
+          handleDayCompleted={null}
+          handleDayRemoved={null}
+          isCompleted={false}
+          curGoal={curGoal}
+          disabled={true}
+        />
+      );
     }
 
     myMonth.push(week);
     return myMonth;
   }
 
-  function getYear() {
-    console.log("GET YEAR", curGoal, completedDays[curGoal]);
-
+  function getYear(completedDays) {
     const calendarYear = {};
     for (let i = 1; i <= 12; i++) {
       let monthNum = i.toString();
       monthNum = monthNum.length === 1 ? "0" + monthNum : monthNum;
 
-      const month = getMonth(monthNum);
+      const month = getMonth(monthNum, completedDays);
       calendarYear[i] = month;
     }
     return calendarYear;
   }
 
-  const calendarYear = getYear();
+  const calendarYear = getYear(completedDays);
 
   return (
     <div>
@@ -305,3 +323,35 @@ const MonthInfoContainer = styled.div`
   margin-left: 1em;
   justify-content: center;
 `;
+
+// LOAD THE COMPLETED DAYS INTO STATE.
+// useEffect(() => {
+//   console.log("LOADING COMPLETED DAYS");
+
+//   const fetchCompletedDays = db
+//     .collection(`daysCompleted-${auth.uid}`)
+//     .get()
+//     .then(snapshot => {
+//       const datesCompleted = [];
+
+//       snapshot.docs.forEach(doc => {
+//         const goal = doc.data().goal;
+//         const date = doc.data().date;
+//         datesCompleted.push({ goal: goal, date: date });
+//       });
+
+//       const datesCompletedMap = {};
+//       datesCompleted.forEach(data => {
+//         if (data.goal in datesCompletedMap) {
+//           datesCompletedMap[data.goal].push(data.date);
+//         } else {
+//           datesCompletedMap[data.goal] = [data.date];
+//         }
+//       });
+//       setCompletedDays(datesCompletedMap);
+//     });
+
+//   if (typeof fetchCompletedDays === "function") {
+//     return () => fetchCompletedDays();
+//   }
+// }, []);
