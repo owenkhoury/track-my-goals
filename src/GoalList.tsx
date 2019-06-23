@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { createGoal, deleteGoal } from "./utils";
-import { db } from "./fire";
-import Calendar from "./Calendar";
 import useAuth from "./useAuth";
-import HeaderBar from "./HeaderBar";
 
 export default function GoalsList({ existingGoals, selected, handleSelected }) {
   const { auth } = useAuth();
@@ -20,79 +17,73 @@ export default function GoalsList({ existingGoals, selected, handleSelected }) {
   }, [existingGoals]);
 
   return (
-    <OverallContainer>
-      <GoalContainer>
-        <AppTitle>Habit Tracker</AppTitle>
-        <InputContainer>
-          <GoalInput
-            type="text"
-            placeholder="Enter your next habit"
-            onChange={e => setNewGoal(e.target.value)}
-          />
-          <AddGoalButton
-            onClick={() => {
-              if (newGoal.length > 0 && !goals.includes(newGoal)) {
-                createGoal({
-                  uid: auth.uid,
-                  goal: newGoal
-                });
+    <GoalContainer>
+      <AppTitle>Habit Tracker</AppTitle>
+      <InputContainer>
+        <GoalInput
+          type="text"
+          placeholder="Enter your next habit"
+          onChange={e => setNewGoal(e.target.value)}
+        />
+        <AddGoalButton
+          onClick={() => {
+            if (newGoal.length > 0 && !goals.includes(newGoal)) {
+              createGoal({
+                uid: auth.uid,
+                goal: newGoal
+              });
 
-                setNewGoal("");
-                setGoals([newGoal, ...goals]);
-              }
-            }}
-          >
-            ADD
-          </AddGoalButton>
-        </InputContainer>
-        <ListContainer>
-          {goals
-            ? goals.map((goal, idx) => {
-                return (
-                  <ListRow
-                    style={goals[idx + 1] ? null : { borderWidth: "5px" }} // Check if it's the last goal in the list.
-                    selected={goal === selected}
+              setNewGoal("");
+              setGoals([newGoal, ...goals]);
+            }
+          }}
+        >
+          ADD
+        </AddGoalButton>
+      </InputContainer>
+      <ListContainer>
+        {goals
+          ? goals.map((goal, idx) => {
+              return (
+                <ListRow
+                  style={goals[idx + 1] ? null : { borderWidth: "5px" }} // Check if it's the last goal in the list.
+                  selected={goal === selected}
+                  onClick={() => {
+                    // setSelected(goal);
+                    handleSelected(goal);
+                  }}
+                >
+                  {" "}
+                  {goal}
+                  {/* // TODO -- IMPORT ICONS, INCLUDING TRASH ICON FOR DELETING */}
+                  <DeleteButton
                     onClick={() => {
-                      // setSelected(goal);
-                      handleSelected(goal);
+                      deleteGoal(auth.uid, goal);
+                      setGoals(goals.filter(g => g !== goal));
                     }}
                   >
                     {" "}
-                    {goal}
-                    {/* // TODO -- IMPORT ICONS, INCLUDING TRASH ICON FOR DELETING */}
-                    <DeleteButton
-                      onClick={() => {
-                        deleteGoal(auth.uid, goal);
-                        setGoals(goals.filter(g => g !== goal));
-                      }}
-                    >
-                      {" "}
-                      X{" "}
-                    </DeleteButton>
-                  </ListRow>
-                );
-              })
-            : null}
-        </ListContainer>
-      </GoalContainer>
-    </OverallContainer>
+                    X{" "}
+                  </DeleteButton>
+                </ListRow>
+              );
+            })
+          : null}
+      </ListContainer>
+    </GoalContainer>
   );
 }
 
-const OverallContainer = styled.div`
-  display: flex;
-  // min-height: 100vh;
-  // min-width: 100vw; // TODO -- WHY DO I NEED THIS?
-`;
-
 const GoalContainer = styled.div`
-  display: flex;
+  // display: flex;
   flex-direction: column;
   align-items: center;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   background-color: #0d160a;
   font-family: Helvetica;
+  position: absolute;
+  height: 100%;
 `;
 
 const AppTitle = styled.div`
@@ -101,7 +92,7 @@ const AppTitle = styled.div`
   margin-top: 1rem;
   margin-bottom: 4rem;
   padding-right: 10rem;
-  font-family: Helvetica;
+  font-family: Montserrat, sans-serif;
 `;
 
 const InputContainer = styled.div`

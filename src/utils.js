@@ -22,6 +22,8 @@ export async function createGoal(goalData) {
 }
 
 export async function addCompletedDay(uid, goal, date) {
+  console.log("addCompletedDay", date);
+
   return db.collection(`daysCompleted-${uid}`).add({
     goal: goal,
     date: date

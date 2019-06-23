@@ -16,6 +16,7 @@
 
 body {
   color: var(--gray);
+  height: 100%;
 }
 
 [data-reach-dialog-overlay] {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { addCompletedDay, removeCompletedDay } from "./utils";
-import useAuth from "./useAuth";
+import { removePropertiesDeep } from "@babel/types";
 
 // None of the props changed, so it didn't re-render
 
@@ -16,9 +15,11 @@ export default function Day({
   isCompleted,
   disabled
 }) {
-  const { auth } = useAuth();
-
   const [completed, setCompleted] = useState(isCompleted);
+
+  useEffect(() => {
+    setCompleted(isCompleted);
+  }, [curGoal]);
 
   // useEffect(() => {
   //   if (month && day && year) {
@@ -30,30 +31,10 @@ export default function Day({
   //       year.toString();
 
   //     if (date == "06-01-2019") {
-  //       console.log("SETTING isCompleted as", isCompleted);
+  //       console.log("MOUNTED");
   //     }
   //   }
-  // });
-
-  useEffect(() => {
-    console.log("YOOOOOOOOOOOOOOOOOOOOO");
-    setCompleted(isCompleted);
-  }, [curGoal]);
-
-  useEffect(() => {
-    if (month && day && year) {
-      const date =
-        month.toString().padStart(2, "0") +
-        "-" +
-        day.toString().padStart(2, "0") +
-        "-" +
-        year.toString();
-
-      if (date == "06-01-2019") {
-        console.log("MOUNTED");
-      }
-    }
-  }, []);
+  // }, []);
 
   useEffect(() => {
     setCompleted(false);
@@ -66,20 +47,20 @@ export default function Day({
   //   }
   // });
 
-  useEffect(() => {
-    if (month && day && year) {
-      const date =
-        month.toString().padStart(2, "0") +
-        "-" +
-        day.toString().padStart(2, "0") +
-        "-" +
-        year.toString();
+  // useEffect(() => {
+  //   if (month && day && year) {
+  //     const date =
+  //       month.toString().padStart(2, "0") +
+  //       "-" +
+  //       day.toString().padStart(2, "0") +
+  //       "-" +
+  //       year.toString();
 
-      if (date == "06-01-2019") {
-        console.log("RE-RENDER", isCompleted, completed, completedDays);
-      }
-    }
-  });
+  //     if (date == "06-01-2019") {
+  //       console.log("RE-RENDER", isCompleted, completed, completedDays);
+  //     }
+  //   }
+  // });
 
   return (
     <Button
@@ -104,13 +85,14 @@ export default function Day({
         }
       }}
     >
-      {disabled ? "0" : curGoal}
+      {disabled ? "0" : day}
     </Button>
   );
 }
 
 interface ButtonProps {
   completed: boolean;
+  disabled: boolean;
 }
 
 const Button = styled.button<ButtonProps>`
@@ -122,14 +104,16 @@ const Button = styled.button<ButtonProps>`
   color: ${props => (props.completed ? "white" : "black")};
   font-size: 1em;
   margin: 0.4375rem;
-  border: 2px solid #5cc7ff;
+  border: ${props =>
+    props.disabled ? "2px solid #f1f1f1;" : "2px solid #5cc7ff"} 
   border-radius: 3px;
-  background-color: ${props => (props.completed ? "#99E897" : "#D8D8D8")};
+  background-color: ${props =>
+    props.disabled ? "#f1f1f1" : props.completed ? "#99E897" : "#D8D8D8"};
   text-align: right;
 
   &:hover {
     background-color: ${props =>
-      props.disabled ? "#D8D8D8" : props.completed ? "#227c20" : "#c2c2c2"};
+      props.disabled ? "#f1f1f1" : props.completed ? "#227c20" : "#c2c2c2"};
   }
 
   // old green color = #99E897

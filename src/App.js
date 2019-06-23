@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import GoalsList from "./GoalList";
+import React from "react";
 import styled from "styled-components";
-import { AppStateProvider, useAppState } from "./app-state";
+import { AppStateProvider } from "./app-state";
 import appReducer, { initialState } from "./appReducer";
 import LoggedOut from "./LoggedOut";
 import LoggedIn from "./LoggedIn";
@@ -16,8 +15,6 @@ function App() {
     <div>
       {auth ? (
         <AppContainer>
-          {/* <HeaderBar /> */}
-          {/* <GoalsList /> */}
           <LoggedIn />
         </AppContainer>
       ) : (
@@ -30,8 +27,7 @@ function App() {
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 0;
-  padding: 0;
+  height: 100%;
 `;
 
 export default () => (
