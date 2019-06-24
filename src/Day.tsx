@@ -112,8 +112,8 @@ const Button = styled.button<ButtonProps>`
   text-align: right;
 
   &:hover {
-    background-color: ${props =>
-      props.disabled ? "#f1f1f1" : props.completed ? "#227c20" : "#c2c2c2"};
+    filter: ${props =>
+      props.disabled ? "brightness(100%)" : "brightness(85%)"};
   }
 
   // old green color = #99E897

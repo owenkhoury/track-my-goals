@@ -114,6 +114,10 @@ const AddGoalButton = styled.button`
   border: none;
   font-weight: bold;
   border-radius: 0 0.3rem 0.3rem 0;
+
+  &:hover {
+    filter: brightness(85%);
+  }
 `;
 
 const GoalInput = styled.input`
@@ -147,14 +151,18 @@ const ListRow = styled.div<ListRowProps>`
   width: 19rem;
   border-radius: 0.3rem;
   margin-top: 2rem;
-  background-color: ${props => (props.selected ? "#227c20" : "#D8D8D8")};
-  color: ${props => (props.selected ? "#D8D8D8" : "black")};
+  background-color: ${props => (props.selected ? "#99E897" : "#D8D8D8")};
+  // color: ${props => (props.selected ? "#D8D8D8" : "black")};
   padding-left: 0.5rem;
   margin-left: 1.2rem;
-  font-family: "Helvetica", "Arial", sans-serif;
+  font-family: Montserrat, sans-serif;
 
   &:hover {
-    background-color: ${props => (props.selected ? "#227c20" : "#8BCC91")};
+    //background-color: ${props => (props.selected ? "#227c20" : "#8BCC91")};
+
+    filter: ${props =>
+      props.selected ? "brightness(100%)" : "brightness(85%)"};
+
   }
 `;
 
