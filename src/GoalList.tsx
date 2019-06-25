@@ -33,8 +33,9 @@ export default function GoalsList({ existingGoals, selected, handleSelected }) {
                 goal: newGoal
               });
 
+              handleSelected(newGoal);
               setNewGoal("");
-              setGoals([newGoal, ...goals]);
+              setGoals([...goals, newGoal]);
             }
           }}
         >

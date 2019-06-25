@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { removePropertiesDeep } from "@babel/types";
-
-// None of the props changed, so it didn't re-render
 
 export default function Day({
   completedDays,
@@ -21,46 +18,10 @@ export default function Day({
     setCompleted(isCompleted);
   }, [curGoal]);
 
-  // useEffect(() => {
-  //   if (month && day && year) {
-  //     const date =
-  //       month.toString().padStart(2, "0") +
-  //       "-" +
-  //       day.toString().padStart(2, "0") +
-  //       "-" +
-  //       year.toString();
-
-  //     if (date == "06-01-2019") {
-  //       console.log("MOUNTED");
-  //     }
-  //   }
-  // }, []);
-
   useEffect(() => {
     setCompleted(false);
     setCompleted(isCompleted);
-  }, [isCompleted]);
-
-  // useEffect(() => {
-  //   if (completed && !isCompleted) {
-  //     setCompleted(false);
-  //   }
-  // });
-
-  // useEffect(() => {
-  //   if (month && day && year) {
-  //     const date =
-  //       month.toString().padStart(2, "0") +
-  //       "-" +
-  //       day.toString().padStart(2, "0") +
-  //       "-" +
-  //       year.toString();
-
-  //     if (date == "06-01-2019") {
-  //       console.log("RE-RENDER", isCompleted, completed, completedDays);
-  //     }
-  //   }
-  // });
+  }, [isCompleted, month]);
 
   return (
     <Button
@@ -77,11 +38,7 @@ export default function Day({
             "-" +
             year.toString();
 
-          // Either store or remove the day in the firstore.
           completed ? handleDayRemoved(date) : handleDayCompleted(date);
-          // completed
-          //   ? addCompletedDay(auth.uid, curGoal, date)
-          //   : removeCompletedDay(auth.uid, curGoal, date);
         }
       }}
     >
@@ -115,6 +72,4 @@ const Button = styled.button<ButtonProps>`
     filter: ${props =>
       props.disabled ? "brightness(100%)" : "brightness(85%)"};
   }
-
-  // old green color = #99E897
 `;

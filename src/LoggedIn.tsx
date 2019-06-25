@@ -6,6 +6,7 @@ import Calendar from "./Calendar";
 import { db } from "./fire";
 import HeaderBar from "./HeaderBar";
 import { addCompletedDay, removeCompletedDay } from "./utils";
+import { GOAL_COLORS } from "./constants/AppConstants";
 
 /**
  * When the goal is changed by the goalList component, send
@@ -16,6 +17,9 @@ import { addCompletedDay, removeCompletedDay } from "./utils";
 
 export default function LoggedIn() {
   const { auth } = useAuth();
+
+  // Color mapping. Goal --> Hex Color
+  const [colorMap, setColorMap] = useState({});
 
   // The list of the existing goals.
   const [existingGoals, setExistingGoals] = useState([]);
@@ -32,6 +36,10 @@ export default function LoggedIn() {
   const [newCompletedDays, setNewCompletedDays] = useState({});
 
   const [curMonth, setCurMonth] = useState(null);
+
+  useEffect(() => {
+    console.log("COLOR MAP: ", colorMap);
+  });
 
   // Load the current month onto the screen.
   useEffect(() => {
@@ -120,6 +128,35 @@ export default function LoggedIn() {
 
     batchUpdateCompletedDays(selected);
     setSelected(goal);
+  }
+
+  function addToColorMap(goal: string) {
+    let nextHexColor = null;
+    // Watch for null pointer exception
+    const colorsInUse = Object.values(colorMap);
+    for (let color in GOAL_COLORS) {
+      if (!colorsInUse.includes(color)) {
+        nextHexColor = color;
+        break;
+      }
+    }
+
+    const updatedMap = colorMap;
+    updatedMap[goal] = nextHexColor;
+
+    setColorMap(updatedMap);
+  }
+
+  function removeFromColorMap(goal: string) {
+    const updatedMap = colorMap;
+
+    Object.keys(updatedMap).forEach(key => {
+      if (key == goal) {
+        delete updatedMap[goal];
+      }
+    });
+
+    setColorMap(updatedMap);
   }
 
   /**
