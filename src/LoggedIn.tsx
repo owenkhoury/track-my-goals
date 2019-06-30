@@ -37,10 +37,6 @@ export default function LoggedIn() {
 
   const [curMonth, setCurMonth] = useState(null);
 
-  useEffect(() => {
-    console.log("COLOR MAP: ", colorMap);
-  });
-
   // Load the current month onto the screen.
   useEffect(() => {
     const today = new Date();
@@ -71,12 +67,19 @@ export default function LoggedIn() {
       .get()
       .then(snapshot => {
         const existingGoals: any[] = [];
+        const existingColorMap = {};
         snapshot.docs.forEach(doc => {
-          existingGoals.push(doc.data().goal);
+          if (doc.data().goal) {
+            existingGoals.push(doc.data().goal);
+            existingColorMap[doc.data().goal] = doc.data().color;
+          }
         });
+
+        existingGoals.sort((a, b) => a.created - b.created);
 
         setSelected(existingGoals[0]);
         setExistingGoals(existingGoals);
+        setColorMap(existingColorMap);
       });
   }
 
@@ -130,13 +133,19 @@ export default function LoggedIn() {
     setSelected(goal);
   }
 
-  function addToColorMap(goal: string) {
+  /**
+   * Returns the new hex code to use.
+   * @param goal
+   */
+  function addToColorMap(goal: string): string {
+    console.log("addToColorMap: ", goal);
+
     let nextHexColor = null;
     // Watch for null pointer exception
     const colorsInUse = Object.values(colorMap);
-    for (let color in GOAL_COLORS) {
-      if (!colorsInUse.includes(color)) {
-        nextHexColor = color;
+    for (let i = 0; i < GOAL_COLORS.length; i++) {
+      if (!colorsInUse.includes(GOAL_COLORS[i])) {
+        nextHexColor = GOAL_COLORS[i];
         break;
       }
     }
@@ -144,9 +153,18 @@ export default function LoggedIn() {
     const updatedMap = colorMap;
     updatedMap[goal] = nextHexColor;
 
+    console.log("UPDATING MAP: ", updatedMap);
+
     setColorMap(updatedMap);
+
+    return nextHexColor;
   }
 
+  /**
+   * TODO -- DECIDE IF I SHOULD KEEP THIS. NOT REALLY NEEDED SINCE THE
+   * COLOR MAP WILL REMOVE THE DELETED GOAL'S COLOR ON REFRESH ANYWAY.
+   * @param goal
+   */
   function removeFromColorMap(goal: string) {
     const updatedMap = colorMap;
 
@@ -200,7 +218,10 @@ export default function LoggedIn() {
       <GoalsList
         existingGoals={existingGoals}
         selected={selected}
+        colorMap={colorMap}
         handleSelected={updateSelected}
+        addToColorMap={addToColorMap}
+        removeFromColorMap={removeFromColorMap}
       />
       <CalendarContainer>
         <HeaderBar curMonth={curMonth} updateCurMonth={updateCurMonth} />
@@ -208,6 +229,7 @@ export default function LoggedIn() {
           curMonth={curMonth}
           curGoal={selected}
           completedDaysMap={newCompletedDays}
+          colorMap={colorMap}
           handleDayCompleted={handleDayCompleted}
           handleDayRemoved={handleDayRemoved}
         />

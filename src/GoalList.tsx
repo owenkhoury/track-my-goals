@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { createGoal, deleteGoal } from "./utils";
+import { createGoal, deleteGoal, removeDaysCompleted } from "./utils";
 import useAuth from "./useAuth";
 
-export default function GoalsList({ existingGoals, selected, handleSelected }) {
+/**
+ * Color map stuff has bugs to workout, but it's a start.
+ */
+
+export default function GoalsList({
+  existingGoals,
+  selected,
+  colorMap,
+  handleSelected,
+  addToColorMap,
+  removeFromColorMap
+}) {
   const { auth } = useAuth();
 
   // This is the goal that is currently typed into the new goal input.
@@ -28,10 +39,8 @@ export default function GoalsList({ existingGoals, selected, handleSelected }) {
         <AddGoalButton
           onClick={() => {
             if (newGoal.length > 0 && !goals.includes(newGoal)) {
-              createGoal({
-                uid: auth.uid,
-                goal: newGoal
-              });
+              const goalColor = addToColorMap(newGoal);
+              createGoal(auth.uid, newGoal, goalColor);
 
               handleSelected(newGoal);
               setNewGoal("");
@@ -49,6 +58,8 @@ export default function GoalsList({ existingGoals, selected, handleSelected }) {
                 <ListRow
                   style={goals[idx + 1] ? null : { borderWidth: "5px" }} // Check if it's the last goal in the list.
                   selected={goal === selected}
+                  colorMap={colorMap}
+                  goal={goal}
                   onClick={() => {
                     // setSelected(goal);
                     handleSelected(goal);
@@ -61,6 +72,7 @@ export default function GoalsList({ existingGoals, selected, handleSelected }) {
                     onClick={() => {
                       deleteGoal(auth.uid, goal);
                       setGoals(goals.filter(g => g !== goal));
+                      removeDaysCompleted(auth.uid, goal);
                     }}
                   >
                     {" "}
@@ -140,6 +152,8 @@ const DeleteButton = styled.button`
 
 interface ListRowProps {
   selected: boolean;
+  colorMap: Object;
+  goal: string;
 }
 
 const ListRow = styled.div<ListRowProps>`
@@ -152,61 +166,16 @@ const ListRow = styled.div<ListRowProps>`
   width: 19rem;
   border-radius: 0.3rem;
   margin-top: 2rem;
-  background-color: ${props => (props.selected ? "#99E897" : "#D8D8D8")};
-  // color: ${props => (props.selected ? "#D8D8D8" : "black")};
+  background-color: ${props =>
+    props.selected && props.colorMap && props.goal
+      ? props.colorMap[props.goal]
+      : "#D8D8D8"};
   padding-left: 0.5rem;
   margin-left: 1.2rem;
   font-family: Montserrat, sans-serif;
 
   &:hover {
-    //background-color: ${props => (props.selected ? "#227c20" : "#8BCC91")};
-
     filter: ${props =>
       props.selected ? "brightness(100%)" : "brightness(85%)"};
-
   }
 `;
-
-const VerticalLine = styled.div`
-  border-left: thick solid #ff0000;
-`;
-
-// LOAD THE EXISTING GOALS INTO STATE.
-// useEffect(() => {
-//   console.log("FETCHING GOALS");
-
-//   fetchGoals();
-
-//   // const fetchGoals = db
-//   //   .collection("goals")
-//   //   .where("uid", "==", auth.uid)
-//   //   .get()
-//   //   .then(snapshot => {
-//   //     const existingGoals = [];
-//   //     snapshot.docs.forEach(doc => {
-//   //       existingGoals.push(doc.data().goal);
-//   //     });
-
-//   //     setSelected(existingGoals[0]);
-//   //     setGoals(existingGoals);
-//   //   });
-
-//   // if (typeof fetchGoals === "function") {
-//   //   return () => fetchGoals();
-//   // }
-// }, []);
-
-// function fetchGoals() {
-//   db.collection("goals")
-//     .where("uid", "==", auth.uid)
-//     .get()
-//     .then(snapshot => {
-//       const existingGoals = [];
-//       snapshot.docs.forEach(doc => {
-//         existingGoals.push(doc.data().goal);
-//       });
-
-//       setSelected(existingGoals[0]);
-//       setGoals(existingGoals);
-//     });
-// }

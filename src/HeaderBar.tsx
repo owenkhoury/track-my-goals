@@ -18,14 +18,6 @@ const monthName = {
 };
 
 export default function HeaderBar({ curMonth, updateCurMonth }) {
-  // const [curMonth, setCurMonth] = useState(null);
-
-  // Load the current month onto the screen.
-  // useEffect(() => {
-  //   const today = new Date();
-  //   setCurMonth(today.getMonth() + 1);
-  // }, []);
-
   return (
     <Header>
       <MonthContainer>

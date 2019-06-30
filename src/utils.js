@@ -1,6 +1,18 @@
 import { db } from "./fire";
 import { auth } from "firebase";
 
+export async function removeDaysCompleted(uid, goal) {
+  let daysCompletedCollection = db.collection("daysCompleted-" + uid);
+
+  let daysToDelete = daysCompletedCollection.where("goal", "==", goal);
+
+  daysToDelete.get().then(snapshot => {
+    snapshot.docs.forEach(doc => {
+      doc.ref.delete();
+    });
+  });
+}
+
 export async function deleteGoal(uid, goal) {
   let existingGoal = db.collection("goals");
   existingGoal = existingGoal.where("goal", "==", goal);
@@ -13,11 +25,15 @@ export async function deleteGoal(uid, goal) {
   });
 }
 
-export async function createGoal(goalData) {
+// TODO -- ADD A HEX COLOR FIELD TO THE GOAL COLLECTION. ALSO PUT THE AUTH UID ON THE COLLECTION NAME
+export async function createGoal(uid, goal, color) {
+  console.log("createGoal:", color);
+
   return db.collection("goals").add({
-    uid: goalData.uid,
-    goal: goalData.goal,
-    datesCompleted: []
+    uid: uid,
+    goal: goal,
+    color: color,
+    created: +new Date() // Timestamp of creation
   });
 }
 

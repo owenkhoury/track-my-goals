@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 export default function Day({
   completedDays,
+  completedColor,
   curGoal,
   day,
   month,
@@ -26,6 +27,7 @@ export default function Day({
   return (
     <Button
       completed={completed}
+      completedColor={completedColor}
       disabled={disabled}
       onClick={() => {
         if (!disabled) {
@@ -50,6 +52,7 @@ export default function Day({
 interface ButtonProps {
   completed: boolean;
   disabled: boolean;
+  completedColor: string;
 }
 
 const Button = styled.button<ButtonProps>`
@@ -65,7 +68,11 @@ const Button = styled.button<ButtonProps>`
     props.disabled ? "2px solid #f1f1f1;" : "2px solid #5cc7ff"} 
   border-radius: 3px;
   background-color: ${props =>
-    props.disabled ? "#f1f1f1" : props.completed ? "#99E897" : "#D8D8D8"};
+    props.disabled
+      ? "#f1f1f1"
+      : props.completed
+      ? props.completedColor
+      : "#D8D8D8"};
   text-align: right;
 
   &:hover {

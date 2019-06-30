@@ -18,10 +18,10 @@ export default function Calendar({
   curMonth,
   curGoal,
   completedDaysMap,
+  colorMap,
   handleDayCompleted,
   handleDayRemoved
 }) {
-  const { auth } = useAuth();
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
   );
@@ -30,10 +30,6 @@ export default function Calendar({
   const [completedDays, setCompletedDays] = useState({});
 
   // const [curMonth, setCurMonth] = useState(null);
-
-  useEffect(() => {
-    console.log("calendar re-render");
-  });
 
   // Load the current month onto the screen.
   // useEffect(() => {
@@ -88,6 +84,7 @@ export default function Calendar({
       week.push(
         <Day
           completedDays={null}
+          completedColor={null}
           day={null}
           month={null}
           year={null}
@@ -123,6 +120,7 @@ export default function Calendar({
       week.push(
         <Day
           completedDays={completedDays[curGoal]}
+          completedColor={colorMap ? colorMap[curGoal] : "green"}
           curGoal={curGoal}
           day={i}
           month={parseInt(month)}
@@ -145,6 +143,7 @@ export default function Calendar({
       week.push(
         <Day
           completedDays={null}
+          completedColor={null}
           day={null}
           month={null}
           year={null}
@@ -166,6 +165,7 @@ export default function Calendar({
         week.push(
           <Day
             completedDays={null}
+            completedColor={null}
             day={null}
             month={null}
             year={null}
@@ -207,60 +207,15 @@ export default function Calendar({
             })
           : null}
       </Container>
-      {/* <MonthInfoContainer>
-        <PrevMonth
-          onClick={() => {
-            setCurMonth(curMonth !== 1 ? curMonth - 1 : curMonth);
-          }}
-        />
-        <Month>{monthName[curMonth] + " 2019"}</Month>
-        <NextMonth
-          onClick={() => {
-            setCurMonth(curMonth !== 12 ? curMonth + 1 : curMonth);
-          }}
-        />
-      </MonthInfoContainer> */}
     </div>
   );
 }
-
-const Month = styled.div`
-  font-size: 3rem;
-  color: #0d160a;
-`;
-
-const NextMonth = styled.button`
-  margin-left: 2rem;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 1.5rem 0 1.5rem 3rem;
-  border-color: transparent transparent transparent #0d160a;
-`;
-
-const PrevMonth = styled.button`
-  margin-right: 2rem;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 1.5rem 3rem 1.5rem 0;
-  border-color: transparent #0d160a transparent transparent;
-`;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   // margin-left: 30rem;
-  justify-content: center;
-  margin-left: 22rem;
-`;
-
-const MonthInfoContainer = styled.div`
-  margin-top: 0.5rem;
-  display: flex;
-  flex-direction: row;
-  margin-left: 1em;
   justify-content: center;
   margin-left: 22rem;
 `;
