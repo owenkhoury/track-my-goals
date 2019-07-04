@@ -1,11 +1,11 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import styled from "styled-components";
 import useAuth from "./useAuth";
 import GoalsList from "./GoalList";
 import Calendar from "./Calendar";
 import { db } from "./fire";
 import HeaderBar from "./HeaderBar";
-import { addCompletedDay, removeCompletedDay } from "./utils";
+import { addCompletedDay, removeCompletedDay, createGoal } from "./utils";
 import { GOAL_COLORS } from "./constants/AppConstants";
 
 /**
@@ -36,6 +36,39 @@ export default function LoggedIn() {
   const [newCompletedDays, setNewCompletedDays] = useState({});
 
   const [curMonth, setCurMonth] = useState(null);
+
+  const addHandler = handler =>
+    window.addEventListener("beforeunload", handler);
+  const removeHandler = handler =>
+    window.removeEventListener("beforeunload", handler);
+
+  /**
+   * Save completed days for last viewed goal, before the app window closes or the page is refreshed.
+   */
+  const useWindowUnloadEffect = (handler, callOnCleanup) => {
+    const prevHandler = useRef(null);
+    useEffect(() => {
+      if (prevHandler.current) removeHandler(handler.current); // remove the the current event listener, if one exists
+      prevHandler.current = handler;
+      addHandler(handler);
+      return () => {
+        if (callOnCleanup) handler();
+        removeHandler(handler);
+      };
+    }, [handler]);
+  };
+
+  // TODO -- WON'T ACCOUNT FOR DESELECTED DAYS. ONLY ADDS NEWLY SELECTED DAYS.
+  const WindowCloseComponent = () => {
+    useWindowUnloadEffect(() => {
+      if (newCompletedDays[selected]) {
+        newCompletedDays[selected].forEach(date => {
+          addCompletedDay(auth.uid, selected, date);
+        });
+      }
+    }, true);
+    return <Fragment />;
+  };
 
   // Load the current month onto the screen.
   useEffect(() => {
@@ -215,6 +248,7 @@ export default function LoggedIn() {
 
   return (
     <Container>
+      <WindowCloseComponent />
       <GoalsList
         existingGoals={existingGoals}
         selected={selected}

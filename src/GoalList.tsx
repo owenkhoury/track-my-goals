@@ -70,9 +70,17 @@ export default function GoalsList({
                   {/* // TODO -- IMPORT ICONS, INCLUDING TRASH ICON FOR DELETING */}
                   <DeleteButton
                     onClick={() => {
+                      const idx = goals.indexOf(goal);
+                      const length = goals.length;
+
                       deleteGoal(auth.uid, goal);
                       setGoals(goals.filter(g => g !== goal));
                       removeDaysCompleted(auth.uid, goal);
+
+                      // Check that this isn't the last goal in the list.
+                      if (!(length - 1 > 0)) {
+                        handleSelected();
+                      }
                     }}
                   >
                     {" "}
@@ -175,6 +183,8 @@ const ListRow = styled.div<ListRowProps>`
   font-family: Montserrat, sans-serif;
 
   &:hover {
+    background-color: ${props =>
+      props.colorMap && props.goal ? props.colorMap[props.goal] : "#D8D8D8"};
     filter: ${props =>
       props.selected ? "brightness(100%)" : "brightness(85%)"};
   }
