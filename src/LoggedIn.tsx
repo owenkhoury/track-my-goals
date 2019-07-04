@@ -160,10 +160,10 @@ export default function LoggedIn() {
   }
 
   function updateSelected(goal: string) {
-    console.log("updateSelected");
+    console.log("updateSelected: ", goal);
 
     // batchUpdateCompletedDays(selected);
-    setSelected(goal);
+    if (GoalsList) setSelected(goal);
   }
 
   /**
@@ -252,7 +252,7 @@ export default function LoggedIn() {
         existingGoals={existingGoals}
         selected={selected}
         colorMap={colorMap}
-        handleSelected={updateSelected}
+        updateSelected={updateSelected}
         addToColorMap={addToColorMap}
         removeFromColorMap={removeFromColorMap}
       />

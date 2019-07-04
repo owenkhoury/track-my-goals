@@ -11,7 +11,7 @@ export default function GoalsList({
   existingGoals,
   selected,
   colorMap,
-  handleSelected,
+  updateSelected,
   addToColorMap,
   removeFromColorMap
 }) {
@@ -42,7 +42,11 @@ export default function GoalsList({
               const goalColor = addToColorMap(newGoal);
               createGoal(auth.uid, newGoal, goalColor);
 
-              handleSelected(newGoal);
+              if (goals.includes(newGoal)) {
+                console.log("HERE 3");
+                updateSelected(newGoal);
+              }
+
               setNewGoal("");
               setGoals([...goals, newGoal]);
             }
@@ -61,15 +65,18 @@ export default function GoalsList({
                   colorMap={colorMap}
                   goal={goal}
                   onClick={() => {
-                    // setSelected(goal);
-                    handleSelected(goal);
+                    if (goals.includes(goal)) {
+                      console.log("HERE 2: ", goals, goal);
+                      updateSelected(goal);
+                    }
                   }}
                 >
                   {" "}
                   {goal}
                   {/* // TODO -- IMPORT ICONS, INCLUDING TRASH ICON FOR DELETING */}
                   <DeleteButton
-                    onClick={() => {
+                    onClick={e => {
+                      e.stopPropagation();
                       const idx = goals.indexOf(goal);
                       const length = goals.length;
 
@@ -77,9 +84,20 @@ export default function GoalsList({
                       setGoals(goals.filter(g => g !== goal));
                       removeDaysCompleted(auth.uid, goal);
 
+                      console.log("DELETE: ", goals, length);
+
                       // Check that this isn't the last goal in the list.
-                      if (!(length - 1 > 0)) {
-                        handleSelected();
+                      if (idx - 1 >= 0) {
+                        console.log(
+                          "goal deleted: ",
+                          goals,
+                          idx,
+                          goals[idx - 1]
+                        );
+                        if (goals.includes(goals[idx - 1])) {
+                          console.log("HERE 1");
+                          updateSelected(goals[idx - 1]);
+                        }
                       }
                     }}
                   >
