@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import useAuth from "./useAuth";
+import { removeCompletedDay, addCompletedDay } from "./utils";
 
 export default function Day({
   completedDays,
@@ -13,6 +15,8 @@ export default function Day({
   isCompleted,
   disabled
 }) {
+  const { auth } = useAuth();
+
   const [completed, setCompleted] = useState(isCompleted);
 
   useEffect(() => {
@@ -40,7 +44,19 @@ export default function Day({
             "-" +
             year.toString();
 
-          completed ? handleDayRemoved(date) : handleDayCompleted(date);
+          if (completed) {
+            handleDayRemoved(date);
+            removeCompletedDay(auth.uid, curGoal, date);
+          } else {
+            handleDayCompleted(date);
+            addCompletedDay(auth.uid, curGoal, date);
+          }
+
+          // completed ? handleDayRemoved(date) : handleDayCompleted(date);
+
+          // completed
+          //   ? removeCompletedDay(auth.uid, curGoal, date)
+          //   : addCompletedDay(auth.uid, curGoal, date);
         }
       }}
     >

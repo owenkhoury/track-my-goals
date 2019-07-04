@@ -5,7 +5,6 @@ import GoalsList from "./GoalList";
 import Calendar from "./Calendar";
 import { db } from "./fire";
 import HeaderBar from "./HeaderBar";
-import { addCompletedDay, removeCompletedDay, createGoal } from "./utils";
 import { GOAL_COLORS } from "./constants/AppConstants";
 
 /**
@@ -59,16 +58,17 @@ export default function LoggedIn() {
   };
 
   // TODO -- WON'T ACCOUNT FOR DESELECTED DAYS. ONLY ADDS NEWLY SELECTED DAYS.
-  const WindowCloseComponent = () => {
-    useWindowUnloadEffect(() => {
-      if (newCompletedDays[selected]) {
-        newCompletedDays[selected].forEach(date => {
-          addCompletedDay(auth.uid, selected, date);
-        });
-      }
-    }, true);
-    return <Fragment />;
-  };
+  // TODO -- NOT TOTALLY WORKING. MAYBE JUST MAKE A REQ FOR EVERY SQUARE
+  // const WindowCloseComponent = () => {
+  //   useWindowUnloadEffect(() => {
+  //     if (newCompletedDays[selected]) {
+  //       newCompletedDays[selected].forEach(date => {
+  //         addCompletedDay(auth.uid, selected, date);
+  //       });
+  //     }
+  //   }, true);
+  //   return <Fragment />;
+  // };
 
   // Load the current month onto the screen.
   useEffect(() => {
@@ -83,11 +83,11 @@ export default function LoggedIn() {
   }, []);
 
   // Component will unmount. Add the selected days for last goal.
-  useEffect(() => {
-    return () => {
-      batchUpdateCompletedDays(selected);
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     batchUpdateCompletedDays(selected);
+  //   };
+  // }, []);
 
   async function updateCurMonth(month: number) {
     console.log("HERE");
@@ -162,7 +162,7 @@ export default function LoggedIn() {
   function updateSelected(goal: string) {
     console.log("updateSelected");
 
-    batchUpdateCompletedDays(selected);
+    // batchUpdateCompletedDays(selected);
     setSelected(goal);
   }
 
@@ -214,41 +214,40 @@ export default function LoggedIn() {
    * When the user switches between goals, batch update all of their
    * selections into the database
    */
-  async function batchUpdateCompletedDays(goal: string) {
-    console.log("batchUpdateCompletedDays");
-    console.log(oldCompletedDays[goal]);
-    console.log(newCompletedDays[goal]);
+  // async function batchUpdateCompletedDays(goal: string) {
+  //   console.log("batchUpdateCompletedDays");
+  //   console.log(oldCompletedDays[goal]);
+  //   console.log(newCompletedDays[goal]);
 
-    if (newCompletedDays[goal]) {
-      if (oldCompletedDays[goal]) {
-        // Add new Days.
-        newCompletedDays[goal].forEach(date => {
-          if (!oldCompletedDays[goal].includes(date)) {
-            addCompletedDay(auth.uid, goal, date);
-          }
-        });
+  //   if (newCompletedDays[goal]) {
+  //     if (oldCompletedDays[goal]) {
+  //       // Add new Days.
+  //       newCompletedDays[goal].forEach(date => {
+  //         if (!oldCompletedDays[goal].includes(date)) {
+  //           addCompletedDay(auth.uid, goal, date);
+  //         }
+  //       });
 
-        // Remove de-selected days.
-        oldCompletedDays[goal].forEach(date => {
-          if (!newCompletedDays[goal].includes(date)) {
-            removeCompletedDay(auth.uid, goal, date);
-          }
-        });
-      } else {
-        // This is a newly created goal.
-        newCompletedDays[goal].forEach(date => {
-          addCompletedDay(auth.uid, goal, date);
-        });
+  //       // Remove de-selected days.
+  //       oldCompletedDays[goal].forEach(date => {
+  //         if (!newCompletedDays[goal].includes(date)) {
+  //           removeCompletedDay(auth.uid, goal, date);
+  //         }
+  //       });
+  //     } else {
+  //       // This is a newly created goal.
+  //       newCompletedDays[goal].forEach(date => {
+  //         addCompletedDay(auth.uid, goal, date);
+  //       });
 
-        // Add this new goal to the 'oldCompletedDays' mapping.
-        setOldCompletedDays(JSON.parse(JSON.stringify(newCompletedDays)));
-      }
-    }
-  }
+  //       // Add this new goal to the 'oldCompletedDays' mapping.
+  //       setOldCompletedDays(JSON.parse(JSON.stringify(newCompletedDays)));
+  //     }
+  //   }
+  // }
 
   return (
     <Container>
-      <WindowCloseComponent />
       <GoalsList
         existingGoals={existingGoals}
         selected={selected}

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Day from "./Day";
-import useAuth from "./useAuth";
 
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
@@ -25,6 +24,10 @@ export default function Calendar({
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
   );
+
+  useEffect(() => {
+    console.log("CUR GOAL: ", curGoal);
+  });
 
   // Mapping of each goal to the days that are completed (selected).
   const [completedDays, setCompletedDays] = useState({});
