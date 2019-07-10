@@ -6,6 +6,7 @@ import Calendar from "./Calendar";
 import { db } from "./fire";
 import HeaderBar from "./HeaderBar";
 import { GOAL_COLORS } from "./constants/AppConstants";
+// TODO -- I'M NOT CLEARING OUT MY LOCAL TRACK OF COMPLETED DAYS WHEN A GOAL GETS DELETED.
 
 /**
  * When the goal is changed by the goalList component, send
@@ -17,6 +18,8 @@ import { GOAL_COLORS } from "./constants/AppConstants";
 export default function LoggedIn() {
   const { auth } = useAuth();
 
+  const [selectedGoals, setSelectedGoals] = useState([]);
+
   // Color mapping. Goal --> Hex Color
   const [colorMap, setColorMap] = useState({});
 
@@ -24,7 +27,7 @@ export default function LoggedIn() {
   const [existingGoals, setExistingGoals] = useState([]);
 
   // The currently selected goal.
-  const [selected, setSelected] = useState("asdfasd");
+  const [selected, setSelected] = useState("");
 
   // Mapping of each goal to the days that are completed (selected).
   // The old state of the mapping at the time of the app being loaded
@@ -57,19 +60,6 @@ export default function LoggedIn() {
     }, [handler]);
   };
 
-  // TODO -- WON'T ACCOUNT FOR DESELECTED DAYS. ONLY ADDS NEWLY SELECTED DAYS.
-  // TODO -- NOT TOTALLY WORKING. MAYBE JUST MAKE A REQ FOR EVERY SQUARE
-  // const WindowCloseComponent = () => {
-  //   useWindowUnloadEffect(() => {
-  //     if (newCompletedDays[selected]) {
-  //       newCompletedDays[selected].forEach(date => {
-  //         addCompletedDay(auth.uid, selected, date);
-  //       });
-  //     }
-  //   }, true);
-  //   return <Fragment />;
-  // };
-
   // Load the current month onto the screen.
   useEffect(() => {
     const today = new Date();
@@ -82,6 +72,10 @@ export default function LoggedIn() {
     fetchCompletedDays();
   }, []);
 
+  useEffect(() => {
+    console.log("selected goals: ", selectedGoals);
+  });
+
   // Component will unmount. Add the selected days for last goal.
   // useEffect(() => {
   //   return () => {
@@ -90,12 +84,11 @@ export default function LoggedIn() {
   // }, []);
 
   async function updateCurMonth(month: number) {
-    console.log("HERE");
     setCurMonth(month);
   }
 
   function fetchGoals() {
-    db.collection("goals")
+    db.collection(`goals-${auth.uid}`)
       .where("uid", "==", auth.uid)
       .get()
       .then(snapshot => {
@@ -171,8 +164,6 @@ export default function LoggedIn() {
    * @param goal
    */
   function addToColorMap(goal: string): string {
-    console.log("addToColorMap: ", goal);
-
     let nextHexColor = null;
     // Watch for null pointer exception
     const colorsInUse = Object.values(colorMap);
@@ -185,9 +176,6 @@ export default function LoggedIn() {
 
     const updatedMap = colorMap;
     updatedMap[goal] = nextHexColor;
-
-    console.log("UPDATING MAP: ", updatedMap);
-
     setColorMap(updatedMap);
 
     return nextHexColor;
@@ -206,45 +194,31 @@ export default function LoggedIn() {
         delete updatedMap[goal];
       }
     });
-
     setColorMap(updatedMap);
   }
 
-  /**
-   * When the user switches between goals, batch update all of their
-   * selections into the database
-   */
-  // async function batchUpdateCompletedDays(goal: string) {
-  //   console.log("batchUpdateCompletedDays");
-  //   console.log(oldCompletedDays[goal]);
-  //   console.log(newCompletedDays[goal]);
+  // THESE ARE USED FOR MULTI-SELECT
+  function handleGoalSelected(goal: string, goalToRemove?: string) {
+    if (!selectedGoals.includes(goal)) {
+      let updateSelected = [...selectedGoals, goal];
 
-  //   if (newCompletedDays[goal]) {
-  //     if (oldCompletedDays[goal]) {
-  //       // Add new Days.
-  //       newCompletedDays[goal].forEach(date => {
-  //         if (!oldCompletedDays[goal].includes(date)) {
-  //           addCompletedDay(auth.uid, goal, date);
-  //         }
-  //       });
+      if (goalToRemove && goalToRemove != goal) {
+        updateSelected = updateSelected.filter(g => g != goalToRemove);
+      }
 
-  //       // Remove de-selected days.
-  //       oldCompletedDays[goal].forEach(date => {
-  //         if (!newCompletedDays[goal].includes(date)) {
-  //           removeCompletedDay(auth.uid, goal, date);
-  //         }
-  //       });
-  //     } else {
-  //       // This is a newly created goal.
-  //       newCompletedDays[goal].forEach(date => {
-  //         addCompletedDay(auth.uid, goal, date);
-  //       });
+      setSelectedGoals(updateSelected);
+    }
+  }
 
-  //       // Add this new goal to the 'oldCompletedDays' mapping.
-  //       setOldCompletedDays(JSON.parse(JSON.stringify(newCompletedDays)));
-  //     }
-  //   }
-  // }
+  function handleGoalRemoved(goal: string) {
+    if (selectedGoals.includes(goal)) {
+      const filteredSelectedGoals = selectedGoals.filter(g => {
+        return g != goal;
+      });
+
+      setSelectedGoals([...filteredSelectedGoals]);
+    }
+  }
 
   return (
     <Container>
@@ -255,6 +229,9 @@ export default function LoggedIn() {
         updateSelected={updateSelected}
         addToColorMap={addToColorMap}
         removeFromColorMap={removeFromColorMap}
+        handleGoalSelected={handleGoalSelected}
+        handleGoalRemoved={handleGoalRemoved}
+        selectedGoals={selectedGoals}
       />
       <CalendarContainer>
         <HeaderBar curMonth={curMonth} updateCurMonth={updateCurMonth} />
@@ -263,6 +240,7 @@ export default function LoggedIn() {
           curGoal={selected}
           completedDaysMap={newCompletedDays}
           colorMap={colorMap}
+          selectedGoals={selectedGoals}
           handleDayCompleted={handleDayCompleted}
           handleDayRemoved={handleDayRemoved}
         />
@@ -285,3 +263,52 @@ const CalendarContainer = styled.div`
   padding: 0;
   width: 100%;
 `;
+
+/**
+ * When the user switches between goals, batch update all of their
+ * selections into the database
+ */
+// async function batchUpdateCompletedDays(goal: string) {
+//   console.log("batchUpdateCompletedDays");
+//   console.log(oldCompletedDays[goal]);
+//   console.log(newCompletedDays[goal]);
+
+//   if (newCompletedDays[goal]) {
+//     if (oldCompletedDays[goal]) {
+//       // Add new Days.
+//       newCompletedDays[goal].forEach(date => {
+//         if (!oldCompletedDays[goal].includes(date)) {
+//           addCompletedDay(auth.uid, goal, date);
+//         }
+//       });
+
+//       // Remove de-selected days.
+//       oldCompletedDays[goal].forEach(date => {
+//         if (!newCompletedDays[goal].includes(date)) {
+//           removeCompletedDay(auth.uid, goal, date);
+//         }
+//       });
+//     } else {
+//       // This is a newly created goal.
+//       newCompletedDays[goal].forEach(date => {
+//         addCompletedDay(auth.uid, goal, date);
+//       });
+
+//       // Add this new goal to the 'oldCompletedDays' mapping.
+//       setOldCompletedDays(JSON.parse(JSON.stringify(newCompletedDays)));
+//     }
+//   }
+// }
+
+// TODO -- WON'T ACCOUNT FOR DESELECTED DAYS. ONLY ADDS NEWLY SELECTED DAYS.
+// TODO -- NOT TOTALLY WORKING. MAYBE JUST MAKE A REQ FOR EVERY SQUARE
+// const WindowCloseComponent = () => {
+//   useWindowUnloadEffect(() => {
+//     if (newCompletedDays[selected]) {
+//       newCompletedDays[selected].forEach(date => {
+//         addCompletedDay(auth.uid, selected, date);
+//       });
+//     }
+//   }, true);
+//   return <Fragment />;
+// };

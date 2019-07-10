@@ -10,6 +10,8 @@ function getWindowDimensions() {
   };
 }
 
+// TODO curGoal change to selected
+
 /**
  * NOTES -- Re-renders on every goal selection
  */
@@ -18,6 +20,7 @@ export default function Calendar({
   curGoal,
   completedDaysMap,
   colorMap,
+  selectedGoals,
   handleDayCompleted,
   handleDayRemoved
 }) {
@@ -26,7 +29,7 @@ export default function Calendar({
   );
 
   useEffect(() => {
-    console.log("CUR GOAL: ", curGoal);
+    console.log("selectedGoals", selectedGoals);
   });
 
   // Mapping of each goal to the days that are completed (selected).
@@ -91,6 +94,8 @@ export default function Calendar({
           day={null}
           month={null}
           year={null}
+          selectedGoals={null}
+          colorMap={null}
           handleDayCompleted={null}
           handleDayRemoved={null}
           isCompleted={false}
@@ -120,6 +125,24 @@ export default function Calendar({
         week = [];
       }
 
+      let goalSelectedOnDay = {};
+
+      selectedGoals.forEach(selectedGoal => {
+        goalSelectedOnDay[selectedGoal] = completedDays[selectedGoal]
+          ? completedDays[selectedGoal].indexOf(date) > -1
+          : false;
+      });
+
+      let selectedGoalsForDay = [];
+      selectedGoals.forEach(selectedGoal => {
+        if (
+          completedDays[selectedGoal] &&
+          completedDays[selectedGoal].indexOf(date) > -1
+        ) {
+          selectedGoalsForDay.push(selectedGoal);
+        }
+      });
+
       week.push(
         <Day
           completedDays={completedDays[curGoal]}
@@ -128,6 +151,8 @@ export default function Calendar({
           day={i}
           month={parseInt(month)}
           year={2019}
+          selectedGoals={selectedGoalsForDay}
+          colorMap={colorMap}
           handleDayCompleted={handleDayCompleted}
           handleDayRemoved={handleDayRemoved}
           isCompleted={
@@ -150,6 +175,8 @@ export default function Calendar({
           day={null}
           month={null}
           year={null}
+          selectedGoals={null}
+          colorMap={null}
           handleDayCompleted={null}
           handleDayRemoved={null}
           isCompleted={false}
@@ -172,6 +199,8 @@ export default function Calendar({
             day={null}
             month={null}
             year={null}
+            selectedGoals={null}
+            colorMap={null}
             handleDayCompleted={null}
             handleDayRemoved={null}
             isCompleted={false}

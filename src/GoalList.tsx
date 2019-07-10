@@ -3,9 +3,7 @@ import styled from "styled-components";
 import { createGoal, deleteGoal, removeDaysCompleted } from "./utils";
 import useAuth from "./useAuth";
 
-/**
- * Color map stuff has bugs to workout, but it's a start.
- */
+// WHERE I LEFT OFF -- have the first goal in the list get its checkbox checked on page load.
 
 export default function GoalsList({
   existingGoals,
@@ -13,7 +11,10 @@ export default function GoalsList({
   colorMap,
   updateSelected,
   addToColorMap,
-  removeFromColorMap
+  removeFromColorMap,
+  handleGoalSelected,
+  handleGoalRemoved,
+  selectedGoals
 }) {
   const { auth } = useAuth();
 
@@ -23,8 +24,18 @@ export default function GoalsList({
   // The list of the existing goals.
   const [goals, setGoals] = useState(existingGoals);
 
+  const [wasGoalSelectedOnLoad, setWasGoalSelectedOnLoad] = useState(true);
+
   useEffect(() => {
     setGoals(existingGoals);
+
+    // if (selected) {
+    //   (document.getElementById(
+    //     `${selected}-checkbox`
+    //   ) as HTMLInputElement).checked = true;
+    // }
+
+    // handleGoalSelected(selected);
   }, [existingGoals]);
 
   return (
@@ -43,7 +54,6 @@ export default function GoalsList({
               createGoal(auth.uid, newGoal, goalColor);
 
               if (goals.includes(newGoal)) {
-                console.log("HERE 3");
                 updateSelected(newGoal);
               }
 
@@ -66,36 +76,69 @@ export default function GoalsList({
                   goal={goal}
                   onClick={() => {
                     if (goals.includes(goal)) {
-                      console.log("HERE 2: ", goals, goal);
+                      // Set as selected and check this rows checkbox, remove the previously selected from the selectedList.
+                      handleGoalSelected(goal, selected);
                       updateSelected(goal);
+
+                      // Use this so that I can check the first goal's checkbox on page load.
+                      if (wasGoalSelectedOnLoad) {
+                        setWasGoalSelectedOnLoad(false);
+                      }
+
+                      (document.getElementById(
+                        selected
+                      ) as HTMLInputElement).checked = false;
+
+                      (document.getElementById(
+                        goal
+                      ) as HTMLInputElement).checked = true;
+
+                      // TODO
+                      // handleGoalSelected(goal);
                     }
                   }}
                 >
-                  {" "}
+                  <label>
+                    <input
+                      id={goal}
+                      type="checkbox"
+                      onClick={e => {
+                        e.stopPropagation();
+                        let checkbox = document.getElementById(
+                          goal
+                        ) as HTMLInputElement;
+
+                        console.log("checked: ", checkbox.checked);
+
+                        if (idx === 0 && selectedGoals.length === 0) {
+                          checkbox.checked = true;
+                          handleGoalSelected(goal);
+                        }
+
+                        if (checkbox.checked) {
+                          handleGoalSelected(goal);
+                        } else if (selectedGoals.length === 1) {
+                          e.preventDefault();
+                        } else {
+                          handleGoalRemoved(goal);
+                        }
+                      }}
+                    />
+                  </label>{" "}
                   {goal}
                   {/* // TODO -- IMPORT ICONS, INCLUDING TRASH ICON FOR DELETING */}
                   <DeleteButton
                     onClick={e => {
                       e.stopPropagation();
                       const idx = goals.indexOf(goal);
-                      const length = goals.length;
 
                       deleteGoal(auth.uid, goal);
                       setGoals(goals.filter(g => g !== goal));
                       removeDaysCompleted(auth.uid, goal);
 
-                      console.log("DELETE: ", goals, length);
-
                       // Check that this isn't the last goal in the list.
                       if (idx - 1 >= 0) {
-                        console.log(
-                          "goal deleted: ",
-                          goals,
-                          idx,
-                          goals[idx - 1]
-                        );
                         if (goals.includes(goals[idx - 1])) {
-                          console.log("HERE 1");
                           updateSelected(goals[idx - 1]);
                         }
                       }
@@ -185,11 +228,11 @@ interface ListRowProps {
 const ListRow = styled.div<ListRowProps>`
   display: flex;
   flex-direction: row;
-  justify-content: space-between
+  justify-content: space-between;
   vertical-align: middle;
   line-height: 2.5rem;
   height: 2.5rem;
-  width: 19rem;
+  width: 19.5rem;
   border-radius: 0.3rem;
   margin-top: 2rem;
   background-color: ${props =>
@@ -197,7 +240,8 @@ const ListRow = styled.div<ListRowProps>`
       ? props.colorMap[props.goal]
       : "#D8D8D8"};
   padding-left: 0.5rem;
-  margin-left: 1.2rem;
+  color: black;
+  margin-left: 0.5rem;
   font-family: Montserrat, sans-serif;
 
   &:hover {

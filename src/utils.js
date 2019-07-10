@@ -14,7 +14,7 @@ export async function removeDaysCompleted(uid, goal) {
 }
 
 export async function deleteGoal(uid, goal) {
-  let existingGoal = db.collection("goals");
+  let existingGoal = db.collection(`goals-${uid}`);
   existingGoal = existingGoal.where("goal", "==", goal);
   existingGoal = existingGoal.where("uid", "==", uid);
 
@@ -29,7 +29,7 @@ export async function deleteGoal(uid, goal) {
 export async function createGoal(uid, goal, color) {
   console.log("createGoal:", color);
 
-  return db.collection("goals").add({
+  return db.collection(`goals-${uid}`).add({
     uid: uid,
     goal: goal,
     color: color,
