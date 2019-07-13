@@ -47,15 +47,16 @@ export default function LoggedOut() {
     });
   }
 
-  return (
-    <Container>
+  return isLogin ? (
+    <Login>
       <Heading>Log into Habit Tracker</Heading>
       <CreateAccount>
         New?{" "}
-        <TextLink onClick={() => console.log("yo")}>Create Account</TextLink>
+        <TextLink onClick={() => setIsLogin(false)}>Create Account</TextLink>
       </CreateAccount>
       <LoginInput
         ref={emailRef}
+        isLogin={isLogin}
         focus={focus === "email"}
         placeholder={"Email Address"}
         onClick={() => {
@@ -65,6 +66,8 @@ export default function LoggedOut() {
       />
       <LoginInput
         ref={passwordRef}
+        isLogin={isLogin}
+        type="password"
         focus={focus === "password"}
         placeholder={"Password"}
         onClick={() => {
@@ -74,7 +77,36 @@ export default function LoggedOut() {
       />
       <LoginButton onClick={handleLogin}>Login</LoginButton>
       {error ? <ErrorMessage>Invalid username or password</ErrorMessage> : null}
-    </Container>
+    </Login>
+  ) : (
+    <Signup>
+      <Heading>Create Account</Heading>
+      <CreateAccount>
+        Have one? <TextLink onClick={() => setIsLogin(true)}>Log In</TextLink>
+      </CreateAccount>
+      <LoginInput
+        ref={emailRef}
+        isLogin={isLogin}
+        focus={focus === "email"}
+        placeholder={"Email Address"}
+        onClick={() => {
+          setFocus("email");
+          setError(null);
+        }}
+      />
+      <LoginInput
+        ref={passwordRef}
+        isLogin={isLogin}
+        type="password"
+        focus={focus === "password"}
+        placeholder={"Password"}
+        onClick={() => {
+          setFocus("password");
+          setError(null);
+        }}
+      />
+      <LoginButton onClick={handleLogin}>Create Account</LoginButton>
+    </Signup>
   );
 }
 
@@ -84,7 +116,18 @@ const TextLink = styled.u`
   }
 `;
 
-const Container = styled.div`
+const Signup = styled.div`
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /*centers items on the line (the x-axis by default)*/
+  align-items: center; /*centers items on the cross-axis (y by default)*/
+`;
+
+const Login = styled.div`
   overflow: hidden;
   position: absolute;
   width: 100%;
@@ -108,7 +151,7 @@ const CreateAccount = styled.h1`
   font-family: "Avenir Next" !important;
 `;
 
-const LoginInput = styled.input<{ focus }>`
+const LoginInput = styled.input<{ focus; isLogin }>`
   height: 3rem;
   width: 18rem;
   border: none;
@@ -116,12 +159,12 @@ const LoginInput = styled.input<{ focus }>`
   margin-top: 2rem;
 
   padding-left: 1rem;
-  border-radius: 0.3rem;
+  border-radius: ${props => (props.isLogin ? "0.3rem" : "0rem")};
   font-family: "Avenir Next" !important;
 
   background-color: ${props => (props.focus ? "#e5e5e5" : "transparent")};
   border-bottom: ${props =>
-    props.focus ? "3px solid transparent" : "3px solid black"};
+    props.focus ? "3px solid transparent" : "2px solid black"};
 `;
 
 const LoginButton = styled.button`
