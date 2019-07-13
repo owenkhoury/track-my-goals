@@ -950,3 +950,7 @@ h2 {
 .checkbox input[type="checkbox"]:checked + label::after {
   content: "";
 }
+
+*:focus {
+  outline: none;
+}

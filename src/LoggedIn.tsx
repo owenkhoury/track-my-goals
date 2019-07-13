@@ -104,6 +104,7 @@ export default function LoggedIn() {
         existingGoals.sort((a, b) => a.created - b.created);
 
         setSelected(existingGoals[0]);
+        handleGoalSelected(existingGoals[0]);
         setExistingGoals(existingGoals);
         setColorMap(existingColorMap);
       });

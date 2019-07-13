@@ -72,6 +72,10 @@ export default function GoalsList({
                 <ListRow
                   style={goals[idx + 1] ? null : { borderWidth: "5px" }} // Check if it's the last goal in the list.
                   selected={goal === selected}
+                  checked={
+                    (document.getElementById(goal) as HTMLInputElement) &&
+                    (document.getElementById(goal) as HTMLInputElement).checked
+                  }
                   colorMap={colorMap}
                   goal={goal}
                   onClick={() => {
@@ -102,6 +106,7 @@ export default function GoalsList({
                     <input
                       id={goal}
                       type="checkbox"
+                      defaultChecked={idx === 0}
                       onClick={e => {
                         e.stopPropagation();
                         let checkbox = document.getElementById(
@@ -221,6 +226,7 @@ const DeleteButton = styled.button`
 
 interface ListRowProps {
   selected: boolean;
+  checked: boolean;
   colorMap: Object;
   goal: string;
 }
@@ -236,7 +242,7 @@ const ListRow = styled.div<ListRowProps>`
   border-radius: 0.3rem;
   margin-top: 2rem;
   background-color: ${props =>
-    props.selected && props.colorMap && props.goal
+    (props.selected || props.checked) && props.colorMap && props.goal
       ? props.colorMap[props.goal]
       : "#D8D8D8"};
   padding-left: 0.5rem;

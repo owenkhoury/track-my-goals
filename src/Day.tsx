@@ -27,6 +27,10 @@ export default function Day({
   const [completed, setCompleted] = useState(isCompleted);
 
   useEffect(() => {
+    console.log("selected goals: ", selectedGoals);
+  });
+
+  useEffect(() => {
     setCompleted(isCompleted);
   }, [curGoal]);
 
@@ -88,7 +92,7 @@ export default function Day({
         </Fragment>
       );
     } else {
-      const singleColor = "#D8D8D8";
+      const singleColor = disabled ? "#f1f1f1" : "#D8D8D8";
       return (
         <Fragment>
           <MyDiv style={{ background: singleColor }} />
@@ -124,6 +128,7 @@ export default function Day({
             handleDayRemoved(date);
             removeCompletedDay(auth.uid, curGoal, date);
           } else {
+            selectedGoals.push(curGoal);
             handleDayCompleted(date);
             addCompletedDay(auth.uid, curGoal, date);
           }
