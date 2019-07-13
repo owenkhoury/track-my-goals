@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { login } from "./utils";
 // import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 // import Signup from "./Signup";
 // import Login from "./Login";
@@ -9,19 +10,33 @@ export default function LoggedOut() {
 
   // Control whether user sees login or signup.
   const [isLogin, setIsLogin] = useState(true);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+
   useOutsideAlerter(emailRef);
   useOutsideAlerter(passwordRef);
+
+  const handleLogin = async event => {
+    event.preventDefault();
+    setLoading(true);
+    try {
+      await login(emailRef.current.value, passwordRef.current.value);
+    } catch (error) {
+      setLoading(false);
+      setError(error);
+    }
+  };
 
   function useOutsideAlerter(ref) {
     function handleClickOutside(event) {
       if (ref.current && !ref.current.contains(event.target)) {
         setFocus("");
+        setError(null);
       }
     }
-
     useEffect(() => {
       // Bind the event listener
       document.addEventListener("mousedown", handleClickOutside);
@@ -33,41 +48,41 @@ export default function LoggedOut() {
   }
 
   return (
-    // <div className="LoggedOut">
-    //   <Tabs>
-    //     <TabList>
-    //       <Tab>Login</Tab>
-    //       <Tab>Sign Up</Tab>
-    //     </TabList>
-    //     <TabPanels>
-    //       <TabPanel>
-    //         <Login />
-    //       </TabPanel>
-    //       <TabPanel>
-    //         <Signup />
-    //       </TabPanel>
-    //     </TabPanels>
-    //   </Tabs>
-    // </div>
     <Container>
       <Heading>Log into Habit Tracker</Heading>
-      <CreateAccount>New? Create Account</CreateAccount>
+      <CreateAccount>
+        New?{" "}
+        <TextLink onClick={() => console.log("yo")}>Create Account</TextLink>
+      </CreateAccount>
       <LoginInput
         ref={emailRef}
         focus={focus === "email"}
         placeholder={"Email Address"}
-        onClick={() => setFocus("email")}
+        onClick={() => {
+          setFocus("email");
+          setError(null);
+        }}
       />
       <LoginInput
         ref={passwordRef}
         focus={focus === "password"}
         placeholder={"Password"}
-        onClick={() => setFocus("password")}
+        onClick={() => {
+          setFocus("password");
+          setError(null);
+        }}
       />
-      <LoginButton>Login</LoginButton>
+      <LoginButton onClick={handleLogin}>Login</LoginButton>
+      {error ? <ErrorMessage>Invalid username or password</ErrorMessage> : null}
     </Container>
   );
 }
+
+const TextLink = styled.u`
+  &:hover {
+    cursor: pointer;
+  }
+`;
 
 const Container = styled.div`
   overflow: hidden;
@@ -105,7 +120,8 @@ const LoginInput = styled.input<{ focus }>`
   font-family: "Avenir Next" !important;
 
   background-color: ${props => (props.focus ? "#e5e5e5" : "transparent")};
-  border-bottom: ${props => (props.focus ? "" : "3px solid black")};
+  border-bottom: ${props =>
+    props.focus ? "3px solid transparent" : "3px solid black"};
 `;
 
 const LoginButton = styled.button`
@@ -119,5 +135,12 @@ const LoginButton = styled.button`
 
   padding-left: 1rem;
   border-radius: 0.3rem;
+  font-family: "Avenir Next" !important;
+`;
+
+const ErrorMessage = styled.h1`
+  margin-top: 1.5rem;
+  color: #cf2e38;
+  font-size: 1rem;
   font-family: "Avenir Next" !important;
 `;
