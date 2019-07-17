@@ -2,7 +2,12 @@ import { db } from "./fire";
 import { auth } from "firebase";
 
 export async function removeDaysCompleted(uid, goal) {
-  let daysCompletedCollection = db.collection("daysCompleted-" + uid);
+  // let daysCompletedCollection = db.collection("daysCompleted-" + uid);
+
+  let daysCompletedCollection = db
+    .collection("completed")
+    .doc(uid)
+    .collection("daysCompleted");
 
   let daysToDelete = daysCompletedCollection.where("goal", "==", goal);
 
@@ -14,7 +19,12 @@ export async function removeDaysCompleted(uid, goal) {
 }
 
 export async function deleteGoal(uid, goal) {
-  let existingGoal = db.collection(`goals-${uid}`);
+  // let existingGoal = db.collection(`goals-${uid}`);
+  let existingGoal = db
+    .collection(`goals`)
+    .doc(uid)
+    .collection("userGoals");
+
   existingGoal = existingGoal.where("goal", "==", goal);
   existingGoal = existingGoal.where("uid", "==", uid);
 
@@ -29,29 +39,57 @@ export async function deleteGoal(uid, goal) {
 export async function createGoal(uid, goal, color) {
   console.log("createGoal:", color);
 
-  return db.collection(`goals-${uid}`).add({
-    uid: uid,
-    goal: goal,
-    color: color,
-    created: +new Date() // Timestamp of creation
-  });
+  return db
+    .collection(`goals`)
+    .doc(uid)
+    .collection("userGoals")
+    .add({
+      uid: uid,
+      goal: goal,
+      color: color,
+      created: +new Date() // Timestamp of creation
+    });
+
+  // return db.collection(`goals-${uid}`).add({
+  //   uid: uid,
+  //   goal: goal,
+  //   color: color,
+  //   created: +new Date() // Timestamp of creation
+  // });
 }
+
+// TODO -- UPDATE HOW I STORE AND GET COMPLETED DAYS.
 
 export async function addCompletedDay(uid, goal, date) {
   console.log("addCompletedDay", date);
 
-  return db.collection(`daysCompleted-${uid}`).add({
-    goal: goal,
-    date: date
-  });
+  return db
+    .collection("completed")
+    .doc(uid)
+    .collection("daysCompleted")
+    .add({
+      goal: goal,
+      date: date
+    });
+
+  // return db.collection(`daysCompleted-${uid}`).add({
+  //   goal: goal,
+  //   date: date
+  // });
 }
 
 export async function removeCompletedDay(uid, goal, date) {
-  let dayCompleted = db.collection(`daysCompleted-${uid}`);
-  dayCompleted = dayCompleted.where("goal", "==", goal);
-  dayCompleted = dayCompleted.where("date", "==", date);
+  // let dayCompleted = db.collection(`daysCompleted-${uid}`);
 
-  dayCompleted.get().then(snapshot => {
+  let daysCompleted = db
+    .collection("completed")
+    .doc(uid)
+    .collection("daysCompleted");
+
+  daysCompleted = daysCompleted.where("goal", "==", goal);
+  daysCompleted = daysCompleted.where("date", "==", date);
+
+  daysCompleted.get().then(snapshot => {
     snapshot.docs.forEach(doc => {
       doc.ref.delete();
     });

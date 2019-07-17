@@ -250,6 +250,7 @@ const Container = styled.div`
   // margin-left: 30rem;
   justify-content: center;
   margin-left: 22rem;
+  margin-top: 1rem;
 `;
 
 const DayOfWeek = styled.div`

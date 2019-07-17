@@ -69,6 +69,7 @@ const CurMonth = styled.div`
   color: #0d160a;
   margin-left: 3rem;
   font-family: "Montserrat", sans-serif;
+  /* font-family: "Avenir Next" !important; */
   margin-right: 1rem;
   padding-left: 1rem;
 `;

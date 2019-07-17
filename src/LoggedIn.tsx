@@ -8,13 +8,6 @@ import HeaderBar from "./HeaderBar";
 import { GOAL_COLORS } from "./constants/AppConstants";
 // TODO -- I'M NOT CLEARING OUT MY LOCAL TRACK OF COMPLETED DAYS WHEN A GOAL GETS DELETED.
 
-/**
- * When the goal is changed by the goalList component, send
- * up the dates selected for that goal. Compare it against the dates selected
- * for that goal in the existingGoals local state to see what's been
- * added / removed. Make bulk updates to the database.
- */
-
 export default function LoggedIn() {
   const { auth } = useAuth();
 
@@ -88,7 +81,9 @@ export default function LoggedIn() {
   }
 
   function fetchGoals() {
-    db.collection(`goals-${auth.uid}`)
+    db.collection("goals")
+      .doc(auth.uid)
+      .collection("userGoals")
       .where("uid", "==", auth.uid)
       .get()
       .then(snapshot => {
@@ -113,7 +108,9 @@ export default function LoggedIn() {
   function fetchCompletedDays() {
     console.log("fetchCompletedDays");
 
-    db.collection(`daysCompleted-${auth.uid}`)
+    db.collection("completed")
+      .doc(auth.uid)
+      .collection("daysCompleted")
       .get()
       .then(snapshot => {
         const datesCompleted: any[] = [];
@@ -237,18 +234,50 @@ export default function LoggedIn() {
       <CalendarContainer>
         <HeaderBar curMonth={curMonth} updateCurMonth={updateCurMonth} />
         <Calendar
-          curMonth={curMonth}
-          curGoal={selected}
-          completedDaysMap={newCompletedDays}
-          colorMap={colorMap}
-          selectedGoals={selectedGoals}
-          handleDayCompleted={handleDayCompleted}
-          handleDayRemoved={handleDayRemoved}
-        />
+            key="calendar1"
+            curMonth={curMonth}
+            curGoal={selected}
+            completedDaysMap={newCompletedDays}
+            colorMap={colorMap}
+            selectedGoals={selectedGoals}
+            handleDayCompleted={handleDayCompleted}
+            handleDayRemoved={handleDayRemoved}
+          />
+        {/* <BothCalendars>
+          <Calendar
+            key="calendar1"
+            curMonth={curMonth}
+            curGoal={selected}
+            completedDaysMap={newCompletedDays}
+            colorMap={colorMap}
+            selectedGoals={selectedGoals}
+            handleDayCompleted={handleDayCompleted}
+            handleDayRemoved={handleDayRemoved}
+          />
+          <div style={{ paddingLeft: "500px" }}>
+            <Calendar
+              key="calendar2"
+              curMonth={curMonth}
+              curGoal={selected}
+              completedDaysMap={newCompletedDays}
+              colorMap={colorMap}
+              selectedGoals={selectedGoals}
+              handleDayCompleted={handleDayCompleted}
+              handleDayRemoved={handleDayRemoved}
+            />
+          </div>
+        </BothCalendars> */}
       </CalendarContainer>
     </Container>
   );
 }
+
+const BothCalendars = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: start;
+`;
 
 const Container = styled.div`
   display: flex;

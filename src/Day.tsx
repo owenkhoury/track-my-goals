@@ -158,6 +158,7 @@ interface ButtonProps {
 }
 
 const Button = styled.button<ButtonProps>`
+  font-family: "Avenir Next" !important;
   padding: 0;
   display: inline-block;
   height: 6rem;

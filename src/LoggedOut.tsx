@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { login } from "./utils";
+import { login, signup } from "./utils";
 // import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 // import Signup from "./Signup";
 // import Login from "./Login";
@@ -13,17 +13,39 @@ export default function LoggedOut() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
+  // login refs
+  const loginEmailRef = useRef(null);
+  const loginPasswordRef = useRef(null);
 
-  useOutsideAlerter(emailRef);
-  useOutsideAlerter(passwordRef);
+  useOutsideAlerter(loginEmailRef);
+  useOutsideAlerter(loginPasswordRef);
+
+  // Signup refs
+  const signupEmailRef = useRef(null);
+  const signupPasswordRef = useRef(null);
+
+  useOutsideAlerter(signupEmailRef);
+  useOutsideAlerter(signupPasswordRef);
 
   const handleLogin = async event => {
     event.preventDefault();
     setLoading(true);
     try {
-      await login(emailRef.current.value, passwordRef.current.value);
+      await login(loginEmailRef.current.value, loginPasswordRef.current.value);
+    } catch (error) {
+      setLoading(false);
+      setError(error);
+    }
+  };
+
+  const handleSignup = async event => {
+    event.preventDefault();
+    setLoading(true);
+    try {
+      await signup({
+        email: signupEmailRef.current.value,
+        password: signupPasswordRef.current.value
+      });
     } catch (error) {
       setLoading(false);
       setError(error);
@@ -55,7 +77,7 @@ export default function LoggedOut() {
         <TextLink onClick={() => setIsLogin(false)}>Create Account</TextLink>
       </CreateAccount>
       <LoginInput
-        ref={emailRef}
+        ref={loginEmailRef}
         isLogin={isLogin}
         focus={focus === "email"}
         placeholder={"Email Address"}
@@ -65,7 +87,7 @@ export default function LoggedOut() {
         }}
       />
       <LoginInput
-        ref={passwordRef}
+        ref={loginPasswordRef}
         isLogin={isLogin}
         type="password"
         focus={focus === "password"}
@@ -85,7 +107,7 @@ export default function LoggedOut() {
         Have one? <TextLink onClick={() => setIsLogin(true)}>Log In</TextLink>
       </CreateAccount>
       <LoginInput
-        ref={emailRef}
+        ref={signupEmailRef}
         isLogin={isLogin}
         focus={focus === "email"}
         placeholder={"Email Address"}
@@ -95,7 +117,7 @@ export default function LoggedOut() {
         }}
       />
       <LoginInput
-        ref={passwordRef}
+        ref={signupPasswordRef}
         isLogin={isLogin}
         type="password"
         focus={focus === "password"}
@@ -105,7 +127,8 @@ export default function LoggedOut() {
           setError(null);
         }}
       />
-      <LoginButton onClick={handleLogin}>Create Account</LoginButton>
+      <LoginButton onClick={handleSignup}>Create Account</LoginButton>
+      {error ? <ErrorMessage>Invalid username or password</ErrorMessage> : null}
     </Signup>
   );
 }
@@ -173,7 +196,7 @@ const LoginButton = styled.button`
   color: black;
   background: #d8d8d8;
   border: none;
-  font-size: 1.1em;
+  font-size: 1.1rem;
   margin-top: 2rem;
 
   padding-left: 1rem;
