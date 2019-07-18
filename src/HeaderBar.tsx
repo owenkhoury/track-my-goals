@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { logout } from "./utils";
 
@@ -20,31 +20,43 @@ const monthName = {
 export default function HeaderBar({ curMonth, updateCurMonth }) {
   return (
     <Header>
-      <MonthContainer>
-        <CurMonth>{monthName[curMonth] + " 2019"}</CurMonth>
-        <MonthButton
-          onClick={() => {
-            if (curMonth != 1) {
-              updateCurMonth(curMonth - 1);
-            }
-          }}
-        >
-          Prev
-        </MonthButton>
-        <MonthButton
-          onClick={() => {
-            if (curMonth != 12) {
-              updateCurMonth(curMonth + 1);
-            }
-          }}
-        >
-          Next
-        </MonthButton>
-      </MonthContainer>
-      <Button onClick={logout}>Logout</Button>
+      <AppTitle>HabitTracker</AppTitle>
+      <VerticalBar />
+      <MonthAndLogoutContainer>
+        <MonthContainer>
+          <CurMonth>{monthName[curMonth] + " 2019"}</CurMonth>
+          <MonthButton
+            onClick={() => {
+              if (curMonth != 1) {
+                updateCurMonth(curMonth - 1);
+              }
+            }}
+          >
+            Prev
+          </MonthButton>
+          <MonthButton
+            onClick={() => {
+              if (curMonth != 12) {
+                updateCurMonth(curMonth + 1);
+              }
+            }}
+          >
+            Next
+          </MonthButton>
+        </MonthContainer>
+        <Button onClick={logout}>Logout</Button>
+      </MonthAndLogoutContainer>
     </Header>
   );
 }
+
+const AppTitle = styled.h1`
+  font-size: 1.5rem;
+  font-family: "Montserrat", sans-serif;
+  color: #0d160a;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+`;
 
 const MonthContainer = styled.div`
   display: flex;
@@ -56,12 +68,25 @@ const MonthContainer = styled.div`
 const Header = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  // align-items: center;
+  // justify-content: space-between;
+  height: 4.5rem;
+  background-color: #d8d8d8; // #c2c2c2;
+  border-bottom: 2px solid #979797;
+`;
+
+const MonthAndLogoutContainer = styled.div`
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
-  height: 70px;
+  width: 100%;
   background-color: #d8d8d8;
-  margin-bottom: 1rem;
-  margin-left: 24rem;
+`;
+
+const VerticalBar = styled.div`
+  border-left: 0rem dotted black; // TODO -- DECIDE IF I WANT THIS BAR HERE
+  height: 4.5rem;
+  margin-left: 13.7rem;
 `;
 
 const CurMonth = styled.div`
@@ -72,6 +97,7 @@ const CurMonth = styled.div`
   /* font-family: "Avenir Next" !important; */
   margin-right: 1rem;
   padding-left: 1rem;
+  margin-left: 3rem;
 `;
 
 const MonthButton = styled.button`

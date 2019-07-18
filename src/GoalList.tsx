@@ -61,7 +61,7 @@ export default function GoalsList({
           ? goals.map((goal, idx) => {
               return (
                 <NewListRow
-                  style={goals[idx + 1] ? null : { borderWidth: "5px" }} // Check if it's the last goal in the list.
+                  // style={goals[idx + 1] ? null : { borderWidth: "5px" }} // Check if it's the last goal in the list.
                   selected={goal === selected}
                   checked={
                     (document.getElementById(goal) as HTMLInputElement) &&
@@ -196,7 +196,6 @@ const ListContainer = styled.div`
   flex-direction: column;
   align-items: center;
   height: 35rem;
-  overflow-y: scroll;
 `;
 
 const AddGoalButton = styled.button`
@@ -237,33 +236,6 @@ interface ListRowProps {
   goal: string;
 }
 
-const ListRow = styled.div<ListRowProps>`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  vertical-align: middle;
-  line-height: 2.5rem;
-  height: 4rem;
-  width: 19.5rem;
-  border-radius: 0.3rem;
-  margin-top: 2rem;
-  background-color: ${props =>
-    (props.selected || props.checked) && props.colorMap && props.goal
-      ? props.colorMap[props.goal]
-      : "#D8D8D8"};
-  padding-left: 0.5rem;
-  color: black;
-  margin-left: 0.5rem;
-  font-family: Montserrat, sans-serif;
-
-  &:hover {
-    background-color: ${props =>
-      props.colorMap && props.goal ? props.colorMap[props.goal] : "#D8D8D8"};
-    filter: ${props =>
-      props.selected ? "brightness(100%)" : "brightness(85%)"};
-  }
-`;
-
 const NewListRow = styled.div<ListRowProps>`
   display: flex;
   flex-direction: row;
@@ -274,6 +246,7 @@ const NewListRow = styled.div<ListRowProps>`
   height: 5rem;
   width: 19.5rem;
   border-radius: 0.3rem;
+  border: 1px solid #565656;
   margin-top: 2rem;
   background-color: #D8D8D8;
   filter: ${props => (props.selected ? "brightness(65%)" : "brightness(100%)")};
@@ -302,6 +275,7 @@ const Circle = styled.span<{ color; selected }>`
   width: 2.5rem;
   background-color: ${props => props.color};
   border-radius: 50%;
+  border: .04rem solid black;
   /* border: ${props => (props.selected ? "" : "3px solid " + props.color)}; */
 `;
 
@@ -312,13 +286,16 @@ const Goal = styled.div`
   overflow: auto;
   height: 29px;
   margin-bottom: 0;
+  overflow-y: hidden; // hide vertical
+  overflow-x: hidden;
 `;
 
 const StartDate = styled.div`
   color: "#A9A9A9";
   font-size: 0.6rem;
   font-family: "Avenir Next" !important;
-  overflow: auto;
+  overflow-y: hidden; // hide vertical
+  overflow-x: hidden;
   height: 25px;
   padding-bottom: 0.6rem;
 `;

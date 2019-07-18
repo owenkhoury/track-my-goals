@@ -6,6 +6,7 @@ import Calendar from "./Calendar";
 import { db } from "./fire";
 import HeaderBar from "./HeaderBar";
 import { GOAL_COLORS } from "./constants/AppConstants";
+import Notes from "./Notes";
 // TODO -- I'M NOT CLEARING OUT MY LOCAL TRACK OF COMPLETED DAYS WHEN A GOAL GETS DELETED.
 
 export default function LoggedIn() {
@@ -219,31 +220,22 @@ export default function LoggedIn() {
   }
 
   return (
-    <Container>
-      <GoalsList
-        existingGoals={existingGoals}
-        selected={selected}
-        colorMap={colorMap}
-        updateSelected={updateSelected}
-        addToColorMap={addToColorMap}
-        removeFromColorMap={removeFromColorMap}
-        handleGoalSelected={handleGoalSelected}
-        handleGoalRemoved={handleGoalRemoved}
-        selectedGoals={selectedGoals}
-      />
-      <CalendarContainer>
-        <HeaderBar curMonth={curMonth} updateCurMonth={updateCurMonth} />
-        <Calendar
-            key="calendar1"
-            curMonth={curMonth}
-            curGoal={selected}
-            completedDaysMap={newCompletedDays}
-            colorMap={colorMap}
-            selectedGoals={selectedGoals}
-            handleDayCompleted={handleDayCompleted}
-            handleDayRemoved={handleDayRemoved}
-          />
-        {/* <BothCalendars>
+    <Container className="this-one">
+      <HeaderBar curMonth={curMonth} updateCurMonth={updateCurMonth} />
+
+      <CalendarAndGoalsContainer>
+        <GoalsList
+          existingGoals={existingGoals}
+          selected={selected}
+          colorMap={colorMap}
+          updateSelected={updateSelected}
+          addToColorMap={addToColorMap}
+          removeFromColorMap={removeFromColorMap}
+          handleGoalSelected={handleGoalSelected}
+          handleGoalRemoved={handleGoalRemoved}
+          selectedGoals={selectedGoals}
+        />
+        <CalendarContainer>
           <Calendar
             key="calendar1"
             curMonth={curMonth}
@@ -254,23 +246,26 @@ export default function LoggedIn() {
             handleDayCompleted={handleDayCompleted}
             handleDayRemoved={handleDayRemoved}
           />
-          <div style={{ paddingLeft: "500px" }}>
-            <Calendar
-              key="calendar2"
-              curMonth={curMonth}
-              curGoal={selected}
-              completedDaysMap={newCompletedDays}
-              colorMap={colorMap}
-              selectedGoals={selectedGoals}
-              handleDayCompleted={handleDayCompleted}
-              handleDayRemoved={handleDayRemoved}
-            />
-          </div>
-        </BothCalendars> */}
-      </CalendarContainer>
+        </CalendarContainer>
+        <Notes />
+      </CalendarAndGoalsContainer>
     </Container>
   );
 }
+
+const CalendarContainer = styled.div`
+  flex: 1;
+  margin-top: 1rem;
+  padding-right: 17rem;
+  padding-left: 2rem;
+  padding-top: 2rem;
+`;
+
+const CalendarAndGoalsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
 
 const BothCalendars = styled.div`
   display: flex;
@@ -281,17 +276,9 @@ const BothCalendars = styled.div`
 
 const Container = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  height: 100%;
-`;
-
-const CalendarContainer = styled.div`
-  display: flex;
   flex-direction: column;
-  margin: 0;
-  padding: 0;
-  width: 100%;
+  height: 100%;
+  flex: 1;
 `;
 
 /**
@@ -342,3 +329,28 @@ const CalendarContainer = styled.div`
 //   }, true);
 //   return <Fragment />;
 // };
+
+/* <BothCalendars>
+          <Calendar
+            key="calendar1"
+            curMonth={curMonth}
+            curGoal={selected}
+            completedDaysMap={newCompletedDays}
+            colorMap={colorMap}
+            selectedGoals={selectedGoals}
+            handleDayCompleted={handleDayCompleted}
+            handleDayRemoved={handleDayRemoved}
+          />
+          <div style={{ paddingLeft: "500px" }}>
+            <Calendar
+              key="calendar2"
+              curMonth={curMonth}
+              curGoal={selected}
+              completedDaysMap={newCompletedDays}
+              colorMap={colorMap}
+              selectedGoals={selectedGoals}
+              handleDayCompleted={handleDayCompleted}
+              handleDayRemoved={handleDayRemoved}
+            />
+          </div>
+        </BothCalendars> */

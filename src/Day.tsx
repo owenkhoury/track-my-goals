@@ -169,7 +169,7 @@ const Button = styled.button<ButtonProps>`
   font-size: 1em;
   margin: 0.4375rem;
   border: ${props =>
-    props.disabled ? "2px solid #f1f1f1;" : "2px solid #5cc7ff"};
+    props.disabled ? "2px solid #f1f1f1;" : "2px solid #10adff"};
   border-radius: 3px;
   background-color: ${props =>
     props.disabled
@@ -183,4 +183,9 @@ const Button = styled.button<ButtonProps>`
     filter: ${props =>
       props.disabled ? "brightness(100%)" : "brightness(85%)"};
   }
+
+  margin-top: 0.3rem;
 `;
+
+//5cc7ff -- blue
+// 565656 -- black
