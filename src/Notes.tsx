@@ -4,7 +4,7 @@ import styled from "styled-components";
 export default function Notes({}) {
   return (
     <Container>
-      <NotesInput type="text" placeholder="Add Notes for goal 3 on 7/18/19" />
+      <NotesInput placeholder="Add Notes for goal 3 on 7/18/19" />
     </Container>
   );
 }
@@ -18,7 +18,7 @@ const Container = styled.div`
   right: 0;
 `;
 
-const NotesInput = styled.input`
+const NotesInput = styled.textarea`
   width: 17rem;
   height: 100%;
   background: #d8d8d8;
