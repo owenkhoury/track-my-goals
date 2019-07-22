@@ -14,7 +14,8 @@ export default function GoalsList({
   removeFromColorMap,
   handleGoalSelected,
   handleGoalRemoved,
-  selectedGoals
+  selectedGoals,
+  creationDateMap
 }) {
   const { auth } = useAuth();
 
@@ -149,7 +150,7 @@ export default function GoalsList({
                     />
                     <ListRowInfo>
                       <Goal>{goal}</Goal>
-                      <StartDate>Jan 11th, 2019</StartDate>
+                      <StartDate>{creationDateMap[goal]}</StartDate>
                     </ListRowInfo>
                   </ListRowLeft>
                   <label>

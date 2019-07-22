@@ -33,6 +33,8 @@ export default function LoggedIn() {
 
   const [curMonth, setCurMonth] = useState(null);
 
+  const [goalCreationDateMap, setGoalCreationDateMap] = useState({});
+
   const addHandler = handler =>
     window.addEventListener("beforeunload", handler);
   const removeHandler = handler =>
@@ -81,6 +83,10 @@ export default function LoggedIn() {
     setCurMonth(month);
   }
 
+  function timeConverter(date: Date) {
+    return date.toISOString().substring(0, 10);
+  }
+
   function fetchGoals() {
     db.collection("goals")
       .doc(auth.uid)
@@ -90,10 +96,16 @@ export default function LoggedIn() {
       .then(snapshot => {
         const existingGoals: any[] = [];
         const existingColorMap = {};
+        const createdDateMap = {};
         snapshot.docs.forEach(doc => {
           if (doc.data().goal) {
             existingGoals.push(doc.data().goal);
             existingColorMap[doc.data().goal] = doc.data().color;
+            // console.log("TIME CONVERTER: ", timeConverter(doc.data().created));
+            console.log("TIME CONVERTER: ", new Date(doc.data().created));
+            createdDateMap[doc.data().goal] = timeConverter(
+              new Date(doc.data().created)
+            );
           }
         });
 
@@ -103,6 +115,8 @@ export default function LoggedIn() {
         handleGoalSelected(existingGoals[0]);
         setExistingGoals(existingGoals);
         setColorMap(existingColorMap);
+
+        setGoalCreationDateMap(createdDateMap);
       });
   }
 
@@ -234,6 +248,7 @@ export default function LoggedIn() {
           handleGoalSelected={handleGoalSelected}
           handleGoalRemoved={handleGoalRemoved}
           selectedGoals={selectedGoals}
+          creationDateMap={goalCreationDateMap}
         />
         <CalendarContainer>
           <Calendar
