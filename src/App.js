@@ -12,7 +12,7 @@ function App() {
   if (!authAttempted) return null;
 
   return (
-    <div>
+    <Container>
       {auth ? (
         <AppContainer>
           <LoggedIn />
@@ -20,14 +20,20 @@ function App() {
       ) : (
         <LoggedOut />
       )}
-    </div>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  overflow-y: hidden;
+  height: 100%;
+`;
 
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow-y: hidden;
 `;
 
 export default () => (

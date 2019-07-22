@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import styled from "styled-components";
 import { createGoal, deleteGoal, removeDaysCompleted } from "./utils";
 import useAuth from "./useAuth";
-import { tsPropertySignature } from "@babel/types";
+
+import DeleteModal from "./DeleteModal";
 
 export default function GoalsList({
   existingGoals,
@@ -25,39 +26,86 @@ export default function GoalsList({
 
   const [wasGoalSelectedOnLoad, setWasGoalSelectedOnLoad] = useState(true);
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [goalToDelete, setGoalToDelete] = useState(null);
+
+  const [curIdx, setCurIdx] = useState(null);
+
   useEffect(() => {
     setGoals(existingGoals);
   }, [existingGoals]);
 
+  // TODO -- THE CHECK BOXES ARE MESSED UP WHEN DELETING
+  // DON'T SET THE DELETED GOAL AS SELECTED, JUST USE SEPARATE STATE.
+  function handleDelete(goal: string, idx: number) {
+    deleteGoal(auth.uid, goal);
+    setGoals(goals.filter(g => g !== goal));
+    removeDaysCompleted(auth.uid, goal);
+
+    handleGoalRemoved(goal);
+
+    console.log("handleDelete", goal, selected);
+
+    if (goal == selected) {
+      console.log("DELETED THE SELECTED GOAL");
+
+      // Check if there are still goals remaining after this delete.
+      if (goals.length - 1 > 0) {
+        const nextGoalIdx = idx === 0 ? idx + 1 : idx - 1;
+        updateSelected(goals[nextGoalIdx]);
+        handleGoalSelected(goals[nextGoalIdx], goals[idx]);
+      }
+
+      // Check that this isn't the last goal in the list.
+      // if (idx - 1 >= 0) {
+      //   if (goals.includes(goals[idx - 1])) {
+      //     updateSelected(goals[idx - 1]);
+      //     handleGoalSelected(goals[idx - 1]);
+      //   }
+      // }
+    }
+
+    setShowDeleteModal(false);
+  }
+
   return (
-    <GoalContainer>
-      <AppTitle />
-      <InputContainer>
-        <GoalInput
-          type="text"
-          placeholder="Enter your next habit"
-          onChange={e => setNewGoal(e.target.value)}
+    <GoalContainer deleteModalShowing={showDeleteModal}>
+      {showDeleteModal ? (
+        <DeleteModal
+          onClick={() => setShowDeleteModal(false)}
+          onDelete={() => handleDelete(goalToDelete, curIdx)}
         />
-        <AddGoalButton
-          onClick={() => {
-            if (newGoal.length > 0 && !goals.includes(newGoal)) {
-              const goalColor = addToColorMap(newGoal);
-              createGoal(auth.uid, newGoal, goalColor);
+      ) : null}
+      <AppTitle />
+      {showDeleteModal ? null : (
+        <InputContainer>
+          <GoalInput
+            type="text"
+            placeholder="Enter your next habit"
+            onChange={e => setNewGoal(e.target.value)}
+          />
+          <AddGoalButton
+            onClick={() => {
+              if (newGoal.length > 0 && !goals.includes(newGoal)) {
+                const goalColor = addToColorMap(newGoal);
+                createGoal(auth.uid, newGoal, goalColor);
 
-              if (goals.includes(newGoal)) {
-                updateSelected(newGoal);
+                if (goals.includes(newGoal)) {
+                  updateSelected(newGoal);
+                }
+
+                setNewGoal("");
+                setGoals([...goals, newGoal]);
               }
-
-              setNewGoal("");
-              setGoals([...goals, newGoal]);
-            }
-          }}
-        >
-          ADD
-        </AddGoalButton>
-      </InputContainer>
+            }}
+          >
+            ADD
+          </AddGoalButton>
+        </InputContainer>
+      )}
       <ListContainer>
-        {goals
+        {goals && !showDeleteModal
           ? goals.map((goal, idx) => {
               return (
                 <NewListRow
@@ -105,7 +153,7 @@ export default function GoalsList({
                     </ListRowInfo>
                   </ListRowLeft>
                   <label>
-                    <input // TODO -- PUT THIS LOGIC INTO THE CIRCLE
+                    <input
                       id={goal}
                       type="checkbox"
                       defaultChecked={idx === 0}
@@ -132,22 +180,15 @@ export default function GoalsList({
                       }}
                     />
                   </label>{" "}
-                  {/* // TODO -- IMPORT ICONS, INCLUDING TRASH ICON FOR DELETING */}
                   <DeleteButton
                     onClick={e => {
                       e.stopPropagation();
-                      const idx = goals.indexOf(goal);
+                      // updateSelected(goal);
 
-                      deleteGoal(auth.uid, goal);
-                      setGoals(goals.filter(g => g !== goal));
-                      removeDaysCompleted(auth.uid, goal);
+                      setGoalToDelete(goal);
 
-                      // Check that this isn't the last goal in the list.
-                      if (idx - 1 >= 0) {
-                        if (goals.includes(goals[idx - 1])) {
-                          updateSelected(goals[idx - 1]);
-                        }
-                      }
+                      setCurIdx(goals.indexOf(goal));
+                      setShowDeleteModal(true);
                     }}
                   >
                     {" "}
@@ -165,8 +206,8 @@ export default function GoalsList({
   );
 }
 
-const GoalContainer = styled.div`
-  // display: flex;
+const GoalContainer = styled.div<{ deleteModalShowing }>`
+  display: flex;
   flex-direction: column;
   align-items: center;
   padding-left: 1.5rem;
@@ -175,6 +216,9 @@ const GoalContainer = styled.div`
   font-family: Helvetica;
   position: absolute;
   height: 100%;
+  width: 25rem;
+  background: ${props =>
+    props.deleteModalShowing ? "rgba(0, 0, 0, 0.6)" : null};
 `;
 
 const AppTitle = styled.div`
@@ -196,6 +240,7 @@ const ListContainer = styled.div`
   flex-direction: column;
   align-items: center;
   height: 35rem;
+  overflow-y: scroll;
 `;
 
 const AddGoalButton = styled.button`

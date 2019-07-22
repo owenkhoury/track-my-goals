@@ -97,7 +97,10 @@ export default function Day({
         <Fragment>
           <MyDiv style={{ background: singleColor }} />
           <MyDiv style={{ background: singleColor }}>
-            <Text>{disabled ? "0" : day} </Text>
+            <EditContainer>
+              <i className="glyphicon glyphicon-edit" />
+              <Text>{disabled ? "0" : day} </Text>
+            </EditContainer>
           </MyDiv>
           <MyDiv style={{ background: singleColor }} />
           <MyDiv style={{ background: singleColor }} />
@@ -114,6 +117,7 @@ export default function Day({
       completedColor={completedColor}
       disabled={disabled}
       onClick={() => {
+        // TODO -- DISABLE DESELECT UNLESS ONLY 1 GOAL IS SELECTED.
         if (!disabled) {
           setCompleted(!completed);
 
@@ -139,6 +143,11 @@ export default function Day({
     </Button>
   );
 }
+
+const EditContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 const Text = styled.div`
   z-index: 10;
