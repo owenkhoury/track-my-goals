@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { createGoal, deleteGoal, removeDaysCompleted } from "./utils";
 import useAuth from "./useAuth";
 
+import "./App.scss";
+
 import DeleteModal from "./DeleteModal";
 
 export default function GoalsList({
@@ -46,25 +48,11 @@ export default function GoalsList({
 
     handleGoalRemoved(goal);
 
-    console.log("handleDelete", goal, selected);
-
-    if (goal == selected) {
-      console.log("DELETED THE SELECTED GOAL");
-
-      // Check if there are still goals remaining after this delete.
-      if (goals.length - 1 > 0) {
-        const nextGoalIdx = idx === 0 ? idx + 1 : idx - 1;
-        updateSelected(goals[nextGoalIdx]);
-        handleGoalSelected(goals[nextGoalIdx], goals[idx]);
-      }
-
-      // Check that this isn't the last goal in the list.
-      // if (idx - 1 >= 0) {
-      //   if (goals.includes(goals[idx - 1])) {
-      //     updateSelected(goals[idx - 1]);
-      //     handleGoalSelected(goals[idx - 1]);
-      //   }
-      // }
+    // Check if there are still goals remaining after this delete.
+    if (goals.length - 1 > 0) {
+      const nextGoalIdx = idx === 0 ? idx + 1 : idx - 1;
+      updateSelected(goals[nextGoalIdx]);
+      handleGoalSelected(goals[nextGoalIdx], goals[idx]);
     }
 
     setShowDeleteModal(false);
@@ -111,7 +99,7 @@ export default function GoalsList({
               return (
                 <NewListRow
                   // style={goals[idx + 1] ? null : { borderWidth: "5px" }} // Check if it's the last goal in the list.
-                  selected={goal === selected}
+                  selected={goal === selectedGoals[0]}
                   checked={
                     (document.getElementById(goal) as HTMLInputElement) &&
                     (document.getElementById(goal) as HTMLInputElement).checked
@@ -142,7 +130,7 @@ export default function GoalsList({
                 >
                   <ListRowLeft>
                     <Circle
-                      selected={goal === selected}
+                      selected={goal === selectedGoals[0]}
                       color={
                         colorMap && colorMap[goal] ? colorMap[goal] : "red"
                       }
@@ -153,51 +141,51 @@ export default function GoalsList({
                       <StartDate>{creationDateMap[goal]}</StartDate>
                     </ListRowInfo>
                   </ListRowLeft>
-                  <label>
-                    <input
-                      id={goal}
-                      type="checkbox"
-                      defaultChecked={idx === 0}
+
+                  <ListRowRight>
+                    <Checkbox>
+                      <input
+                        id={goal}
+                        type="checkbox"
+                        defaultChecked={idx === 0}
+                        onClick={e => {
+                          e.stopPropagation();
+                          let checkbox = document.getElementById(
+                            goal
+                          ) as HTMLInputElement;
+
+                          console.log("checked: ", checkbox.checked);
+
+                          if (idx === 0 && selectedGoals.length === 0) {
+                            checkbox.checked = true;
+                            handleGoalSelected(goal);
+                          }
+
+                          if (checkbox.checked) {
+                            handleGoalSelected(goal);
+                          } else if (selectedGoals.length === 1) {
+                            e.preventDefault();
+                          } else {
+                            handleGoalRemoved(goal);
+                          }
+                        }}
+                      />
+                    </Checkbox>{" "}
+                    <DeleteButton
                       onClick={e => {
                         e.stopPropagation();
-                        let checkbox = document.getElementById(
-                          goal
-                        ) as HTMLInputElement;
-
-                        console.log("checked: ", checkbox.checked);
-
-                        if (idx === 0 && selectedGoals.length === 0) {
-                          checkbox.checked = true;
-                          handleGoalSelected(goal);
-                        }
-
-                        if (checkbox.checked) {
-                          handleGoalSelected(goal);
-                        } else if (selectedGoals.length === 1) {
-                          e.preventDefault();
-                        } else {
-                          handleGoalRemoved(goal);
-                        }
+                        setGoalToDelete(goal);
+                        setCurIdx(goals.indexOf(goal));
+                        setShowDeleteModal(true);
                       }}
-                    />
-                  </label>{" "}
-                  <DeleteButton
-                    onClick={e => {
-                      e.stopPropagation();
-                      // updateSelected(goal);
-
-                      setGoalToDelete(goal);
-
-                      setCurIdx(goals.indexOf(goal));
-                      setShowDeleteModal(true);
-                    }}
-                  >
-                    {" "}
-                    <i
-                      className="glyphicon glyphicon-trash"
-                      style={{ paddingRight: ".5rem" }}
-                    />
-                  </DeleteButton>
+                    >
+                      {" "}
+                      <i
+                        className="glyphicon glyphicon-trash"
+                        style={{ paddingRight: ".5rem" }}
+                      />
+                    </DeleteButton>
+                  </ListRowRight>
                 </NewListRow>
               );
             })
@@ -350,4 +338,15 @@ const ListRowLeft = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+`;
+
+const ListRowRight = styled.div`
+  display: flex;
+  justify-content: end;
+  align-items: center;
+`;
+
+const Checkbox = styled.label`
+  margin-right: 0rem;
+  width: 3rem;
 `;

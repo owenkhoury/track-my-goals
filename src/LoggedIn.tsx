@@ -7,6 +7,8 @@ import { db } from "./fire";
 import HeaderBar from "./HeaderBar";
 import { GOAL_COLORS } from "./constants/AppConstants";
 import Notes from "./Notes";
+import { addCompletedDay, removeCompletedDay } from "./utils";
+
 // TODO -- I'M NOT CLEARING OUT MY LOCAL TRACK OF COMPLETED DAYS WHEN A GOAL GETS DELETED.
 
 export default function LoggedIn() {
@@ -68,10 +70,6 @@ export default function LoggedIn() {
     fetchCompletedDays();
   }, []);
 
-  useEffect(() => {
-    console.log("selected goals: ", selectedGoals);
-  });
-
   // Component will unmount. Add the selected days for last goal.
   // useEffect(() => {
   //   return () => {
@@ -87,6 +85,9 @@ export default function LoggedIn() {
     return date.toISOString().substring(0, 10);
   }
 
+  /**
+   * Pull Goal data from the firestore.
+   */
   function fetchGoals() {
     db.collection("goals")
       .doc(auth.uid)
@@ -101,8 +102,7 @@ export default function LoggedIn() {
           if (doc.data().goal) {
             existingGoals.push(doc.data().goal);
             existingColorMap[doc.data().goal] = doc.data().color;
-            // console.log("TIME CONVERTER: ", timeConverter(doc.data().created));
-            console.log("TIME CONVERTER: ", new Date(doc.data().created));
+
             createdDateMap[doc.data().goal] = timeConverter(
               new Date(doc.data().created)
             );
@@ -110,6 +110,11 @@ export default function LoggedIn() {
         });
 
         existingGoals.sort((a, b) => a.created - b.created);
+
+        // Set the initially selected goal
+
+        const selected: [string] = [selectedGoals[0]];
+        setSelectedGoals(selected);
 
         setSelected(existingGoals[0]);
         handleGoalSelected(existingGoals[0]);
@@ -120,8 +125,11 @@ export default function LoggedIn() {
       });
   }
 
+  /**
+   * Load a mapping of each goal to its list of completed dates.
+   */
   function fetchCompletedDays() {
-    console.log("fetchCompletedDays");
+    console.log("fetch completed days");
 
     db.collection("completed")
       .doc(auth.uid)
@@ -147,29 +155,6 @@ export default function LoggedIn() {
         setOldCompletedDays(JSON.parse(JSON.stringify(datesCompletedMap)));
         setNewCompletedDays(datesCompletedMap);
       });
-  }
-
-  async function handleDayCompleted(date: string) {
-    const updatedCompletedDays = newCompletedDays;
-    updatedCompletedDays[selected] = newCompletedDays[selected]
-      ? [...newCompletedDays[selected], date]
-      : [date];
-    await setNewCompletedDays(updatedCompletedDays);
-  }
-
-  function handleDayRemoved(date: string) {
-    const updatedCompletedDays = newCompletedDays;
-    updatedCompletedDays[selected] = updatedCompletedDays[selected].filter(
-      curDate => curDate !== date
-    );
-    setNewCompletedDays(updatedCompletedDays);
-  }
-
-  function updateSelected(goal: string) {
-    console.log("updateSelected: ", goal);
-
-    // batchUpdateCompletedDays(selected);
-    if (GoalsList) setSelected(goal);
   }
 
   /**
@@ -210,7 +195,11 @@ export default function LoggedIn() {
     setColorMap(updatedMap);
   }
 
-  // THESE ARE USED FOR MULTI-SELECT
+  /**
+   * Add newly selected goal to selectedGoalss state.
+   * @param goal
+   * @param goalToRemove
+   */
   function handleGoalSelected(goal: string, goalToRemove?: string) {
     if (!selectedGoals.includes(goal)) {
       let updateSelected = [...selectedGoals, goal];
@@ -223,6 +212,10 @@ export default function LoggedIn() {
     }
   }
 
+  /**
+   * Remove goal from selectedGoals state.
+   * @param goal
+   */
   function handleGoalRemoved(goal: string) {
     if (selectedGoals.includes(goal)) {
       const filteredSelectedGoals = selectedGoals.filter(g => {
@@ -231,6 +224,40 @@ export default function LoggedIn() {
 
       setSelectedGoals([...filteredSelectedGoals]);
     }
+  }
+
+  /**
+   * Add this day to this goal's list of completed days.
+   * @param date
+   * @param goal
+   */
+  function handleDayCompleted(date: string, goal: string) {
+    // Make firestore call to save completed date.
+    addCompletedDay(auth.uid, goal, date);
+
+    const update: Object = JSON.parse(JSON.stringify(newCompletedDays));
+    update[goal] = update[goal] ? [...update[goal], date] : [date];
+
+    setNewCompletedDays(update);
+  }
+
+  /**
+   * Remove this day from this goal's list of completed days.
+   * @param date
+   * @param goal
+   */
+  function handleDayRemoved(date: string, goal: string) {
+    // Make firestore call to remove completed date.
+    removeCompletedDay(auth.uid, goal, date);
+
+    const update: Object = JSON.parse(JSON.stringify(newCompletedDays));
+    update[goal] = update[goal].filter(curDate => curDate !== date);
+    setNewCompletedDays(update);
+  }
+
+  function updateSelected(goal: string) {
+    // batchUpdateCompletedDays(selected);
+    if (GoalsList) setSelected(goal);
   }
 
   return (
@@ -255,7 +282,7 @@ export default function LoggedIn() {
             key="calendar1"
             curMonth={curMonth}
             curGoal={selected}
-            completedDaysMap={newCompletedDays}
+            newCompletedDays={newCompletedDays}
             colorMap={colorMap}
             selectedGoals={selectedGoals}
             handleDayCompleted={handleDayCompleted}
@@ -295,77 +322,3 @@ const Container = styled.div`
   height: 100%;
   flex: 1;
 `;
-
-/**
- * When the user switches between goals, batch update all of their
- * selections into the database
- */
-// async function batchUpdateCompletedDays(goal: string) {
-//   console.log("batchUpdateCompletedDays");
-//   console.log(oldCompletedDays[goal]);
-//   console.log(newCompletedDays[goal]);
-
-//   if (newCompletedDays[goal]) {
-//     if (oldCompletedDays[goal]) {
-//       // Add new Days.
-//       newCompletedDays[goal].forEach(date => {
-//         if (!oldCompletedDays[goal].includes(date)) {
-//           addCompletedDay(auth.uid, goal, date);
-//         }
-//       });
-
-//       // Remove de-selected days.
-//       oldCompletedDays[goal].forEach(date => {
-//         if (!newCompletedDays[goal].includes(date)) {
-//           removeCompletedDay(auth.uid, goal, date);
-//         }
-//       });
-//     } else {
-//       // This is a newly created goal.
-//       newCompletedDays[goal].forEach(date => {
-//         addCompletedDay(auth.uid, goal, date);
-//       });
-
-//       // Add this new goal to the 'oldCompletedDays' mapping.
-//       setOldCompletedDays(JSON.parse(JSON.stringify(newCompletedDays)));
-//     }
-//   }
-// }
-
-// TODO -- WON'T ACCOUNT FOR DESELECTED DAYS. ONLY ADDS NEWLY SELECTED DAYS.
-// TODO -- NOT TOTALLY WORKING. MAYBE JUST MAKE A REQ FOR EVERY SQUARE
-// const WindowCloseComponent = () => {
-//   useWindowUnloadEffect(() => {
-//     if (newCompletedDays[selected]) {
-//       newCompletedDays[selected].forEach(date => {
-//         addCompletedDay(auth.uid, selected, date);
-//       });
-//     }
-//   }, true);
-//   return <Fragment />;
-// };
-
-/* <BothCalendars>
-          <Calendar
-            key="calendar1"
-            curMonth={curMonth}
-            curGoal={selected}
-            completedDaysMap={newCompletedDays}
-            colorMap={colorMap}
-            selectedGoals={selectedGoals}
-            handleDayCompleted={handleDayCompleted}
-            handleDayRemoved={handleDayRemoved}
-          />
-          <div style={{ paddingLeft: "500px" }}>
-            <Calendar
-              key="calendar2"
-              curMonth={curMonth}
-              curGoal={selected}
-              completedDaysMap={newCompletedDays}
-              colorMap={colorMap}
-              selectedGoals={selectedGoals}
-              handleDayCompleted={handleDayCompleted}
-              handleDayRemoved={handleDayRemoved}
-            />
-          </div>
-        </BothCalendars> */

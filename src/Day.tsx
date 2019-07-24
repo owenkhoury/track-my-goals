@@ -1,47 +1,54 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useEffect, Fragment } from "react";
 import styled from "styled-components";
-import useAuth from "./useAuth";
-import { removeCompletedDay, addCompletedDay } from "./utils";
-
-// TODO -- UPDATE COMPONENT TO USE PROP INTERFACE. ALLOWS OPTIONS.
-// interface Props  {
-//   completedDays:
-// }
 
 export default function Day({
   completedDays,
   completedColor,
-  curGoal,
+  curGoal, // shouldn't need this
   day,
   month,
   year,
+  goalsCompletedOnDay,
   selectedGoals,
   colorMap,
   handleDayCompleted,
   handleDayRemoved,
   isCompleted,
+  newCompletedDays,
   disabled
 }) {
-  const { auth } = useAuth();
+  // const [completed, setCompleted] = useState(isCompleted);
 
-  const [completed, setCompleted] = useState(isCompleted);
+  // useEffect(() => {
+  //   if (goalsCompletedOnDay && goalsCompletedOnDay.length > 0) {
+  //     console.log("day.tsx selected goals: ", goalsCompletedOnDay);
+  //   }
 
-  useEffect(() => {
-    console.log("selected goals: ", selectedGoals);
-  });
+  //   console.log(selectedGoals);
+  // }, [selectedGoals, goalsCompletedOnDay]);
 
-  useEffect(() => {
-    setCompleted(isCompleted);
-  }, [curGoal]);
+  // useEffect(() => {
+  //   setCompleted(isCompleted);
+  // }, [curGoal]);
 
-  useEffect(() => {
-    setCompleted(false);
-    setCompleted(isCompleted);
-  }, [isCompleted, month]);
+  // useEffect(() => {
+  //   setCompleted(false);
+  //   setCompleted(isCompleted);
+  // }, [isCompleted, month]);
 
+  /**
+   * Determine how to color in each day depending on how many goals
+   * are currently selected.
+   */
   function getColorDisplay() {
-    if (selectedGoals && selectedGoals.length === 1) {
-      const singleColor = colorMap[selectedGoals[0]];
+    const oneGoal: boolean =
+      goalsCompletedOnDay && goalsCompletedOnDay.length === 1;
+
+    const multipleGoals: boolean =
+      goalsCompletedOnDay && goalsCompletedOnDay.length > 1;
+
+    if (oneGoal) {
+      const singleColor = colorMap[goalsCompletedOnDay[0]];
       return (
         <Fragment>
           <MyDiv style={{ background: singleColor }} />
@@ -52,43 +59,34 @@ export default function Day({
           <MyDiv style={{ background: singleColor }} />
         </Fragment>
       );
-    } else if (selectedGoals && selectedGoals.length > 1) {
-      if (selectedGoals.length > 1) {
-        console.log(
-          "multiple colors for this day: ",
-          selectedGoals,
-          colorMap[selectedGoals[0]],
-          colorMap[selectedGoals[1]]
-        );
-      }
-
-      let divList = [];
+    } else if (multipleGoals) {
+      let display = [];
 
       // TODO -- use a foreach loop. this is whack
-      for (let x in selectedGoals) {
+      for (let x in goalsCompletedOnDay) {
         if (x === "1") {
-          divList.push(
-            <MyDiv style={{ background: colorMap[selectedGoals[x]] }}>
+          display.push(
+            <MyDiv style={{ background: colorMap[goalsCompletedOnDay[x]] }}>
               <Text>{disabled ? "0" : day} </Text>
             </MyDiv>
           );
         } else {
-          divList.push(
-            <MyDiv style={{ background: colorMap[selectedGoals[x]] }} />
+          display.push(
+            <MyDiv style={{ background: colorMap[goalsCompletedOnDay[x]] }} />
           );
         }
       }
 
-      while (divList.length !== 4) {
-        divList.push(<MyDiv style={{ background: "#D8D8D8" }} />);
+      while (display.length !== 4) {
+        display.push(<MyDiv style={{ background: "#D8D8D8" }} />);
       }
 
       return (
         <Fragment>
-          {divList[0]}
-          {divList[1]}
-          {divList[2]}
-          {divList[3]}
+          {display[0]}
+          {display[1]}
+          {display[2]}
+          {display[3]}
         </Fragment>
       );
     } else {
@@ -113,14 +111,10 @@ export default function Day({
 
   return (
     <Button
-      completed={completed}
       completedColor={completedColor}
       disabled={disabled}
       onClick={() => {
-        // TODO -- DISABLE DESELECT UNLESS ONLY 1 GOAL IS SELECTED.
         if (!disabled) {
-          setCompleted(!completed);
-
           const date =
             month.toString().padStart(2, "0") +
             "-" +
@@ -128,13 +122,20 @@ export default function Day({
             "-" +
             year.toString();
 
-          if (completed) {
-            handleDayRemoved(date);
-            removeCompletedDay(auth.uid, curGoal, date);
-          } else {
-            selectedGoals.push(curGoal);
-            handleDayCompleted(date);
-            addCompletedDay(auth.uid, curGoal, date);
+          // Only allow select and deselect if ony one goal is selected.
+          if (selectedGoals.length === 1) {
+            const goal = selectedGoals[0];
+
+            const isGoalSelected =
+              newCompletedDays &&
+              newCompletedDays[goal] &&
+              newCompletedDays[goal].indexOf(date) > -1;
+
+            if (isGoalSelected) {
+              handleDayRemoved(date, goal);
+            } else {
+              handleDayCompleted(date, goal);
+            }
           }
         }
       }}
@@ -161,7 +162,7 @@ const MyDiv = styled.div`
 `;
 
 interface ButtonProps {
-  completed: boolean;
+  // completed: boolean;
   disabled: boolean;
   completedColor: string;
 }
@@ -174,18 +175,11 @@ const Button = styled.button<ButtonProps>`
   width: 6rem;
   -webkit-text-fill-color: ${props =>
     props.disabled ? "transparent" : "none"};
-  color: ${props => (props.completed ? "white" : "black")};
   font-size: 1em;
   margin: 0.4375rem;
   border: ${props =>
     props.disabled ? "2px solid #f1f1f1;" : "2px solid #10adff"};
   border-radius: 3px;
-  background-color: ${props =>
-    props.disabled
-      ? "#f1f1f1"
-      : props.completed
-      ? props.completedColor
-      : "#D8D8D8"};
   text-align: right;
 
   &:hover {
