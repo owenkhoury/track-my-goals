@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { AppStateProvider } from "./app-state";
 import appReducer, { initialState } from "./appReducer";
@@ -9,8 +9,12 @@ import useAuth from "./useAuth";
 
 function App() {
   const { authAttempted, auth } = useAuth();
-  if (!authAttempted) return null;
 
+  useEffect(() => {
+    document.getElementById("root").style.overflow = "hidden";
+  });
+
+  if (!authAttempted) return null;
   return (
     <Container>
       {auth ? (
@@ -25,7 +29,7 @@ function App() {
 }
 
 const Container = styled.div`
-  overflow-y: hidden;
+  overflow-y: hidden !important;
   height: 100%;
 `;
 
