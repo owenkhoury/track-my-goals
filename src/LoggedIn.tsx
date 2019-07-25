@@ -5,7 +5,7 @@ import GoalsList from "./GoalList";
 import Calendar from "./Calendar";
 import { db } from "./fire";
 import HeaderBar from "./HeaderBar";
-import { GOAL_COLORS } from "./constants/AppConstants";
+import { GOAL_COLORS, completedDay } from "./constants/AppConstants";
 import Notes from "./Notes";
 import { addCompletedDay, removeCompletedDay } from "./utils";
 
@@ -37,10 +37,24 @@ export default function LoggedIn() {
 
   const [goalCreationDateMap, setGoalCreationDateMap] = useState({});
 
+  // Track which completed day we are currently writing notes for.
+  const [selectedDayForNotes, setSelectedDayForNotes] = useState(null);
+
   const addHandler = handler =>
     window.addEventListener("beforeunload", handler);
   const removeHandler = handler =>
     window.removeEventListener("beforeunload", handler);
+
+  useEffect(() => {
+    console.log("\n");
+    console.log(
+      "===================== LOGGED IN STATE ========================="
+    );
+    console.log("selectedDayForNotes: ", selectedDayForNotes);
+    console.log("selectedGoals: ", selectedGoals);
+    console.log("newCompletedDays:  ", newCompletedDays);
+    console.log("\n");
+  });
 
   /**
    * Save completed days for last viewed goal, before the app window closes or the page is refreshed.
@@ -69,13 +83,6 @@ export default function LoggedIn() {
     fetchGoals();
     fetchCompletedDays();
   }, []);
-
-  // Component will unmount. Add the selected days for last goal.
-  // useEffect(() => {
-  //   return () => {
-  //     batchUpdateCompletedDays(selected);
-  //   };
-  // }, []);
 
   async function updateCurMonth(month: number) {
     setCurMonth(month);
@@ -129,8 +136,6 @@ export default function LoggedIn() {
    * Load a mapping of each goal to its list of completed dates.
    */
   function fetchCompletedDays() {
-    console.log("fetch completed days");
-
     db.collection("completed")
       .doc(auth.uid)
       .collection("daysCompleted")
@@ -141,15 +146,21 @@ export default function LoggedIn() {
         snapshot.docs.forEach(doc => {
           const goal = doc.data().goal;
           const date = doc.data().date;
-          datesCompleted.push({ goal: goal, date: date });
+          const notes = doc.data().notes ? doc.data().notes : "";
+          datesCompleted.push({ goal: goal, date: date, notes: notes });
         });
 
         const datesCompletedMap = {};
         datesCompleted.forEach(data => {
           if (data.goal in datesCompletedMap) {
-            datesCompletedMap[data.goal].push(data.date);
+            datesCompletedMap[data.goal].push({
+              date: data.date,
+              notes: data.notes
+            });
           } else {
-            datesCompletedMap[data.goal] = [data.date];
+            datesCompletedMap[data.goal] = [
+              { date: data.date, notes: data.notes }
+            ];
           }
         });
         setOldCompletedDays(JSON.parse(JSON.stringify(datesCompletedMap)));
@@ -232,11 +243,19 @@ export default function LoggedIn() {
    * @param goal
    */
   function handleDayCompleted(date: string, goal: string) {
+    const completedDay: completedDay = {
+      date: date,
+      goal: goal,
+      notes: ""
+    };
+
     // Make firestore call to save completed date.
-    addCompletedDay(auth.uid, goal, date);
+    addCompletedDay(auth.uid, completedDay);
 
     const update: Object = JSON.parse(JSON.stringify(newCompletedDays));
-    update[goal] = update[goal] ? [...update[goal], date] : [date];
+    update[goal] = update[goal]
+      ? [...update[goal], { date: date, notes: "" }]
+      : [{ date: date, notes: "" }];
 
     setNewCompletedDays(update);
   }
@@ -251,13 +270,17 @@ export default function LoggedIn() {
     removeCompletedDay(auth.uid, goal, date);
 
     const update: Object = JSON.parse(JSON.stringify(newCompletedDays));
-    update[goal] = update[goal].filter(curDate => curDate !== date);
+    update[goal] = update[goal].filter(curDate => curDate.date !== date);
     setNewCompletedDays(update);
   }
 
   function updateSelected(goal: string) {
     // batchUpdateCompletedDays(selected);
     if (GoalsList) setSelected(goal);
+  }
+
+  function handleNotesSelected(completedDay: completedDay) {
+    setSelectedDayForNotes(completedDay);
   }
 
   return (
@@ -287,9 +310,13 @@ export default function LoggedIn() {
             selectedGoals={selectedGoals}
             handleDayCompleted={handleDayCompleted}
             handleDayRemoved={handleDayRemoved}
+            handleNotesSelected={handleNotesSelected}
           />
         </CalendarContainer>
-        <Notes />
+        <Notes
+          selectedDayForNotes={selectedDayForNotes}
+          newCompletedDays={newCompletedDays}
+        />
       </CalendarAndGoalsContainer>
     </Container>
   );
@@ -307,13 +334,6 @@ const CalendarAndGoalsContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-`;
-
-const BothCalendars = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: start;
 `;
 
 const Container = styled.div`

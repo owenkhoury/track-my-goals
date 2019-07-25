@@ -28,30 +28,6 @@ const appStateReducer = (state, action) => {
       return { ...state, user: action.user };
     }
 
-    // TODO -- SEE IF THESE ARE BEING USED AT ALL.
-    // case "GOALS_LOADED": {
-    //   console.log("LOADING GOALS: ", action.goals, action.goals[0]);
-    //   return { ...state };
-    // }
-    // case "GOAL_ADDED": {
-    //   // IDK IF THIS IS RIGHT. LET'S SEE
-    //   return { ...state, goals: [...state.goals, action.newGoal] };
-    // }
-    // case "SELECTED_DAYS_LOADED": {
-    //   return { ...state, selectedDays: action.selectedDays };
-    // }
-    // case "DAY_SELECTED": {
-    //   // HAVEN'T TESTED THIS LOGIC. PROBABLY NEEDS WORK.
-    //   const updatedDays = state.selectedDays;
-
-    //   // Make this a set instead of a list. Don't want duplicate days.
-    //   updatedDays[action.goal] = [
-    //     ...updatedDays[action.goal],
-    //     action.selectedDay
-    //   ];
-    //   return { ...state, selectedDays: updatedDays };
-    // }
-
     default:
       return state;
   }

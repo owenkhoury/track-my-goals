@@ -154,8 +154,6 @@ export default function GoalsList({
                             goal
                           ) as HTMLInputElement;
 
-                          console.log("checked: ", checkbox.checked);
-
                           if (idx === 0 && selectedGoals.length === 0) {
                             checkbox.checked = true;
                             handleGoalSelected(goal);

@@ -22,7 +22,8 @@ export default function Calendar({
   colorMap,
   selectedGoals,
   handleDayCompleted,
-  handleDayRemoved
+  handleDayRemoved,
+  handleNotesSelected
 }) {
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
@@ -99,6 +100,7 @@ export default function Calendar({
           isCompleted={false}
           curGoal={curGoal}
           disabled={true}
+          handleNotesSelected={handleNotesSelected}
         />
       );
     }
@@ -123,19 +125,12 @@ export default function Calendar({
         week = [];
       }
 
-      let goalSelectedOnDay = {};
-
-      selectedGoals.forEach(selectedGoal => {
-        goalSelectedOnDay[selectedGoal] = completedDays[selectedGoal]
-          ? completedDays[selectedGoal].indexOf(date) > -1
-          : false;
-      });
-
       let goalsCompletedOnDay = [];
       selectedGoals.forEach(selectedGoal => {
         if (
           completedDays[selectedGoal] &&
-          completedDays[selectedGoal].indexOf(date) > -1
+          completedDays[selectedGoal].filter(day => day.date === date).length >
+            0 //.indexOf(date) > -1
         ) {
           goalsCompletedOnDay.push(selectedGoal);
         }
@@ -161,6 +156,7 @@ export default function Calendar({
               : false
           }
           disabled={false}
+          handleNotesSelected={handleNotesSelected}
         />
       );
       dayOfWeek += 1;
@@ -184,6 +180,7 @@ export default function Calendar({
           isCompleted={false}
           curGoal={curGoal}
           disabled={true}
+          handleNotesSelected={handleNotesSelected}
         />
       );
     }
@@ -210,6 +207,7 @@ export default function Calendar({
             isCompleted={false}
             curGoal={curGoal}
             disabled={true}
+            handleNotesSelected={handleNotesSelected}
           />
         );
       }

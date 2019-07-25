@@ -1,5 +1,7 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import styled from "styled-components";
+
+import { completedDay } from "./constants/AppConstants";
 
 export default function Day({
   completedDays,
@@ -15,26 +17,22 @@ export default function Day({
   handleDayRemoved,
   isCompleted,
   newCompletedDays,
-  disabled
+  disabled,
+  handleNotesSelected
 }) {
-  // const [completed, setCompleted] = useState(isCompleted);
+  const [myDate, setMyDate] = useState("");
 
-  // useEffect(() => {
-  //   if (goalsCompletedOnDay && goalsCompletedOnDay.length > 0) {
-  //     console.log("day.tsx selected goals: ", goalsCompletedOnDay);
-  //   }
-
-  //   console.log(selectedGoals);
-  // }, [selectedGoals, goalsCompletedOnDay]);
-
-  // useEffect(() => {
-  //   setCompleted(isCompleted);
-  // }, [curGoal]);
-
-  // useEffect(() => {
-  //   setCompleted(false);
-  //   setCompleted(isCompleted);
-  // }, [isCompleted, month]);
+  useEffect(() => {
+    if (month && day && year) {
+      const date =
+        month.toString().padStart(2, "0") +
+        "-" +
+        day.toString().padStart(2, "0") +
+        "-" +
+        year.toString();
+      setMyDate(date);
+    }
+  });
 
   /**
    * Determine how to color in each day depending on how many goals
@@ -53,6 +51,22 @@ export default function Day({
         <Fragment>
           <MyDiv style={{ background: singleColor }} />
           <MyDiv style={{ background: singleColor }}>
+            <i
+              className="glyphicon glyphicon-edit"
+              style={{ color: "white" }}
+              onClick={e => {
+                console.log("clicked note button");
+                e.stopPropagation();
+
+                const day: completedDay = {
+                  date: myDate,
+                  goal: curGoal,
+                  notes: "hey this is a note"
+                };
+
+                handleNotesSelected(day);
+              }}
+            />
             <Text>{disabled ? "0" : day} </Text>
           </MyDiv>
           <MyDiv style={{ background: singleColor }} />
@@ -96,7 +110,6 @@ export default function Day({
           <MyDiv style={{ background: singleColor }} />
           <MyDiv style={{ background: singleColor }}>
             <EditContainer>
-              <i className="glyphicon glyphicon-edit" />
               <Text>{disabled ? "0" : day} </Text>
             </EditContainer>
           </MyDiv>
@@ -129,11 +142,14 @@ export default function Day({
             const isGoalSelected =
               newCompletedDays &&
               newCompletedDays[goal] &&
-              newCompletedDays[goal].indexOf(date) > -1;
+              newCompletedDays[goal].filter(day => day.date === date).length >
+                0; //.indexOf(date) > -1;
 
             if (isGoalSelected) {
+              console.log("handleDayRemoved");
               handleDayRemoved(date, goal);
             } else {
+              console.log("handleDayCompleted");
               handleDayCompleted(date, goal);
             }
           }
