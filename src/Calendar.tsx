@@ -2,15 +2,13 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Day from "./Day";
 
-function getWindowDimensions() {
+export function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
   return {
     width,
     height
   };
 }
-
-// TODO curGoal change to selected
 
 /**
  * NOTES -- Re-renders on every goal selection
@@ -28,22 +26,6 @@ export default function Calendar({
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
   );
-
-  // Mapping of each goal to the days that are completed (selected).
-  // const [completedDays, setCompletedDays] = useState({});
-
-  // const [curMonth, setCurMonth] = useState(null);
-
-  // Load the current month onto the screen.
-  // useEffect(() => {
-  //   const today = new Date();
-  //   setCurMonth(today.getMonth() + 1);
-  // }, []);
-
-  // MIGHT BE BAD DESIGN -- THIS SHOULD ONLY REALLY SET OUR LOCAL STATE ONCE.
-  // useEffect(() => {
-  //   setCompletedDays(newCompletedDays);
-  // }, [newCompletedDays]);
 
   const monthDays = {
     "01": 31,

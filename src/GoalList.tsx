@@ -6,6 +6,7 @@ import useAuth from "./useAuth";
 import "./App.scss";
 
 import DeleteModal from "./DeleteModal";
+import { getWindowDimensions } from "./Calendar";
 
 export default function GoalsList({
   existingGoals,
@@ -20,6 +21,15 @@ export default function GoalsList({
   creationDateMap
 }) {
   const { auth } = useAuth();
+
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  );
+
+  useEffect(() => {
+    console.log("dimensions: ", windowDimensions);
+    setWindowDimensions(getWindowDimensions());
+  });
 
   // This is the goal that is currently typed into the new goal input.
   const [newGoal, setNewGoal] = useState("");
@@ -93,7 +103,7 @@ export default function GoalsList({
           </AddGoalButton>
         </InputContainer>
       )}
-      <ListContainer>
+      <ListContainer windowHeight={windowDimensions.height}>
         {goals && !showDeleteModal
           ? goals.map((goal, idx) => {
               return (
@@ -222,12 +232,16 @@ const InputContainer = styled.div`
   flex-direction: row;
 `;
 
-const ListContainer = styled.div`
+const ListContainer = styled.div<{ windowHeight }>`
   display: flex;
+  direction: rtl;
   flex-direction: column;
   align-items: center;
-  height: 35rem;
+  height: ${props =>
+    props.windowHeight ? `${props.windowHeight - 320}px` : "35rem"};
   overflow-y: scroll;
+  margin-top: 2rem;
+  padding-left: 0.5rem;
 `;
 
 const AddGoalButton = styled.button`
@@ -270,16 +284,18 @@ interface ListRowProps {
 
 const NewListRow = styled.div<ListRowProps>`
   display: flex;
+  direction: ltr;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   vertical-align: middle;
   line-height: 2.5rem;
   height: 5rem;
+  margin-bottom: 2rem;
   width: 19.5rem;
   border-radius: 0.3rem;
   border: 1px solid #565656;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
   background-color: #D8D8D8;
   filter: ${props => (props.selected ? "brightness(65%)" : "brightness(100%)")};
   padding-left: 0.5rem;
