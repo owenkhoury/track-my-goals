@@ -238,7 +238,7 @@ const ListContainer = styled.div<{ windowHeight }>`
   flex-direction: column;
   align-items: center;
   height: ${props =>
-    props.windowHeight ? `${props.windowHeight - 280}px` : "35rem"};
+    props.windowHeight ? `${props.windowHeight - 330}px` : "35rem"};
   overflow-y: scroll;
   margin-top: 2rem;
   padding-left: 0.5rem;

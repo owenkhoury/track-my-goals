@@ -55,7 +55,7 @@ const NewContainer = styled.div`
 
 const Container = styled.div`
   width: 17rem;
-  border-left: 1px solid black;
+  border-left: 1.5px solid #979797;
   background: #d8d8d8;
   position: absolute;
   height: 100%;

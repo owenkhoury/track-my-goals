@@ -69,7 +69,7 @@ const Header = styled.div`
   display: flex;
   flex-direction: row;
   height: 4.5rem;
-  background-color: #e3e3e3; // #d8d8d8; // #c2c2c2;
+  background-color: #d6d6d6; // #e3e3e3; // #d8d8d8; // #c2c2c2;
   border-bottom: 2px solid #979797;
 `;
 
@@ -78,7 +78,7 @@ const MonthAndLogoutContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  background-color: #e3e3e3;
+  background-color: #d6d6d6;
 `;
 
 const VerticalBar = styled.div`
