@@ -194,7 +194,7 @@ const Button = styled.button<ButtonProps>`
   font-size: 1em;
   margin: 0.4375rem;
   border: ${props =>
-    props.disabled ? "2px solid #f1f1f1;" : "2px solid #10adff"};
+    props.disabled ? "2px solid #f1f1f1;" : "2px solid #6B7A8F"};
   border-radius: 3px;
   text-align: right;
 
@@ -206,5 +206,6 @@ const Button = styled.button<ButtonProps>`
   margin-top: 0.3rem;
 `;
 
+// 10adff - blue border
 //5cc7ff -- blue
 // 565656 -- black

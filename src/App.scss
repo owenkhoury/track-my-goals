@@ -40,16 +40,19 @@ body {
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
+  margin-bottom: 2rem;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
+  margin-bottom: 2rem;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #b2b2b2;
+  margin-bottom: 2rem;
 }
 
 /* Handle on hover */

@@ -68,10 +68,8 @@ const MonthContainer = styled.div`
 const Header = styled.div`
   display: flex;
   flex-direction: row;
-  // align-items: center;
-  // justify-content: space-between;
   height: 4.5rem;
-  background-color: #d8d8d8; // #c2c2c2;
+  background-color: #e3e3e3; // #d8d8d8; // #c2c2c2;
   border-bottom: 2px solid #979797;
 `;
 
@@ -80,7 +78,7 @@ const MonthAndLogoutContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  background-color: #d8d8d8;
+  background-color: #e3e3e3;
 `;
 
 const VerticalBar = styled.div`
@@ -107,11 +105,14 @@ const MonthButton = styled.button`
   margin: 1em;
   padding: 0.25em 1em;
   border: 2px solid;
-  border-color: #acacac;
+
   border-radius: 3px;
   display: inline-block;
-  background-color: #cbc9c9;
   border-radius: 0.3rem;
+
+  background-color: #ededed;
+  border-color: #09868b;
+  color: #09868b;
 
   &:hover {
     background-color: #bcb9b9;
@@ -127,8 +128,10 @@ const Button = styled.button`
   border: 2px solid;
   border-radius: 3px;
   display: inline-block;
-  background-color: #cbc9c9;
   border-radius: 0.3rem;
+
+  border-color: #09868b;
+  color: #09868b;
 
   &:hover {
     background-color: #bcb9b9;

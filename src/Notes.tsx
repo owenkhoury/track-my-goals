@@ -17,6 +17,7 @@ export default function Notes({ selectedDayForNotes, newCompletedDays }) {
     if (selectedDayForNotes) {
       setGoal(selectedDayForNotes.goal);
       setDate(selectedDayForNotes.date);
+      setNote(selectedDayForNotes.note);
       console.log(newCompletedDays[selectedDayForNotes.goal]);
     }
   }, [selectedDayForNotes, newCompletedDays]);

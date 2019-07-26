@@ -27,7 +27,6 @@ export default function GoalsList({
   );
 
   useEffect(() => {
-    console.log("dimensions: ", windowDimensions);
     setWindowDimensions(getWindowDimensions());
   });
 
@@ -209,11 +208,12 @@ const GoalContainer = styled.div<{ deleteModalShowing }>`
   align-items: center;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-  background-color: #0d160a;
+  // background-color: #393f4d // #6b7a8f; //#0d160a;
   font-family: Helvetica;
   position: absolute;
   height: 100%;
   width: 25rem;
+  border-right: 1.5px solid #d0d0d0;
   background: ${props =>
     props.deleteModalShowing ? "rgba(0, 0, 0, 0.6)" : null};
 `;
@@ -238,7 +238,7 @@ const ListContainer = styled.div<{ windowHeight }>`
   flex-direction: column;
   align-items: center;
   height: ${props =>
-    props.windowHeight ? `${props.windowHeight - 320}px` : "35rem"};
+    props.windowHeight ? `${props.windowHeight - 280}px` : "35rem"};
   overflow-y: scroll;
   margin-top: 2rem;
   padding-left: 0.5rem;
