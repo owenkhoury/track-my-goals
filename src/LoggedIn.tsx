@@ -53,6 +53,7 @@ export default function LoggedIn() {
     console.log("selectedDayForNotes: ", selectedDayForNotes);
     console.log("selectedGoals: ", selectedGoals);
     console.log("newCompletedDays:  ", newCompletedDays);
+    console.log("selectedDayForNotes: ", selectedDayForNotes);
     console.log("\n");
   });
 
@@ -279,8 +280,26 @@ export default function LoggedIn() {
     if (GoalsList) setSelected(goal);
   }
 
-  function handleNotesSelected(completedDay: completedDay) {
-    setSelectedDayForNotes(completedDay);
+  function handleNotesSelected(date: string, goal: string) {
+    let notes = null;
+
+    if (newCompletedDays && newCompletedDays[goal]) {
+      const day = newCompletedDays[goal].find(e => {
+        return e.date === date;
+      });
+
+      if (day) {
+        notes = day.notes;
+      }
+    }
+
+    const selectedDay: completedDay = {
+      date: date,
+      goal: goal,
+      notes: notes
+    };
+
+    setSelectedDayForNotes(selectedDay);
   }
 
   return (

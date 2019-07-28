@@ -58,13 +58,14 @@ export default function Day({
                 console.log("clicked note button");
                 e.stopPropagation();
 
-                const day: completedDay = {
-                  date: myDate,
-                  goal: curGoal,
-                  notes: "hey this is a note"
-                };
+                // const day: completedDay = {
+                //   date: myDate,
+                //   goal: curGoal,
+                //   notes: "hey this is a note"
+                // };
 
-                handleNotesSelected(day);
+                // TODO -- PASS THE GOAL AND THE DAY. LOOK UP THE NOTE
+                handleNotesSelected(myDate, curGoal);
               }}
             />
             <Text>{disabled ? "0" : day} </Text>
