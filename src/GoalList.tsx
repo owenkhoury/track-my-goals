@@ -1,285 +1,270 @@
-import React, { useState, useEffect, Fragment } from "react";
-import styled from "styled-components";
-import { createGoal, deleteGoal, removeDaysCompleted } from "./utils";
-import useAuth from "./useAuth";
+import React, { useState, useEffect, Fragment } from 'react';
+import styled from 'styled-components';
+import { createGoal, deleteGoal, removeDaysCompleted } from './utils';
+import useAuth from './useAuth';
 
-import "./App.scss";
+import './App.scss';
 
-import DeleteModal from "./DeleteModal";
-import { getWindowDimensions } from "./Calendar";
+import { getWindowDimensions } from './Calendar';
+import DeleteGoalRow from './DeleteGoalRow';
 
 export default function GoalsList({
-  existingGoals,
-  selected,
-  colorMap,
-  updateSelected,
-  addToColorMap,
-  removeFromColorMap,
-  handleGoalSelected,
-  handleGoalRemoved,
-  selectedGoals,
-  creationDateMap
+    existingGoals,
+    selected,
+    colorMap,
+    updateSelected,
+    addToColorMap,
+    removeFromColorMap,
+    handleGoalSelected,
+    handleGoalRemoved,
+    selectedGoals,
+    creationDateMap
 }) {
-  const { auth } = useAuth();
+    const { auth } = useAuth();
 
-  const [windowDimensions, setWindowDimensions] = useState(
-    getWindowDimensions()
-  );
+    // This is the goal that is currently typed into the new goal input.
+    const [newGoal, setNewGoal] = useState('');
 
-  useEffect(() => {
-    setWindowDimensions(getWindowDimensions());
-  });
+    // List of goals that are in the pre-delete state.
+    const [goalsToDelete, setGoalsToDelete] = useState([]);
 
-  // This is the goal that is currently typed into the new goal input.
-  const [newGoal, setNewGoal] = useState("");
+    // The list of the existing goals.
+    const [goals, setGoals] = useState(existingGoals);
 
-  // The list of the existing goals.
-  const [goals, setGoals] = useState(existingGoals);
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
-  const [wasGoalSelectedOnLoad, setWasGoalSelectedOnLoad] = useState(true);
+    useEffect(() => {
+        setWindowDimensions(getWindowDimensions());
+    });
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+    useEffect(() => {
+        setGoals(existingGoals);
+    }, [existingGoals]);
 
-  const [goalToDelete, setGoalToDelete] = useState(null);
+    // TODO -- THE CHECK BOXES ARE MESSED UP WHEN DELETING
+    // DON'T SET THE DELETED GOAL AS SELECTED, JUST USE SEPARATE STATE.
+    function handleDelete(goal: string, idx: number) {
+        deleteGoal(auth.uid, goal);
+        setGoals(goals.filter((g) => g !== goal));
+        removeDaysCompleted(auth.uid, goal);
 
-  const [curIdx, setCurIdx] = useState(null);
+        handleGoalRemoved(goal);
 
-  useEffect(() => {
-    setGoals(existingGoals);
-  }, [existingGoals]);
-
-  // TODO -- THE CHECK BOXES ARE MESSED UP WHEN DELETING
-  // DON'T SET THE DELETED GOAL AS SELECTED, JUST USE SEPARATE STATE.
-  function handleDelete(goal: string, idx: number) {
-    deleteGoal(auth.uid, goal);
-    setGoals(goals.filter(g => g !== goal));
-    removeDaysCompleted(auth.uid, goal);
-
-    handleGoalRemoved(goal);
-
-    // Check if there are still goals remaining after this delete.
-    if (goals.length - 1 > 0) {
-      const nextGoalIdx = idx === 0 ? idx + 1 : idx - 1;
-      updateSelected(goals[nextGoalIdx]);
-      handleGoalSelected(goals[nextGoalIdx], goals[idx]);
+        // Check if there are still goals remaining after this delete.
+        if (goals.length - 1 > 0) {
+            const nextGoalIdx = idx === 0 ? idx + 1 : idx - 1;
+            updateSelected(goals[nextGoalIdx]);
+            handleGoalSelected(goals[nextGoalIdx], goals[idx]);
+        }
     }
 
-    setShowDeleteModal(false);
-  }
+    function undoDelete(goal: string) {
+        let update = JSON.parse(JSON.stringify(goalsToDelete));
+        update = update.filter((g) => g != goal);
 
-  return (
-    <GoalContainer deleteModalShowing={showDeleteModal}>
-      {showDeleteModal ? (
-        <DeleteModal
-          onClick={() => setShowDeleteModal(false)}
-          onDelete={() => handleDelete(goalToDelete, curIdx)}
-        />
-      ) : null}
-      <AppTitle />
-      {showDeleteModal ? null : (
-        <InputContainer>
-          <GoalInput
-            type="text"
-            placeholder="Enter your next habit"
-            onChange={e => setNewGoal(e.target.value)}
-          />
-          <AddGoalButton
-            onClick={() => {
-              if (newGoal.length > 0 && !goals.includes(newGoal)) {
-                const goalColor = addToColorMap(newGoal);
-                createGoal(auth.uid, newGoal, goalColor);
+        setGoalsToDelete(update);
+    }
 
-                if (goals.includes(newGoal)) {
-                  updateSelected(newGoal);
-                }
+    return (
+        <GoalContainer>
+            <AppTitle />
 
-                setNewGoal("");
-                setGoals([...goals, newGoal]);
-              }
-            }}
-          >
-            ADD
-          </AddGoalButton>
-        </InputContainer>
-      )}
-      <ListContainer windowHeight={windowDimensions.height}>
-        {goals && !showDeleteModal
-          ? goals.map((goal, idx) => {
-              return (
-                <NewListRow
-                  // style={goals[idx + 1] ? null : { borderWidth: "5px" }} // Check if it's the last goal in the list.
-                  selected={goal === selectedGoals[0]}
-                  checked={
-                    (document.getElementById(goal) as HTMLInputElement) &&
-                    (document.getElementById(goal) as HTMLInputElement).checked
-                  }
-                  colorMap={colorMap}
-                  goal={goal}
-                  onClick={() => {
-                    // TODO -- PUT THIS INTO ITS OWN FUNCTION
-                    if (goals.includes(goal)) {
-                      // Set as selected and check this rows checkbox, remove the previously selected from the selectedList.
-                      handleGoalSelected(goal, selected);
-                      updateSelected(goal);
+            <InputContainer>
+                <GoalInput
+                    type='text'
+                    placeholder='Enter your next habit'
+                    onChange={(e) => setNewGoal(e.target.value)}
+                />
+                <AddGoalButton
+                    onClick={() => {
+                        if (newGoal.length > 0 && !goals.includes(newGoal)) {
+                            const goalColor = addToColorMap(newGoal);
+                            createGoal(auth.uid, newGoal, goalColor);
 
-                      // Use this so that I can check the first goal's checkbox on page load.
-                      if (wasGoalSelectedOnLoad) {
-                        setWasGoalSelectedOnLoad(false);
-                      }
+                            if (goals.includes(newGoal)) {
+                                updateSelected(newGoal);
+                            }
 
-                      (document.getElementById(
-                        selected
-                      ) as HTMLInputElement).checked = false;
+                            setNewGoal('');
+                            setGoals([...goals, newGoal]);
+                        }
+                    }}>
+                    ADD
+                </AddGoalButton>
+            </InputContainer>
+            <ListContainer windowHeight={windowDimensions.height}>
+                {goals
+                    ? goals.map((goal, idx) => {
+                          return (
+                              <Fragment>
+                                  {goalsToDelete.includes(goal) ? (
+                                      <DeleteGoalRow
+                                          goal={goal}
+                                          index={idx}
+                                          undoDelete={() => undoDelete(goal)}
+                                          confirmDelete={(goalToDelete, index) => handleDelete(goalToDelete, index)}
+                                      />
+                                  ) : (
+                                      <NewListRow
+                                          selected={goal === selectedGoals[0]}
+                                          checked={
+                                              (document.getElementById(goal) as HTMLInputElement) &&
+                                              (document.getElementById(goal) as HTMLInputElement).checked
+                                          }
+                                          colorMap={colorMap}
+                                          goal={goal}
+                                          toDelete={goalsToDelete.includes(goal)}
+                                          onClick={() => {
+                                              if (goals.includes(goal)) {
+                                                  if (selectedGoals) {
+                                                      selectedGoals.forEach((element) => {
+                                                          (document.getElementById(
+                                                              element
+                                                          ) as HTMLInputElement).checked = false;
+                                                      });
+                                                  }
 
-                      (document.getElementById(
-                        goal
-                      ) as HTMLInputElement).checked = true;
-                    }
-                  }}
-                >
-                  <ListRowLeft>
-                    <Circle
-                      selected={goal === selectedGoals[0]}
-                      color={
-                        colorMap && colorMap[goal] ? colorMap[goal] : "red"
-                      }
-                      className="dot"
-                    />
-                    <ListRowInfo>
-                      <Goal>{goal}</Goal>
-                      <StartDate>{creationDateMap[goal]}</StartDate>
-                    </ListRowInfo>
-                  </ListRowLeft>
+                                                  // Set as selected and check this rows checkbox, remove the previously selected from the selectedList.
+                                                  handleGoalSelected(goal, selectedGoals);
+                                                  updateSelected(goal);
 
-                  <ListRowRight>
-                    <Checkbox>
-                      <input
-                        id={goal}
-                        type="checkbox"
-                        defaultChecked={idx === 0}
-                        onClick={e => {
-                          e.stopPropagation();
-                          let checkbox = document.getElementById(
-                            goal
-                          ) as HTMLInputElement;
+                                                  (document.getElementById(goal) as HTMLInputElement).checked = true;
+                                              }
+                                          }}>
+                                          <ListRowLeft>
+                                              <Circle
+                                                  color={colorMap && colorMap[goal] ? colorMap[goal] : 'red'}
+                                                  className='dot'
+                                              />
+                                              <ListRowInfo>
+                                                  <Goal>{goal}</Goal>
+                                                  <StartDate>{creationDateMap[goal]}</StartDate>
+                                              </ListRowInfo>
+                                          </ListRowLeft>
+                                          <ListRowRight>
+                                              <Checkbox>
+                                                  <input
+                                                      id={goal}
+                                                      type='checkbox'
+                                                      defaultChecked={idx === 0}
+                                                      onClick={(e) => {
+                                                          e.stopPropagation();
+                                                          let checkbox = document.getElementById(
+                                                              goal
+                                                          ) as HTMLInputElement;
 
-                          if (idx === 0 && selectedGoals.length === 0) {
-                            checkbox.checked = true;
-                            handleGoalSelected(goal);
-                          }
+                                                          if (checkbox.checked) {
+                                                              handleGoalSelected(goal);
+                                                          } else if (selectedGoals.length === 1) {
+                                                              e.preventDefault();
+                                                          } else {
+                                                              handleGoalRemoved(goal);
+                                                          }
+                                                      }}
+                                                  />
+                                              </Checkbox>{' '}
+                                              <DeleteButton
+                                                  onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      setGoalsToDelete([...goalsToDelete, goal]);
 
-                          if (checkbox.checked) {
-                            handleGoalSelected(goal);
-                          } else if (selectedGoals.length === 1) {
-                            e.preventDefault();
-                          } else {
-                            handleGoalRemoved(goal);
-                          }
-                        }}
-                      />
-                    </Checkbox>{" "}
-                    <DeleteButton
-                      onClick={e => {
-                        e.stopPropagation();
-                        setGoalToDelete(goal);
-                        setCurIdx(goals.indexOf(goal));
-                        setShowDeleteModal(true);
-                      }}
-                    >
-                      {" "}
-                      <i
-                        className="glyphicon glyphicon-trash"
-                        style={{ paddingRight: ".5rem" }}
-                      />
-                    </DeleteButton>
-                  </ListRowRight>
-                </NewListRow>
-              );
-            })
-          : null}
-      </ListContainer>
-    </GoalContainer>
-  );
+                                                      // update local state of rows in delete state
+                                                      setGoalsToDelete([...goalsToDelete, goal]);
+                                                  }}>
+                                                  {' '}
+                                                  <i
+                                                      className='glyphicon glyphicon-trash'
+                                                      style={{ paddingRight: '.5rem' }}
+                                                  />
+                                              </DeleteButton>
+                                          </ListRowRight>
+                                      </NewListRow>
+                                  )}
+                              </Fragment>
+                          );
+                      })
+                    : null}
+            </ListContainer>
+        </GoalContainer>
+    );
 }
 
-const GoalContainer = styled.div<{ deleteModalShowing }>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  // background-color: #393f4d // #6b7a8f; //#0d160a;
-  font-family: Helvetica;
-  position: absolute;
-  height: 100%;
-  width: 25rem;
-  border-right: 1.5px solid #d0d0d0;
-  background: ${props =>
-    props.deleteModalShowing ? "rgba(0, 0, 0, 0.6)" : null};
+const GoalContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    // background-color: #393f4d // #6b7a8f; //#0d160a;
+    font-family: Helvetica;
+    position: absolute;
+    height: 100%;
+    width: 25rem;
+    border-right: 1.5px solid #d0d0d0;
 `;
 
 const AppTitle = styled.div`
-  color: white;
-  font-size: 2rem;
-  margin-top: 1rem;
-  margin-bottom: 4rem;
-  padding-right: 10rem;
-  font-family: Montserrat, sans-serif;
+    color: white;
+    font-size: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 4rem;
+    padding-right: 10rem;
+    font-family: Montserrat, sans-serif;
 `;
 
 const InputContainer = styled.div`
-  display: flex;
-  flex-direction: row;
+    display: flex;
+    flex-direction: row;
 `;
 
 const ListContainer = styled.div<{ windowHeight }>`
-  display: flex;
-  direction: rtl;
-  flex-direction: column;
-  align-items: center;
-  height: ${props =>
-    props.windowHeight ? `${props.windowHeight - 330}px` : "35rem"};
-  overflow-y: scroll;
-  margin-top: 2rem;
-  padding-left: 0.5rem;
+    display: flex;
+    direction: rtl;
+    flex-direction: column;
+    align-items: center;
+    height: ${(props) => (props.windowHeight ? `${props.windowHeight - 330}px` : '35rem')};
+    overflow-y: scroll;
+    margin-top: 2rem;
+    padding-left: 0.5rem;
 `;
 
 const AddGoalButton = styled.button`
-  background-color: #bcb9b9;
-  display: inline-block;
-  color: #faf8f8;
-  font-size: 1em;
-  /* padding: 1rem; */
-  border: none;
-  font-weight: bold;
+    background-color: #bcb9b9;
+    display: inline-block;
+    color: #faf8f8;
+    font-size: 1em;
+    /* padding: 1rem; */
+    border: none;
+    font-weight: bold;
 
-  &:hover {
-    filter: brightness(85%);
-  }
+    &:hover {
+        filter: brightness(85%);
+    }
 `;
 
 const GoalInput = styled.input`
-  height: 3rem;
-  width: 18rem;
-  color: black;
-  background: #d8d8d8;
-  border: none;
-  font-size: 1em;
+    height: 3rem;
+    width: 18rem;
+    color: black;
+    background: #d8d8d8;
+    border: none;
+    font-size: 1em;
 
-  padding-left: 0.5rem;
-  /* border-radius: 0.3rem 0 0 0.3rem; */
+    padding-left: 0.5rem;
+    /* border-radius: 0.3rem 0 0 0.3rem; */
 `;
 
 const DeleteButton = styled.button`
-  background-color: rgba(0, 0, 0, 0);
-  border: none;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
 `;
 
 interface ListRowProps {
-  selected: boolean;
-  checked: boolean;
-  colorMap: Object;
-  goal: string;
+    selected: boolean;
+    checked: boolean;
+    colorMap: Object;
+    goal: string;
+    toDelete: boolean; // check if this row is in deleting state (user clicked delete button but waiting for confirmation / cancellation).
 }
 
 const NewListRow = styled.div<ListRowProps>`
@@ -296,71 +281,68 @@ const NewListRow = styled.div<ListRowProps>`
   border-radius: 0.3rem;
   border: 1px solid #565656;
   /* margin-top: 2rem; */
-  background-color: #D8D8D8;
-  filter: ${props => (props.selected ? "brightness(65%)" : "brightness(100%)")};
+  background-color: ${(props) => (props.toDelete ? 'red' : '#d8d8d8')}; 
+  filter: ${(props) => (props.selected ? 'brightness(65%)' : 'brightness(100%)')};
   padding-left: 0.5rem;
   color: black;
   margin-left: 0.5rem;
   font-family: "Avenir Next" !important;
 
   &:hover {
-    /* background-color: ${props =>
-      props.colorMap && props.goal ? props.colorMap[props.goal] : "#D8D8D8"}; */
-    filter: ${props =>
-      props.selected ? "brightness(65%)" : "brightness(50%)"};
+    /* background-color: ${(props) => (props.colorMap && props.goal ? props.colorMap[props.goal] : '#d8d8d8')}; */
+    filter: ${(props) => (props.selected ? 'brightness(65%)' : 'brightness(50%)')};
   }
 `;
 
 const ListRowInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  padding-left: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    padding-left: 0.75rem;
 `;
 
-const Circle = styled.span<{ color; selected }>`
-  height: 2.5rem;
-  width: 2.5rem;
-  background-color: ${props => props.color};
-  border-radius: 50%;
-  border: .04rem solid black;
-  /* border: ${props => (props.selected ? "" : "3px solid " + props.color)}; */
+const Circle = styled.span<{ color }>`
+    height: 2.5rem;
+    width: 2.5rem;
+    background-color: ${(props) => props.color};
+    border-radius: 50%;
+    border: 0.04rem solid black;
 `;
 
 const Goal = styled.div`
-  color: black;
-  font-size: 1rem;
-  font-family: "Avenir Next" !important;
-  overflow: auto;
-  height: 29px;
-  margin-bottom: 0;
-  overflow-y: hidden; // hide vertical
-  overflow-x: hidden;
+    color: black;
+    font-size: 1rem;
+    font-family: 'Avenir Next' !important;
+    overflow: auto;
+    height: 29px;
+    margin-bottom: 0;
+    overflow-y: hidden; // hide vertical
+    overflow-x: hidden;
 `;
 
 const StartDate = styled.div`
-  color: "#A9A9A9";
-  font-size: 0.6rem;
-  font-family: "Avenir Next" !important;
-  overflow-y: hidden; // hide vertical
-  overflow-x: hidden;
-  height: 25px;
-  padding-bottom: 0.6rem;
+    color: '#A9A9A9';
+    font-size: 0.6rem;
+    font-family: 'Avenir Next' !important;
+    overflow-y: hidden; // hide vertical
+    overflow-x: hidden;
+    height: 25px;
+    padding-bottom: 0.6rem;
 `;
 
 const ListRowLeft = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 `;
 
 const ListRowRight = styled.div`
-  display: flex;
-  justify-content: end;
-  align-items: center;
+    display: flex;
+    justify-content: end;
+    align-items: center;
 `;
 
 const Checkbox = styled.label`
-  margin-right: 0rem;
-  width: 3rem;
+    margin-right: 0rem;
+    width: 3rem;
 `;

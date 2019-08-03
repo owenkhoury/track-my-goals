@@ -1,112 +1,137 @@
-import React, { useState, useEffect, Fragment } from "react";
-import styled from "styled-components";
-import { updateNotesForCompletedDay } from "./utils";
-import { completedDay } from "./constants/AppConstants";
-import useAuth from "./useAuth";
-import { getWindowDimensions } from "./Calendar";
+import React, { useState, useEffect, Fragment } from 'react';
+import styled from 'styled-components';
+import { completedDay } from './constants/AppConstants';
+import { getWindowDimensions } from './Calendar';
+import { useSpring, animated } from 'react-spring';
 
-export default function Notes({ selectedDayForNotes, newCompletedDays }) {
-  const { auth } = useAuth();
+export default function Notes({ selectedDayForNotes, newCompletedDays, handleNoteAdded }) {
+    const [goal, setGoal] = useState(null);
 
-  const [goal, setGoal] = useState("none selected");
+    const [date, setDate] = useState(null);
 
-  const [date, setDate] = useState("none selected");
+    const [note, setNote] = useState('');
 
-  const [note, setNote] = useState("");
+    const [showSuccess, setShowSuccess] = useState(1);
 
-  const [windowDimensions, setWindowDimensions] = useState(
-    getWindowDimensions()
-  );
+    const props = useSpring({ opacity: 0, from: { opacity: showSuccess } });
 
-  useEffect(() => {
-    setWindowDimensions(getWindowDimensions());
-  });
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
-  useEffect(() => {
-    console.log("note: ", selectedDayForNotes);
-  });
+    useEffect(() => {
+        setWindowDimensions(getWindowDimensions());
+    }, []);
 
-  useEffect(() => {
-    if (selectedDayForNotes) {
-      setGoal(selectedDayForNotes.goal);
-      setDate(selectedDayForNotes.date);
-      setNote(selectedDayForNotes.notes);
-    }
-  }, [selectedDayForNotes, newCompletedDays]);
+    useEffect(() => {
+        if (selectedDayForNotes) {
+            setGoal(selectedDayForNotes.goal);
+            setDate(selectedDayForNotes.date);
+            setNote(selectedDayForNotes.notes);
+        }
+    }, [selectedDayForNotes, newCompletedDays]);
 
-  return (
-    <Container>
-      <NewContainer>
-        <Header>Note for:</Header>
-        <Header>{goal}</Header>
-        <Header>{date}</Header>
-        <NotesInput
-          // placeholder={`Add Notes for ${goal} on ${date}`}
-          windowHeight={windowDimensions.height}
-          onChange={e => setNote(e.target.value)}
-          value={note}
-        />
-        <SaveButton
-          onClick={() => {
-            if (goal && date) {
-              const dayToUpdate: completedDay = {
-                goal: goal,
-                date: date,
-                notes: note
-              };
-              updateNotesForCompletedDay(auth.uid, dayToUpdate);
-            }
-          }}
-        >
-          Save Note
-        </SaveButton>
-        <Remainder />
-      </NewContainer>
-    </Container>
-  );
+    return (
+        <Container>
+            <NewContainer>
+                {/* {goal && date ? ( */}
+                <Fragment>
+                    <SaveButton
+                        onClick={async (event) => {
+                            if (goal && date && note.length) {
+                                const dayToUpdate: completedDay = {
+                                    goal: goal,
+                                    date: date,
+                                    notes: note
+                                };
+                                // updateNotesForCompletedDay(auth.uid, dayToUpdate);
+                                await handleNoteAdded(dayToUpdate);
+                                await setShowSuccess(showSuccess === 1 ? 0 : 1);
+                            }
+                        }}>
+                        Save Note
+                    </SaveButton>
+                    <Header style={{ paddingTop: '.5rem' }}>Note for:</Header>
+                    <Header>{goal}</Header>
+                    <Header style={{ paddingBottom: '1rem', borderBottom: '1px solid black' }}>{date}</Header>
+
+                    <SuccessfulSave success={showSuccess} style={props}>
+                        Sucess
+                    </SuccessfulSave>
+
+                    <NotesInput
+                        placeholder={note ? null : `Add Notes for ${goal} on ${date}`}
+                        windowHeight={windowDimensions.height}
+                        onChange={(e) => setNote(e.target.value)}
+                        value={note}
+                    />
+                    <Remainder />
+                </Fragment>
+                {/* // ) : null} */}
+            </NewContainer>
+        </Container>
+    );
 }
 
-const Header = styled.h6`
-  font-family: "Avenir Next";
+const sup = styled.div`
+    transition: opacity 0.3s;
+    -webkit-transition: opacity 0.3s;
+`;
+
+const SuccessfulSave = styled(animated.div)<{ success }>`
+    width: 5rem;
+    height: 2rem;
+    background-color: green;
+    opacity: ${(props) => props.success};
+`;
+
+const Header = styled.h4`
+    font-family: 'Avenir Next';
+    padding-left: 0.3rem;
+    color: black;
 `;
 
 const SaveButton = styled.button`
-  border: 3px solid #09868b;
-  height: 5rem;
-  color: #09868b;
-  font-family: "Avenir Next";
+    /* border: 3px solid black; */
+    height: 5rem;
+    background-color: #09868b;
+    font-family: 'Avenir Next';
+    font-size: 1.3rem;
+    color: white;
 
-  &:hover {
-    filter: brightness(85%);
-  }
+    &:hover {
+        filter: brightness(85%);
+    }
 `;
 
 const NewContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background: #d8d8d8;
+    display: flex;
+    flex-direction: column;
+    background-color: #d8d8d8;
 `;
 
 const Container = styled.div`
-  width: 17rem;
-  background: #d8d8d8;
-  position: absolute;
-  right: 0;
+    width: 17rem;
+    background-color: #d8d8d8;
+
+    color: #09868b;
+    border-left: 1.5px solid #979797;
+    position: absolute;
+    right: 0;
 `;
 
 const NotesInput = styled.textarea<{ windowHeight }>`
-  width: 17rem;
-  background: #d8d8d8;
-  font-family: "Avenir Next";
-  height: ${props =>
-    props.windowHeight ? `${props.windowHeight - 300}px` : "35rem"};
-  padding-left: 0.5rem;
-  border: none;
-  padding-top: 3rem;
-  border-left: 1.5px solid #979797;
+    color: black;
+    width: 17rem;
+    background: #d8d8d8;
+    font-family: 'Avenir Next';
+    height: ${(props) => (props.windowHeight ? `${props.windowHeight - 300}px` : '35rem')};
+    padding-left: 0.5rem;
+    border: none;
+    padding-top: 3rem;
+    /* border-left: 1.5px solid #979797; */
+    background-color: #d8d8d8;
 `;
 
 const Remainder = styled.div`
-  background: #d8d8d8;
-  height: 200px;
+    background: #d8d8d8;
+    height: 200px;
 `;
