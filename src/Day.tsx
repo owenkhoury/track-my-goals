@@ -116,28 +116,23 @@ export default function Day({
             disabled={disabled}
             onClick={() => {
                 if (!disabled) {
-                    const date =
-                        month.toString().padStart(2, '0') +
-                        '-' +
-                        day.toString().padStart(2, '0') +
-                        '-' +
-                        year.toString();
-
                     // Only allow select and deselect if ony one goal is selected.
                     if (selectedGoals.length === 1) {
                         const goal = selectedGoals[0];
 
+                        handleNoteSelected(myDate, curGoal);
+
                         const isGoalSelected =
                             newCompletedDays &&
                             newCompletedDays[goal] &&
-                            newCompletedDays[goal].filter((day) => day.date === date).length > 0; //.indexOf(date) > -1;
+                            newCompletedDays[goal].filter((day) => day.date === myDate).length > 0; //.indexOf(date) > -1;
 
                         if (isGoalSelected) {
                             console.log('handleDayRemoved');
-                            handleDayRemoved(date, goal);
+                            handleDayRemoved(myDate, goal);
                         } else {
                             console.log('handleDayCompleted');
-                            handleDayCompleted(date, goal);
+                            handleDayCompleted(myDate, goal);
                         }
                     }
                 }
@@ -146,11 +141,6 @@ export default function Day({
         </Button>
     );
 }
-
-const NotesContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
-`;
 
 const EditContainer = styled.div`
     display: flex;
@@ -170,7 +160,6 @@ const MyDiv = styled.div`
 `;
 
 interface ButtonProps {
-    // completed: boolean;
     disabled: boolean;
     completedColor: string;
 }
@@ -194,7 +183,3 @@ const Button = styled.button<ButtonProps>`
 
     margin-top: 0.3rem;
 `;
-
-// 10adff - blue border
-//5cc7ff -- blue
-// 565656 -- black

@@ -29,7 +29,7 @@ export default function LoggedIn() {
 
     // Mapping of each goal to the days that are completed (selected).
     // The old state of the mapping at the time of the app being loaded
-    const [oldCompletedDays, setOldCompletedDays] = useState({});
+    // const [oldCompletedDays, setOldCompletedDays] = useState({});
 
     // Mapping of each goal to the days that are completed (selected).
     // the new state of the mapping as the user makes new selections.
@@ -159,7 +159,7 @@ export default function LoggedIn() {
                         datesCompletedMap[data.goal] = [{ date: data.date, notes: data.notes }];
                     }
                 });
-                setOldCompletedDays(JSON.parse(JSON.stringify(datesCompletedMap)));
+                // setOldCompletedDays(JSON.parse(JSON.stringify(datesCompletedMap)));
                 setNewCompletedDays(datesCompletedMap);
             });
     }
@@ -208,27 +208,12 @@ export default function LoggedIn() {
      * @param goalToRemove
      */
     function handleGoalSelected(goal: string, goalsToRemove?: string[]) {
-        console.log('\n');
-        console.log('handleGoalSelected: ', goal, goalsToRemove);
-
         if (!selectedGoals.includes(goal)) {
-            console.log('inside if statement');
             let updateSelected = [...selectedGoals, goal];
 
             if (goalsToRemove) {
                 updateSelected = updateSelected.filter((g) => !goalsToRemove.includes(g));
             }
-
-            console.log(updateSelected);
-
-            // let updateSelected = [...selectedGoals, goal];
-
-            // if (goalsToRemove && goalToRemove != goal) {
-            //     updateSelected = updateSelected.filter((g) => g != goalToRemove);
-            // }
-
-            console.log('\n');
-
             setSelectedGoals(updateSelected);
         }
     }
