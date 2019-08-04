@@ -54,6 +54,7 @@ export async function addCompletedDay(uid, completedDay: completedDay) {
         .doc(uid)
         .collection('daysCompleted')
         .add({
+            uid: uid,
             goal: completedDay.goal,
             date: completedDay.date,
             notes: completedDay.notes
@@ -79,6 +80,7 @@ export async function updateNotesForCompletedDay(uid, completedDay: completedDay
                 .collection('daysCompleted')
                 .doc(doc.id)
                 .update({
+                    uid: uid,
                     goal: completedDay.goal,
                     date: completedDay.date,
                     notes: completedDay.notes

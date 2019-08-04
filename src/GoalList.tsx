@@ -10,7 +10,6 @@ import DeleteGoalRow from './DeleteGoalRow';
 
 export default function GoalsList({
     existingGoals,
-    selected,
     colorMap,
     updateSelected,
     addToColorMap,

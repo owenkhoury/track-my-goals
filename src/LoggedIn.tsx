@@ -208,11 +208,13 @@ export default function LoggedIn() {
      * @param goalToRemove
      */
     function handleGoalSelected(goal: string, goalsToRemove?: string[]) {
-        if (!selectedGoals.includes(goal)) {
-            let updateSelected = [...selectedGoals, goal];
+        console.log('handleGoalSelected', goal, goalsToRemove);
+
+        if (!(selectedGoals.includes(goal) && selectedGoals.length === 1)) {
+            let updateSelected = selectedGoals.includes(goal) ? [...selectedGoals] : [...selectedGoals, goal];
 
             if (goalsToRemove) {
-                updateSelected = updateSelected.filter((g) => !goalsToRemove.includes(g));
+                updateSelected = updateSelected.filter((g) => !goalsToRemove.includes(g) || g == goal);
             }
             setSelectedGoals(updateSelected);
         }
@@ -320,7 +322,6 @@ export default function LoggedIn() {
                 <CalendarAndGoalsContainer>
                     <GoalsList
                         existingGoals={existingGoals}
-                        selected={selected}
                         colorMap={colorMap}
                         updateSelected={updateSelected}
                         addToColorMap={addToColorMap}
