@@ -7,7 +7,13 @@ import { db } from './fire';
 import HeaderBar from './HeaderBar';
 import { GOAL_COLORS, completedDay } from './constants/AppConstants';
 import Notes from './Notes';
-import { addCompletedDay, removeCompletedDay, updateNotesForCompletedDay } from './utils';
+import {
+    addCompletedDay,
+    removeCompletedDay,
+    updateNotesForCompletedDay,
+    removeDaysCompleted,
+    deleteGoal
+} from './utils';
 
 import { useSpring, animated } from 'react-spring';
 
@@ -53,6 +59,7 @@ export default function LoggedIn() {
         console.log('selectedGoals: ', selectedGoals);
         console.log('newCompletedDays:  ', newCompletedDays);
         console.log('selectedDayForNotes: ', selectedDayForNotes);
+        console.log('colorMap: ', colorMap);
         console.log('\n');
     });
 
@@ -172,6 +179,9 @@ export default function LoggedIn() {
         let nextHexColor = null;
         // Watch for null pointer exception
         const colorsInUse = Object.values(colorMap);
+
+        console.log('add to color map:  ', colorsInUse, GOAL_COLORS);
+
         for (let i = 0; i < GOAL_COLORS.length; i++) {
             if (!colorsInUse.includes(GOAL_COLORS[i])) {
                 nextHexColor = GOAL_COLORS[i];
@@ -194,7 +204,10 @@ export default function LoggedIn() {
     function removeFromColorMap(goal: string) {
         const updatedMap = colorMap;
 
+        console.log('remove from color map: ');
+
         Object.keys(updatedMap).forEach((key) => {
+            console.log(key, goal);
             if (key == goal) {
                 delete updatedMap[goal];
             }
@@ -230,6 +243,8 @@ export default function LoggedIn() {
                 return g != goal;
             });
 
+            // removeDaysCompleted(auth.uid, goal);
+            // removeFromColorMap(goal);
             setSelectedGoals([...filteredSelectedGoals]);
         }
     }
@@ -356,6 +371,9 @@ export default function LoggedIn() {
 }
 
 const CalendarContainer = styled.div`
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+
     flex: 1;
     margin-top: 1rem;
     padding-right: 17rem;
@@ -364,12 +382,31 @@ const CalendarContainer = styled.div`
 `;
 
 const CalendarAndGoalsContainer = styled.div`
+    display: -webkit-box;
+    display: -ms-flexbox;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 `;
 
 const Container = styled.div`
+    display: -webkit-box;
+    display: -ms-flexbox;
+
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+
     display: flex;
     flex-direction: column;
     height: 100%;

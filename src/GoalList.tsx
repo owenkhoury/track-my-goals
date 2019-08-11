@@ -34,7 +34,7 @@ export default function GoalsList({
 
     useEffect(() => {
         setWindowDimensions(getWindowDimensions());
-    });
+    }, []);
 
     useEffect(() => {
         setGoals(existingGoals);
@@ -46,6 +46,8 @@ export default function GoalsList({
         deleteGoal(auth.uid, goal);
         setGoals(goals.filter((g) => g !== goal));
         removeDaysCompleted(auth.uid, goal);
+
+        removeFromColorMap(goal);
 
         handleGoalRemoved(goal);
 
@@ -189,12 +191,31 @@ export default function GoalsList({
 }
 
 const GoalContainer = styled.div`
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     align-items: center;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     // background-color: #393f4d // #6b7a8f; //#0d160a;
+    font-family: Helvetica;
+    position: absolute;
+    height: 100%;
+    width: 25rem;
+    border-right: 1.5px solid #d0d0d0; */
+
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+
     font-family: Helvetica;
     position: absolute;
     height: 100%;
@@ -212,11 +233,31 @@ const AppTitle = styled.div`
 `;
 
 const InputContainer = styled.div`
+    /* display: flex;
+    flex-direction: row; */
+
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
     flex-direction: row;
 `;
 
 const ListContainer = styled.div<{ windowHeight }>`
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    direction: rtl;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+
     display: flex;
     direction: rtl;
     flex-direction: column;

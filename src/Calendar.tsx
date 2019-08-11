@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Day from './Day';
 
@@ -201,8 +201,6 @@ export default function Calendar({
 
     const calendarYear = getYear(newCompletedDays);
 
-    console.log('CALENDAR YEAR: ', calendarYear);
-
     return (
         <Container>
             {calendarYear[curMonth]
@@ -215,10 +213,26 @@ export default function Calendar({
 }
 
 const Container = styled.div`
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     align-items: center;
-    // margin-left: 30rem;
+    justify-content: center;
+    margin-left: 22rem;
+    margin-top: 1rem;
+    overflow: hidden; */
+
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
     margin-left: 22rem;
     margin-top: 1rem;

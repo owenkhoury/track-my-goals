@@ -23,10 +23,6 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
     }, []);
 
     useEffect(() => {
-        console.log('notes: ', selectedDayForNotes);
-    });
-
-    useEffect(() => {
         if (selectedDayForNotes) {
             setGoal(selectedDayForNotes.goal);
             setDate(selectedDayForNotes.date);
@@ -52,6 +48,17 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
                                         // updateNotesForCompletedDay(auth.uid, dayToUpdate);
                                         await handleNoteAdded(dayToUpdate);
                                         await setShowSuccess(showSuccess === 1 ? 0 : 1);
+
+                                        let saveDisplay = document.getElementById('Saved');
+
+                                        saveDisplay.style.opacity = '1';
+                                        saveDisplay.style.opacity = '0';
+
+                                        // if (saveDisplay.style.opacity == '0') {
+                                        //     saveDisplay.style.opacity = '1';
+                                        // } else {
+                                        //     saveDisplay.style.opacity = '0';
+                                        // }
                                     }
                                 }}>
                                 Save Note
@@ -64,6 +71,8 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
                                 Sucess
                             </SuccessfulSave>
 
+                            <Whatever id='Saved'>Saved</Whatever>
+
                             <NotesInput
                                 placeholder={note ? null : `Add Notes for ${goal} on ${date}`}
                                 windowHeight={windowDimensions.height}
@@ -72,7 +81,6 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
                             />
                             <Remainder />
                         </Fragment>
-                        {/* // ) : null} */}
                     </NewContainer>
                 </Container>
             ) : (
@@ -87,6 +95,15 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
         </Fragment>
     );
 }
+
+const Whatever = styled.div`
+    opacity: 0;
+    -webkit-transition: all 2s ease-out;
+    -moz-transition: all 2s ease-out;
+    -ms-transition: all 2s ease-out;
+    -o-transition: all 2s ease-out;
+    transition: all 2s ease-out;
+`;
 
 const Placeholder = styled.div<{ windowHeight }>`
     color: black;
@@ -128,7 +145,16 @@ const SaveButton = styled.button`
 `;
 
 const NewContainer = styled.div`
+    /* display: flex;
+    flex-direction: column;
+    background-color: #d8d8d8; */
+
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
     background-color: #d8d8d8;
 `;

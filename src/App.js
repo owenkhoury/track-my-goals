@@ -1,47 +1,57 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
-import { AppStateProvider } from "./app-state";
-import appReducer, { initialState } from "./appReducer";
-import LoggedOut from "./LoggedOut";
-import LoggedIn from "./LoggedIn";
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
+import { AppStateProvider } from './app-state';
+import appReducer, { initialState } from './appReducer';
+import LoggedOut from './LoggedOut';
+import LoggedIn from './LoggedIn';
 
-import useAuth from "./useAuth";
+import useAuth from './useAuth';
 
 function App() {
-  const { authAttempted, auth } = useAuth();
+    const { authAttempted, auth } = useAuth();
 
-  useEffect(() => {
-    document.getElementById("root").style.overflow = "hidden";
-  });
+    useEffect(() => {
+        document.getElementById('root').style.overflow = 'hidden';
+    });
 
-  if (!authAttempted) return null;
-  return (
-    <Container>
-      {auth ? (
-        <AppContainer>
-          <LoggedIn />
-        </AppContainer>
-      ) : (
-        <LoggedOut />
-      )}
-    </Container>
-  );
+    if (!authAttempted) return null;
+    return (
+        <Container>
+            {auth ? (
+                <AppContainer>
+                    <LoggedIn />
+                </AppContainer>
+            ) : (
+                <LoggedOut />
+            )}
+        </Container>
+    );
 }
 
 const Container = styled.div`
-  overflow-y: hidden !important;
-  height: 100%;
+    overflow-y: hidden !important;
+    height: 100%;
 `;
 
 const AppContainer = styled.div`
-  display: flex;
+    /* display: flex;
   flex-direction: column;
   height: 100%;
-  overflow-y: hidden;
+  overflow-y: hidden; */
+
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: hidden;
 `;
 
 export default () => (
-  <AppStateProvider reducer={appReducer} initialState={initialState}>
-    <App />
-  </AppStateProvider>
+    <AppStateProvider reducer={appReducer} initialState={initialState}>
+        <App />
+    </AppStateProvider>
 );

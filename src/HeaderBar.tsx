@@ -64,10 +64,21 @@ const MonthContainer = styled.div`
 `;
 
 const Header = styled.div`
-    display: flex;
+    /* display: flex;
     flex-direction: row;
     height: 4.4rem;
-    background-color: #d8d8d8; // #e3e3e3; // #d8d8d8; // #c2c2c2;
+    background-color: #d8d8d8;
+    border-bottom: 2px solid #979797; */
+
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    height: 4.4rem;
+    background-color: #d8d8d8;
     border-bottom: 2px solid #979797;
 `;
 
