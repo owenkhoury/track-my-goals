@@ -107,7 +107,8 @@ export default function GoalsList({
                                       />
                                   ) : (
                                       <NewListRow
-                                          selected={goal === selectedGoals[0]}
+                                          // selected={goal === selectedGoals[0]}
+                                          selected={selectedGoals.includes(goal)}
                                           checked={
                                               (document.getElementById(goal) as HTMLInputElement) &&
                                               (document.getElementById(goal) as HTMLInputElement).checked
