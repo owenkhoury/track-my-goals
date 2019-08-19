@@ -7,15 +7,11 @@ import { db } from './fire';
 import HeaderBar from './HeaderBar';
 import { GOAL_COLORS, completedDay } from './constants/AppConstants';
 import Notes from './Notes';
-import {
-    addCompletedDay,
-    removeCompletedDay,
-    updateNotesForCompletedDay,
-    removeDaysCompleted,
-    deleteGoal
-} from './utils';
+import { addCompletedDay, removeCompletedDay, updateNotesForCompletedDay } from './utils';
 
 import { useSpring, animated } from 'react-spring';
+import BarGraph from './BarGraph';
+import Analytics from './Analytics';
 
 // TODO -- I'M NOT CLEARING OUT MY LOCAL TRACK OF COMPLETED DAYS WHEN A GOAL GETS DELETED.
 
@@ -47,6 +43,9 @@ export default function LoggedIn() {
 
     // Track which completed day we are currently writing notes for.
     const [selectedDayForNotes, setSelectedDayForNotes] = useState(null);
+
+    // Track if we're on the analytics page or the calendar page.
+    const [showAnalytics, setShowAnalytics] = useState(false);
 
     const animatedProps = useSpring({ opacity: 1, from: { opacity: 0 } });
 
@@ -332,8 +331,11 @@ export default function LoggedIn() {
     return (
         <animated.div style={animatedProps}>
             <Container className='this-one'>
-                <HeaderBar curMonth={curMonth} updateCurMonth={updateCurMonth} />
-
+                <HeaderBar
+                    curMonth={curMonth}
+                    updateCurMonth={updateCurMonth}
+                    toggleAnalytics={() => setShowAnalytics(!showAnalytics)}
+                />
                 <CalendarAndGoalsContainer>
                     <GoalsList
                         existingGoals={existingGoals}
@@ -347,17 +349,21 @@ export default function LoggedIn() {
                         creationDateMap={goalCreationDateMap}
                     />
                     <CalendarContainer>
-                        <Calendar
-                            key='calendar1'
-                            curMonth={curMonth}
-                            curGoal={selected}
-                            newCompletedDays={newCompletedDays}
-                            colorMap={colorMap}
-                            selectedGoals={selectedGoals}
-                            handleDayCompleted={handleDayCompleted}
-                            handleDayRemoved={handleDayRemoved}
-                            handleNoteSelected={handleNoteSelected}
-                        />
+                        {showAnalytics ? (
+                            <Analytics />
+                        ) : (
+                            <Calendar
+                                key='calendar1'
+                                curMonth={curMonth}
+                                curGoal={selected}
+                                newCompletedDays={newCompletedDays}
+                                colorMap={colorMap}
+                                selectedGoals={selectedGoals}
+                                handleDayCompleted={handleDayCompleted}
+                                handleDayRemoved={handleDayRemoved}
+                                handleNoteSelected={handleNoteSelected}
+                            />
+                        )}
                     </CalendarContainer>
                     <Notes
                         selectedDayForNotes={selectedDayForNotes}

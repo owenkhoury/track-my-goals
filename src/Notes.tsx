@@ -35,10 +35,9 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
             {selectedDayForNotes ? (
                 <Container>
                     <NewContainer>
-                        {/* {goal && date ? ( */}
                         <Fragment>
                             <SaveButton
-                                onClick={async (event) => {
+                                onClick={async () => {
                                     if (goal && date && note.length) {
                                         const dayToUpdate: completedDay = {
                                             goal: goal,
@@ -53,12 +52,6 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
 
                                         saveDisplay.style.opacity = '1';
                                         saveDisplay.style.opacity = '0';
-
-                                        // if (saveDisplay.style.opacity == '0') {
-                                        //     saveDisplay.style.opacity = '1';
-                                        // } else {
-                                        //     saveDisplay.style.opacity = '0';
-                                        // }
                                     }
                                 }}>
                                 Save Note
@@ -67,11 +60,10 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
                             <Header>{goal}</Header>
                             <Header style={{ paddingBottom: '1rem', borderBottom: '1px solid black' }}>{date}</Header>
 
-                            <SuccessfulSave success={showSuccess} style={props}>
-                                Sucess
-                            </SuccessfulSave>
-
-                            <Whatever id='Saved'>Saved</Whatever>
+                            <div className='alert'>
+                                <span className='closebtn'>&times;</span>
+                                This is an alert box.
+                            </div>
 
                             <NotesInput
                                 placeholder={note ? null : `Add Notes for ${goal} on ${date}`}

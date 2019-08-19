@@ -17,7 +17,7 @@ const monthName = {
     12: 'Dec'
 };
 
-export default function HeaderBar({ curMonth, updateCurMonth }) {
+export default function HeaderBar({ curMonth, updateCurMonth, toggleAnalytics }) {
     return (
         <Header>
             <AppTitle>HabitTracker</AppTitle>
@@ -42,6 +42,9 @@ export default function HeaderBar({ curMonth, updateCurMonth }) {
                         Next
                     </MonthButton>
                 </MonthContainer>
+                <Button onClick={toggleAnalytics} style={{ borderColor: '#CF2E38', color: '#CF2E38' }}>
+                    Analytics
+                </Button>
                 <Button onClick={logout}>Logout</Button>
             </MonthAndLogoutContainer>
         </Header>
