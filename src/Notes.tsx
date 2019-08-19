@@ -60,11 +60,6 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
                             <Header>{goal}</Header>
                             <Header style={{ paddingBottom: '1rem', borderBottom: '1px solid black' }}>{date}</Header>
 
-                            <div className='alert'>
-                                <span className='closebtn'>&times;</span>
-                                This is an alert box.
-                            </div>
-
                             <NotesInput
                                 placeholder={note ? null : `Add Notes for ${goal} on ${date}`}
                                 windowHeight={windowDimensions.height}
