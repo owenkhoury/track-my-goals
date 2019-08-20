@@ -23,10 +23,6 @@ export default function Day({
     const [doesDayHaveNote, setDayHasNote] = useState(false);
 
     useEffect(() => {
-        console.log('rendering day');
-    });
-
-    useEffect(() => {
         if (newCompletedDays && newCompletedDays[curGoal]) {
             const day = newCompletedDays[curGoal].find((e) => {
                 return e.date === myDate;
@@ -82,20 +78,22 @@ export default function Day({
                             paddingLeft: '0.5rem',
                             paddingTop: '0.2rem'
                         }}>
-                        <i
-                            className='glyphicon glyphicon-edit'
-                            style={{ color: 'white' }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleNoteSelected(myDate, curGoal);
-                            }}
-                        />
                         {doesDayHaveNote ? (
+                            <i
+                                className='glyphicon glyphicon-edit'
+                                style={{ color: 'white' }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleNoteSelected(myDate, curGoal);
+                                }}
+                            />
+                        ) : null}
+                        {/* {doesDayHaveNote ? (
                             <i
                                 className='glyphicon glyphicon-ok'
                                 style={{ color: 'white', marginRight: '.2rem', marginTop: '.5rem' }}
                             />
-                        ) : null}
+                        ) : null} */}
                     </MyDiv>
                     <MyDiv style={{ background: singleColor }}>
                         <Text style={{ color: 'white' }}>{disabled ? '0' : day} </Text>
@@ -179,16 +177,20 @@ export default function Day({
 
                         handleNoteSelected(myDate, curGoal);
 
-                        const isGoalSelected =
+                        const isDayCompleted =
                             newCompletedDays &&
                             newCompletedDays[goal] &&
-                            newCompletedDays[goal].filter((day) => day.date === myDate).length > 0; //.indexOf(date) > -1;
+                            newCompletedDays[goal].filter((day) => day.date === myDate).length > 0;
 
-                        if (isGoalSelected) {
-                            handleDayRemoved(myDate, goal);
-                        } else {
+                        if (!isDayCompleted) {
                             handleDayCompleted(myDate, goal);
                         }
+
+                        // if (isGoalSelected) {
+                        //     handleDayRemoved(myDate, goal);
+                        // } else {
+                        //     handleDayCompleted(myDate, goal);
+                        // }
                     }
                 }
             }}>

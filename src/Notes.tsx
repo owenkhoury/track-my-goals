@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import { completedDay } from './constants/AppConstants';
 import { getWindowDimensions } from './Calendar';
 import { useSpring, animated } from 'react-spring';
-import { placeholder } from '@babel/types';
 
-export default function Notes({ selectedDayForNotes, newCompletedDays, handleNoteAdded }) {
+export default function Notes({ selectedDayForNotes, newCompletedDays, handleNoteAdded, handleDayRemoved }) {
     const [goal, setGoal] = useState(null);
 
     const [date, setDate] = useState(null);
@@ -44,14 +43,7 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
                                             date: date,
                                             notes: note
                                         };
-                                        // updateNotesForCompletedDay(auth.uid, dayToUpdate);
                                         await handleNoteAdded(dayToUpdate);
-                                        await setShowSuccess(showSuccess === 1 ? 0 : 1);
-
-                                        let saveDisplay = document.getElementById('Saved');
-
-                                        saveDisplay.style.opacity = '1';
-                                        saveDisplay.style.opacity = '0';
                                     }
                                 }}>
                                 Save Note
@@ -66,6 +58,12 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
                                 onChange={(e) => setNote(e.target.value)}
                                 value={note}
                             />
+                            <DeselectButton
+                                onClick={() => {
+                                    handleDayRemoved(date, goal);
+                                }}>
+                                Deselect Day
+                            </DeselectButton>
                             <Remainder />
                         </Fragment>
                     </NewContainer>
@@ -82,15 +80,6 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
         </Fragment>
     );
 }
-
-const Whatever = styled.div`
-    opacity: 0;
-    -webkit-transition: all 2s ease-out;
-    -moz-transition: all 2s ease-out;
-    -ms-transition: all 2s ease-out;
-    -o-transition: all 2s ease-out;
-    transition: all 2s ease-out;
-`;
 
 const Placeholder = styled.div<{ windowHeight }>`
     color: black;
@@ -131,6 +120,19 @@ const SaveButton = styled.button`
     }
 `;
 
+const DeselectButton = styled.button`
+    height: 5rem;
+    background-color: #cf2e38;
+    color: white;
+
+    font-family: 'Avenir Next';
+    font-size: 1.3rem;
+
+    &:hover {
+        filter: brightness(85%);
+    }
+`;
+
 const NewContainer = styled.div`
     /* display: flex;
     flex-direction: column;
@@ -161,7 +163,7 @@ const NotesInput = styled.textarea<{ windowHeight }>`
     width: 17rem;
     background: #d8d8d8;
     font-family: 'Avenir Next';
-    height: ${(props) => (props.windowHeight ? `${props.windowHeight - 300}px` : '35rem')};
+    height: ${(props) => (props.windowHeight ? `${props.windowHeight - 360}px` : '35rem')};
     padding-left: 0.5rem;
     border: none;
     padding-top: 3rem;

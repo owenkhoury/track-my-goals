@@ -281,6 +281,8 @@ export default function LoggedIn() {
         const update: Object = JSON.parse(JSON.stringify(newCompletedDays));
         update[goal] = update[goal].filter((curDate) => curDate.date !== date);
         setNewCompletedDays(update);
+
+        setSelectedDayForNotes(null);
     }
 
     function updateSelected(goal: string) {
@@ -369,6 +371,7 @@ export default function LoggedIn() {
                         selectedDayForNotes={selectedDayForNotes}
                         newCompletedDays={newCompletedDays}
                         handleNoteAdded={handleNoteAdded}
+                        handleDayRemoved={handleDayRemoved}
                     />
                 </CalendarAndGoalsContainer>
             </Container>
