@@ -174,10 +174,7 @@ export default function GoalsList({
                                                       setGoalsToDelete([...goalsToDelete, goal]);
                                                   }}>
                                                   {' '}
-                                                  <i
-                                                      className='glyphicon glyphicon-trash'
-                                                      style={{ paddingRight: '.5rem' }}
-                                                  />
+                                                  <DeleteIcon className='glyphicon glyphicon-trash' />
                                               </DeleteButton>
                                           </ListRowRight>
                                       </NewListRow>
@@ -280,6 +277,14 @@ const AddGoalButton = styled.button`
 
     &:hover {
         filter: brightness(85%);
+    }
+`;
+
+const DeleteIcon = styled.i`
+    padding-right: 0.5rem;
+    &:hover {
+        filter: brightness(85%);
+        color: red;
     }
 `;
 

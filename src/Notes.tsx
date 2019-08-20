@@ -71,9 +71,7 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
             ) : (
                 <Container>
                     <NewContainer>
-                        <Placeholder windowHeight={windowDimensions.height}>
-                            Click the edit icon on completed day to add a note
-                        </Placeholder>
+                        <Placeholder windowHeight={windowDimensions.height}>Click on a day to add a note</Placeholder>
                     </NewContainer>
                 </Container>
             )}
@@ -87,18 +85,12 @@ const Placeholder = styled.div<{ windowHeight }>`
     background: #d8d8d8;
     font-family: 'Avenir Next';
     height: ${(props) => (props.windowHeight ? `${props.windowHeight}px` : '35rem')};
-    padding-left: 0.5rem;
     border: none;
     padding-top: 3rem;
+    padding-right: 1rem;
+    text-align: center;
     /* border-left: 1.5px solid #979797; */
     background-color: #d8d8d8;
-`;
-
-const SuccessfulSave = styled(animated.div)<{ success }>`
-    width: 5rem;
-    height: 2rem;
-    background-color: green;
-    opacity: ${(props) => props.success};
 `;
 
 const Header = styled.h4`
@@ -114,6 +106,8 @@ const SaveButton = styled.button`
     font-family: 'Avenir Next';
     font-size: 1.3rem;
     color: white;
+    padding: 0;
+    border: 0;
 
     &:hover {
         filter: brightness(85%);
@@ -127,6 +121,9 @@ const DeselectButton = styled.button`
 
     font-family: 'Avenir Next';
     font-size: 1.3rem;
+
+    padding: 0;
+    border: 0;
 
     &:hover {
         filter: brightness(85%);
