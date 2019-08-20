@@ -46,11 +46,12 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
                                         await handleNoteAdded(dayToUpdate);
                                     }
                                 }}>
-                                Save Note
+                                Save Note For
+                                <br />
+                                {goal}
+                                <br />
+                                {date}
                             </SaveButton>
-                            <Header style={{ paddingTop: '.5rem' }}>Note for:</Header>
-                            <Header>{goal}</Header>
-                            <Header style={{ paddingBottom: '1rem', borderBottom: '1px solid black' }}>{date}</Header>
 
                             <NotesInput
                                 placeholder={note ? null : `Add Notes for ${goal} on ${date}`}
@@ -93,21 +94,17 @@ const Placeholder = styled.div<{ windowHeight }>`
     background-color: #d8d8d8;
 `;
 
-const Header = styled.h4`
-    font-family: 'Avenir Next';
-    padding-left: 0.3rem;
-    color: black;
-`;
-
 const SaveButton = styled.button`
     /* border: 3px solid black; */
-    height: 5rem;
-    background-color: #09868b;
+    height: 10rem;
+    background-color: #262228;
     font-family: 'Avenir Next';
     font-size: 1.3rem;
     color: white;
     padding: 0;
     border: 0;
+
+    white-space: normal;
 
     &:hover {
         filter: brightness(85%);
@@ -116,7 +113,8 @@ const SaveButton = styled.button`
 
 const DeselectButton = styled.button`
     height: 5rem;
-    background-color: #cf2e38;
+    background-color: #062f4f;
+
     color: white;
 
     font-family: 'Avenir Next';
@@ -142,7 +140,7 @@ const NewContainer = styled.div`
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-    background-color: #d8d8d8;
+    background-color: #062f4f;
 `;
 
 const Container = styled.div`
@@ -160,7 +158,7 @@ const NotesInput = styled.textarea<{ windowHeight }>`
     width: 17rem;
     background: #d8d8d8;
     font-family: 'Avenir Next';
-    height: ${(props) => (props.windowHeight ? `${props.windowHeight - 360}px` : '35rem')};
+    height: ${(props) => (props.windowHeight ? `${props.windowHeight - 290}px` : '35rem')};
     padding-left: 0.5rem;
     border: none;
     padding-top: 3rem;
