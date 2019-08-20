@@ -96,7 +96,7 @@ const Placeholder = styled.div<{ windowHeight }>`
 
 const SaveButton = styled.button`
     /* border: 3px solid black; */
-    height: 10rem;
+    height: 8rem;
     background-color: #262228;
     font-family: 'Avenir Next';
     font-size: 1.3rem;
@@ -158,7 +158,7 @@ const NotesInput = styled.textarea<{ windowHeight }>`
     width: 17rem;
     background: #d8d8d8;
     font-family: 'Avenir Next';
-    height: ${(props) => (props.windowHeight ? `${props.windowHeight - 290}px` : '35rem')};
+    height: ${(props) => (props.windowHeight ? `${props.windowHeight - 260}px` : '35rem')};
     padding-left: 0.5rem;
     border: none;
     padding-top: 3rem;
