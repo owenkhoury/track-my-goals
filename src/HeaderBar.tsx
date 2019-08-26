@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { logout } from './utils';
 
@@ -18,6 +18,13 @@ const monthName = {
 };
 
 export default function HeaderBar({ curMonth, updateCurMonth, toggleAnalytics }) {
+    const [analyticsSelected, toggleAnalyticsSelected] = useState(false);
+
+    function clickedAnalytics() {
+        toggleAnalyticsSelected(!analyticsSelected);
+        toggleAnalytics();
+    }
+
     return (
         <Header>
             <AppTitle>HabitTracker</AppTitle>
@@ -42,9 +49,9 @@ export default function HeaderBar({ curMonth, updateCurMonth, toggleAnalytics })
                         Next
                     </MonthButton>
                 </MonthContainer>
-                <Button onClick={toggleAnalytics} style={{ borderColor: '#CF2E38', color: '#CF2E38' }}>
+                <AnalyticsButton onClick={clickedAnalytics} analyticsOn={analyticsSelected}>
                     Analytics
-                </Button>
+                </AnalyticsButton>
                 <Button onClick={logout}>Logout</Button>
             </MonthAndLogoutContainer>
         </Header>
@@ -127,6 +134,26 @@ const MonthButton = styled.button`
     color: #09868b;
 
     &:hover {
+        background-color: #bcb9b9;
+    }
+`;
+
+const AnalyticsButton = styled.button<{ analyticsOn }>`
+    display: inline-block;
+
+    font-size: 1em;
+    margin: 1em;
+    padding: 0.25em 1em;
+    border: 2px solid;
+    border-radius: 3px;
+    display: inline-block;
+    border-radius: 0.3rem;
+
+    border-color: ${(props) => (props.analyticsOn ? 'white' : '#CF2E38')};
+    color: ${(props) => (props.analyticsOn ? 'white' : '#CF2E38')};
+
+    background-color: ${(props) => (props.analyticsOn ? '#CF2E38' : 'white')};
+    */ &:hover {
         background-color: #bcb9b9;
     }
 `;
