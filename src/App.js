@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useEffect, Fragment } from 'react';
 import { AppStateProvider } from './app-state';
 import appReducer, { initialState } from './appReducer';
 import LoggedOut from './LoggedOut';
@@ -15,40 +14,8 @@ function App() {
     });
 
     if (!authAttempted) return null;
-    return (
-        <Container>
-            {auth ? (
-                <AppContainer>
-                    <LoggedIn />
-                </AppContainer>
-            ) : (
-                <LoggedOut />
-            )}
-        </Container>
-    );
+    return <Fragment>{auth ? <LoggedIn /> : <LoggedOut />}</Fragment>;
 }
-
-const Container = styled.div`
-    overflow-y: hidden !important;
-    height: 100%;
-`;
-
-const AppContainer = styled.div`
-    /* display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow-y: hidden; */
-
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    height: 100%;
-    overflow-y: hidden;
-`;
 
 export default () => (
     <AppStateProvider reducer={appReducer} initialState={initialState}>

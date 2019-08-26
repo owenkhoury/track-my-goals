@@ -331,53 +331,56 @@ export default function LoggedIn() {
     }
 
     return (
-        <animated.div style={animatedProps}>
-            <Container className='this-one'>
-                <HeaderBar
-                    curMonth={curMonth}
-                    updateCurMonth={updateCurMonth}
-                    toggleAnalytics={() => setShowAnalytics(!showAnalytics)}
+        <OverallContainer style={animatedProps}>
+            <HeaderBar
+                curMonth={curMonth}
+                updateCurMonth={updateCurMonth}
+                toggleAnalytics={() => setShowAnalytics(!showAnalytics)}
+            />
+            <InnerRowContainer>
+                <GoalsList
+                    existingGoals={existingGoals}
+                    colorMap={colorMap}
+                    updateSelected={updateSelected}
+                    addToColorMap={addToColorMap}
+                    removeFromColorMap={removeFromColorMap}
+                    handleGoalSelected={handleGoalSelected}
+                    handleGoalRemoved={handleGoalRemoved}
+                    selectedGoals={selectedGoals}
+                    creationDateMap={goalCreationDateMap}
                 />
-                <CalendarAndGoalsContainer>
-                    <GoalsList
-                        existingGoals={existingGoals}
-                        colorMap={colorMap}
-                        updateSelected={updateSelected}
-                        addToColorMap={addToColorMap}
-                        removeFromColorMap={removeFromColorMap}
-                        handleGoalSelected={handleGoalSelected}
-                        handleGoalRemoved={handleGoalRemoved}
-                        selectedGoals={selectedGoals}
-                        creationDateMap={goalCreationDateMap}
-                    />
-                    <CalendarContainer>
-                        {showAnalytics ? (
-                            <Analytics />
-                        ) : (
-                            <Calendar
-                                key='calendar1'
-                                curMonth={curMonth}
-                                curGoal={selected}
-                                newCompletedDays={newCompletedDays}
-                                colorMap={colorMap}
-                                selectedGoals={selectedGoals}
-                                handleDayCompleted={handleDayCompleted}
-                                handleDayRemoved={handleDayRemoved}
-                                handleNoteSelected={handleNoteSelected}
-                            />
-                        )}
-                    </CalendarContainer>
-                    <Notes
-                        selectedDayForNotes={selectedDayForNotes}
-                        newCompletedDays={newCompletedDays}
-                        handleNoteAdded={handleNoteAdded}
-                        handleDayRemoved={handleDayRemoved}
-                    />
-                </CalendarAndGoalsContainer>
-            </Container>
-        </animated.div>
+                <CalendarContainer>
+                    {showAnalytics ? (
+                        <Analytics />
+                    ) : (
+                        <Calendar
+                            key='calendar1'
+                            curMonth={curMonth}
+                            curGoal={selected}
+                            newCompletedDays={newCompletedDays}
+                            colorMap={colorMap}
+                            selectedGoals={selectedGoals}
+                            handleDayCompleted={handleDayCompleted}
+                            handleDayRemoved={handleDayRemoved}
+                            handleNoteSelected={handleNoteSelected}
+                        />
+                    )}
+                </CalendarContainer>
+
+                <Notes
+                    selectedDayForNotes={selectedDayForNotes}
+                    newCompletedDays={newCompletedDays}
+                    handleNoteAdded={handleNoteAdded}
+                    handleDayRemoved={handleDayRemoved}
+                />
+            </InnerRowContainer>
+        </OverallContainer>
     );
 }
+
+const OverallContainer = styled(animated.div)`
+    height: 100%;
+`;
 
 const CalendarContainer = styled.div`
     -webkit-box-flex: 1;
@@ -385,39 +388,21 @@ const CalendarContainer = styled.div`
 
     flex: 1;
     margin-top: 1rem;
-    padding-right: 17rem;
+    padding-right: 19rem;
     padding-left: 2rem;
     padding-top: 2rem;
 `;
 
-const CalendarAndGoalsContainer = styled.div`
+const InnerRowContainer = styled.div`
     display: -webkit-box;
     display: -ms-flexbox;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
-    -ms-flex-direction: row;
 
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
 
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
-`;
-
-const Container = styled.div`
-    display: -webkit-box;
-    display: -ms-flexbox;
-
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-
-    display: flex;
-    flex-direction: column;
     height: 100%;
-    flex: 1;
 `;

@@ -1,42 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import BarGraph from './BarGraph';
-import CommonlyDoneWith from './CommonlyDoneWith';
 
 export default function Analytics({}) {
     return (
         <Container>
-            <Row>Row 1</Row>
-            <Row> Row 2</Row>
-            <Row> Row 3</Row>
+            <StackedRowsContainer>
+                <Row>
+                    <BarGraph goal={null} completedDays={null} />
+                    <BarGraph goal={null} completedDays={null} />
+                </Row>
+                <Row>
+                    <BarGraph goal={null} completedDays={null} />
+                    <BarGraph goal={null} completedDays={null} />
+                </Row>
+            </StackedRowsContainer>
         </Container>
     );
 }
 
-const Row = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    /* position: relative;
-    width: 100%;
-    height: 100%; */
-
-    flex: 1;
-
-    background-color: grey;
-    border: 1px solid black;
-`;
-
 const Container = styled.div`
-    /* display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-left: 22rem;
-    margin-top: 1rem;
-    overflow: hidden; */
-
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -46,4 +29,16 @@ const Container = styled.div`
 
     margin-left: 24rem;
     overflow: hidden;
+`;
+
+const StackedRowsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: space-evenly;
+`;
+
+const Row = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
 `;

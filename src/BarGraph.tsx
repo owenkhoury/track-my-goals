@@ -1,53 +1,24 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useState } from 'react';
+
+import { Bar } from 'britecharts-react';
+import colors from './colors';
 
 export default function BarGraph({ goal, completedDays }) {
+    const barData = [
+        { name: 'This week', value: 2 },
+        { name: '1 week ago', value: 5 },
+        { name: '2 weeks ago', value: 4 },
+        { name: '3 weeks ago', value: 3 }
+    ];
+
     return (
-        <Container>
-            <h4>Completed days: Meditate 15 minutes</h4>
-            <Divider />
-            <SubContainer>
-                <Text>2 Weeks ago </Text>
-                <Bar days={1} />
-            </SubContainer>
-            <Divider />
-            <SubContainer>
-                <Text>Last Week </Text>
-                <Bar days={5} />
-            </SubContainer>
-            <Divider />
-            <SubContainer>
-                <Text>This Week </Text>
-                <Bar days={2} />
-            </SubContainer>
-        </Container>
+        <Bar
+            data={barData}
+            height={200}
+            width={300}
+            isHorizontal={true}
+            margin={{ left: 100 }}
+            colorSchema={colors.colorSchemas.orange}
+        />
     );
 }
-
-const Text = styled.div`
-    width: 6rem;
-`;
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-`;
-
-const SubContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-`;
-
-const Divider = styled.div`
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-`;
-
-const Bar = styled.div<{ days }>`
-    width: ${(props) => (props.days ? `${props.days * 3}rem` : '1rem')};
-    height: 2rem;
-    margin-left: 1rem;
-    background-color: blue;
-`;

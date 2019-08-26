@@ -234,7 +234,7 @@ const Container = styled.div`
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     justify-content: center;
-    margin-left: 22rem;
+    /* margin-left: 22rem; */
     margin-top: 1rem;
     overflow: hidden;
 `;
@@ -246,4 +246,5 @@ const DayOfWeek = styled.div`
     margin: 0.4375rem;
     margin-bottom: 2rem;
     text-align: center;
+    font-size: 1.15rem;
 `;

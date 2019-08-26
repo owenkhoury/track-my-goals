@@ -68,125 +68,135 @@ export default function GoalsList({
 
     return (
         <GoalContainer>
-            <AppTitle />
+            <InnerContainer>
+                <InputContainer>
+                    <GoalInput
+                        type='text'
+                        placeholder='Enter your next habit'
+                        onChange={(e) => setNewGoal(e.target.value)}
+                    />
+                    <AddGoalButton
+                        onClick={() => {
+                            if (newGoal.length > 0 && !goals.includes(newGoal)) {
+                                const goalColor = addToColorMap(newGoal);
+                                createGoal(auth.uid, newGoal, goalColor);
 
-            <InputContainer>
-                <GoalInput
-                    type='text'
-                    placeholder='Enter your next habit'
-                    onChange={(e) => setNewGoal(e.target.value)}
-                />
-                <AddGoalButton
-                    onClick={() => {
-                        if (newGoal.length > 0 && !goals.includes(newGoal)) {
-                            const goalColor = addToColorMap(newGoal);
-                            createGoal(auth.uid, newGoal, goalColor);
+                                if (goals.includes(newGoal)) {
+                                    updateSelected(newGoal);
+                                }
 
-                            if (goals.includes(newGoal)) {
-                                updateSelected(newGoal);
+                                setNewGoal('');
+                                setGoals([...goals, newGoal]);
                             }
-
-                            setNewGoal('');
-                            setGoals([...goals, newGoal]);
-                        }
-                    }}>
-                    ADD
-                </AddGoalButton>
-            </InputContainer>
-            <ListContainer windowHeight={windowDimensions.height}>
-                {goals
-                    ? goals.map((goal, idx) => {
-                          return (
-                              <Fragment>
-                                  {goalsToDelete.includes(goal) ? (
-                                      <DeleteGoalRow
-                                          goal={goal}
-                                          index={idx}
-                                          undoDelete={() => undoDelete(goal)}
-                                          confirmDelete={(goalToDelete, index) => handleDelete(goalToDelete, index)}
-                                      />
-                                  ) : (
-                                      <NewListRow
-                                          // selected={goal === selectedGoals[0]}
-                                          selected={selectedGoals.includes(goal)}
-                                          checked={
-                                              (document.getElementById(goal) as HTMLInputElement) &&
-                                              (document.getElementById(goal) as HTMLInputElement).checked
-                                          }
-                                          colorMap={colorMap}
-                                          goal={goal}
-                                          toDelete={goalsToDelete.includes(goal)}
-                                          onClick={() => {
-                                              if (goals.includes(goal)) {
-                                                  if (selectedGoals) {
-                                                      selectedGoals.forEach((element) => {
-                                                          (document.getElementById(
-                                                              element
-                                                          ) as HTMLInputElement).checked = false;
-                                                      });
-                                                  }
-
-                                                  // Set as selected and check this rows checkbox, remove the previously selected from the selectedList.
-                                                  handleGoalSelected(goal, selectedGoals);
-                                                  updateSelected(goal);
-
-                                                  (document.getElementById(goal) as HTMLInputElement).checked = true;
+                        }}>
+                        ADD
+                    </AddGoalButton>
+                </InputContainer>
+                <ListContainer windowHeight={windowDimensions.height}>
+                    {goals
+                        ? goals.map((goal, idx) => {
+                              return (
+                                  <Fragment>
+                                      {goalsToDelete.includes(goal) ? (
+                                          <DeleteGoalRow
+                                              goal={goal}
+                                              index={idx}
+                                              undoDelete={() => undoDelete(goal)}
+                                              confirmDelete={(goalToDelete, index) => handleDelete(goalToDelete, index)}
+                                          />
+                                      ) : (
+                                          <NewListRow
+                                              // selected={goal === selectedGoals[0]}
+                                              selected={selectedGoals.includes(goal)}
+                                              checked={
+                                                  (document.getElementById(goal) as HTMLInputElement) &&
+                                                  (document.getElementById(goal) as HTMLInputElement).checked
                                               }
-                                          }}>
-                                          <ListRowLeft>
-                                              <Circle
-                                                  color={colorMap && colorMap[goal] ? colorMap[goal] : 'red'}
-                                                  className='dot'
-                                              />
-                                              <ListRowInfo>
-                                                  <Goal>{goal}</Goal>
-                                                  <StartDate>{creationDateMap[goal]}</StartDate>
-                                              </ListRowInfo>
-                                          </ListRowLeft>
-                                          <ListRowRight>
-                                              <Checkbox>
-                                                  <input
-                                                      id={goal}
-                                                      type='checkbox'
-                                                      defaultChecked={idx === 0}
+                                              colorMap={colorMap}
+                                              goal={goal}
+                                              toDelete={goalsToDelete.includes(goal)}
+                                              onClick={() => {
+                                                  if (goals.includes(goal)) {
+                                                      if (selectedGoals) {
+                                                          selectedGoals.forEach((element) => {
+                                                              (document.getElementById(
+                                                                  element
+                                                              ) as HTMLInputElement).checked = false;
+                                                          });
+                                                      }
+
+                                                      // Set as selected and check this rows checkbox, remove the previously selected from the selectedList.
+                                                      handleGoalSelected(goal, selectedGoals);
+                                                      updateSelected(goal);
+
+                                                      (document.getElementById(
+                                                          goal
+                                                      ) as HTMLInputElement).checked = true;
+                                                  }
+                                              }}>
+                                              <ListRowLeft>
+                                                  <Circle
+                                                      color={colorMap && colorMap[goal] ? colorMap[goal] : 'red'}
+                                                      className='dot'
+                                                  />
+                                                  <ListRowInfo>
+                                                      <Goal>{goal}</Goal>
+                                                      <StartDate>{creationDateMap[goal]}</StartDate>
+                                                  </ListRowInfo>
+                                              </ListRowLeft>
+                                              <ListRowRight>
+                                                  <Checkbox>
+                                                      <input
+                                                          id={goal}
+                                                          type='checkbox'
+                                                          defaultChecked={idx === 0}
+                                                          onClick={(e) => {
+                                                              e.stopPropagation();
+                                                              let checkbox = document.getElementById(
+                                                                  goal
+                                                              ) as HTMLInputElement;
+
+                                                              if (checkbox.checked) {
+                                                                  handleGoalSelected(goal);
+                                                              } else if (selectedGoals.length === 1) {
+                                                                  e.preventDefault();
+                                                              } else {
+                                                                  handleGoalRemoved(goal);
+                                                              }
+                                                          }}
+                                                      />
+                                                  </Checkbox>{' '}
+                                                  <DeleteButton
                                                       onClick={(e) => {
                                                           e.stopPropagation();
-                                                          let checkbox = document.getElementById(
-                                                              goal
-                                                          ) as HTMLInputElement;
+                                                          setGoalsToDelete([...goalsToDelete, goal]);
 
-                                                          if (checkbox.checked) {
-                                                              handleGoalSelected(goal);
-                                                          } else if (selectedGoals.length === 1) {
-                                                              e.preventDefault();
-                                                          } else {
-                                                              handleGoalRemoved(goal);
-                                                          }
-                                                      }}
-                                                  />
-                                              </Checkbox>{' '}
-                                              <DeleteButton
-                                                  onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      setGoalsToDelete([...goalsToDelete, goal]);
-
-                                                      // update local state of rows in delete state
-                                                      setGoalsToDelete([...goalsToDelete, goal]);
-                                                  }}>
-                                                  {' '}
-                                                  <DeleteIcon className='glyphicon glyphicon-trash' />
-                                              </DeleteButton>
-                                          </ListRowRight>
-                                      </NewListRow>
-                                  )}
-                              </Fragment>
-                          );
-                      })
-                    : null}
-            </ListContainer>
+                                                          // update local state of rows in delete state
+                                                          setGoalsToDelete([...goalsToDelete, goal]);
+                                                      }}>
+                                                      {' '}
+                                                      <DeleteIcon className='glyphicon glyphicon-trash' />
+                                                  </DeleteButton>
+                                              </ListRowRight>
+                                          </NewListRow>
+                                      )}
+                                  </Fragment>
+                              );
+                          })
+                        : null}
+                </ListContainer>
+            </InnerContainer>
         </GoalContainer>
     );
 }
+
+const InnerContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    margin-top: 3rem;
+`;
 
 const GoalContainer = styled.div`
     /* display: flex;
@@ -215,20 +225,20 @@ const GoalContainer = styled.div`
     padding-right: 1.5rem;
 
     font-family: Helvetica;
-    position: absolute;
+    // position: absolute;
     height: 100%;
     width: 25rem;
     border-right: 1.5px solid #d0d0d0;
 `;
 
-const AppTitle = styled.div`
-    color: white;
-    font-size: 2rem;
-    margin-top: 1rem;
-    margin-bottom: 4rem;
-    padding-right: 10rem;
-    font-family: Montserrat, sans-serif;
-`;
+// const AppTitle = styled.div`
+//     color: white;
+//     font-size: 2rem;
+//     margin-top: 1rem;
+//     margin-bottom: 4rem;
+//     padding-right: 10rem;
+//     font-family: Montserrat, sans-serif;
+// `;
 
 const InputContainer = styled.div`
     /* display: flex;
