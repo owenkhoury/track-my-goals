@@ -2,9 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import BarGraph from './BarGraph';
 
+import { animated, useSpring } from 'react-spring';
+
 export default function Analytics({}) {
+    const animatedProps = useSpring({ opacity: 1, from: { opacity: 0 } });
+
     return (
-        <Container>
+        <Container style={animatedProps}>
             <StackedRowsContainer>
                 <Row style={{ paddingTop: '2rem' }}>
                     <BarGraph goal={null} completedDays={null} />
@@ -19,7 +23,7 @@ export default function Analytics({}) {
     );
 }
 
-const Container = styled.div`
+const Container = styled(animated.div)`
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;

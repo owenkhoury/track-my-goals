@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Day from './Day';
 
-import { useTransition, animated } from 'react-spring';
+import { animated, useSpring } from 'react-spring';
 
 export function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
@@ -26,6 +26,8 @@ export default function Calendar({
     handleNoteSelected
 }) {
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+    const animatedProps = useSpring({ opacity: 1, from: { opacity: 0 } });
 
     const monthDays = {
         '01': 31,
@@ -202,7 +204,7 @@ export default function Calendar({
     const calendarYear = getYear(newCompletedDays);
 
     return (
-        <Container>
+        <Container style={animatedProps}>
             {calendarYear[curMonth]
                 ? calendarYear[curMonth].map((week) => {
                       return <div id={week}>{week}</div>;
@@ -212,7 +214,7 @@ export default function Calendar({
     );
 }
 
-const Container = styled.div`
+const Container = styled(animated.div)`
     /* display: flex;
     flex-direction: column;
     align-items: center;
@@ -237,6 +239,8 @@ const Container = styled.div`
     /* margin-left: 22rem; */
     margin-top: 1rem;
     overflow: hidden;
+
+    margin-top: 3rem;
 `;
 
 const DayOfWeek = styled.div`
