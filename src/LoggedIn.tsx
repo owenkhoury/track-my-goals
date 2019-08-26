@@ -387,10 +387,9 @@ const CalendarContainer = styled.div`
     -ms-flex: 1;
 
     flex: 1;
-    margin-top: 1rem;
+
     padding-right: 19rem;
     padding-left: 2rem;
-    padding-top: 2rem;
 `;
 
 const InnerRowContainer = styled.div`
