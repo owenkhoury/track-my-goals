@@ -1,6 +1,21 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import styled from 'styled-components';
 
+interface Day {
+    completedColor?;
+    curGoal?; // shouldn't need this
+    day?;
+    month?;
+    year?;
+    goalsCompletedOnDay?;
+    selectedGoals?;
+    colorMap?;
+    handleDayCompleted?;
+    completedDays?;
+    disabled?;
+    handleNoteSelected?;
+}
+
 export default function Day({
     completedColor,
     curGoal, // shouldn't need this
@@ -11,11 +26,10 @@ export default function Day({
     selectedGoals,
     colorMap,
     handleDayCompleted,
-    handleDayRemoved,
-    newCompletedDays,
+    completedDays,
     disabled,
     handleNoteSelected
-}) {
+}: Day) {
     const [myDate, setMyDate] = useState('');
 
     const [isTodaysDate, setIsTodaysDate] = useState(false);
@@ -23,8 +37,8 @@ export default function Day({
     const [doesDayHaveNote, setDayHasNote] = useState(false);
 
     useEffect(() => {
-        if (newCompletedDays && newCompletedDays[curGoal]) {
-            const day = newCompletedDays[curGoal].find((e) => {
+        if (completedDays && completedDays[curGoal]) {
+            const day = completedDays[curGoal].find((e) => {
                 return e.date === myDate;
             });
 
@@ -34,7 +48,7 @@ export default function Day({
                 setDayHasNote(false);
             }
         }
-    }, [newCompletedDays, curGoal]);
+    }, [completedDays, curGoal]);
 
     useEffect(() => {
         if (month && day && year) {
@@ -178,9 +192,9 @@ export default function Day({
                         handleNoteSelected(myDate, curGoal);
 
                         const isDayCompleted =
-                            newCompletedDays &&
-                            newCompletedDays[goal] &&
-                            newCompletedDays[goal].filter((day) => day.date === myDate).length > 0;
+                            completedDays &&
+                            completedDays[goal] &&
+                            completedDays[goal].filter((day) => day.date === myDate).length > 0;
 
                         if (!isDayCompleted) {
                             handleDayCompleted(myDate, goal);

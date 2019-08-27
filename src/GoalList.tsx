@@ -331,7 +331,7 @@ const NewListRow = styled.div<ListRowProps>`
   justify-content: space-between;
   vertical-align: middle;
   line-height: 2.5rem;
-  height: 5rem;
+  height: 4.2rem;
   margin-bottom: 2rem;
   width: 19.5rem;
   border-radius: 0.3rem;

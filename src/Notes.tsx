@@ -4,7 +4,7 @@ import { completedDay } from './constants/AppConstants';
 import { getWindowDimensions } from './Calendar';
 import { useSpring, animated } from 'react-spring';
 
-export default function Notes({ selectedDayForNotes, newCompletedDays, handleNoteAdded, handleDayRemoved }) {
+export default function Notes({ selectedDayForNotes, completedDays, handleNoteAdded, handleDayRemoved }) {
     const [goal, setGoal] = useState(null);
 
     const [date, setDate] = useState(null);
@@ -27,7 +27,7 @@ export default function Notes({ selectedDayForNotes, newCompletedDays, handleNot
             setDate(selectedDayForNotes.date);
             setNote(selectedDayForNotes.notes);
         }
-    }, [selectedDayForNotes, newCompletedDays]);
+    }, [selectedDayForNotes, completedDays]);
 
     return (
         <Fragment>

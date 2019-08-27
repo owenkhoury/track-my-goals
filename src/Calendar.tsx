@@ -12,13 +12,28 @@ export function getWindowDimensions() {
     };
 }
 
+export const monthDays = {
+    '01': 31,
+    '02': 28,
+    '03': 31,
+    '04': 30,
+    '05': 31,
+    '06': 30,
+    '07': 31,
+    '08': 31,
+    '09': 30,
+    '10': 31,
+    '11': 30,
+    '12': 31
+};
+
 /**
  * NOTES -- Re-renders on every goal selection
  */
 export default function Calendar({
     curMonth,
     curGoal,
-    newCompletedDays,
+    completedDays,
     colorMap,
     selectedGoals,
     handleDayCompleted,
@@ -28,21 +43,6 @@ export default function Calendar({
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
     const animatedProps = useSpring({ opacity: 1, from: { opacity: 0 } });
-
-    const monthDays = {
-        '01': 31,
-        '02': 28,
-        '03': 31,
-        '04': 30,
-        '05': 31,
-        '06': 30,
-        '07': 31,
-        '08': 31,
-        '09': 30,
-        '10': 31,
-        '11': 30,
-        '12': 31
-    };
 
     const DaysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
@@ -68,23 +68,7 @@ export default function Calendar({
 
         // Add in blank days until the first day of the month.
         for (let unusedDay = 0; unusedDay < firstOfMonth; unusedDay++) {
-            week.push(
-                <Day
-                    completedColor={null}
-                    day={null}
-                    month={null}
-                    year={null}
-                    goalsCompletedOnDay={null}
-                    selectedGoals={null}
-                    newCompletedDays={null}
-                    colorMap={null}
-                    handleDayCompleted={null}
-                    handleDayRemoved={null}
-                    curGoal={curGoal}
-                    disabled={true}
-                    handleNoteSelected={handleNoteSelected}
-                />
-            );
+            week.push(<Day disabled={true} />);
         }
 
         dayOfWeek = firstOfMonth + 1;
@@ -126,10 +110,9 @@ export default function Calendar({
                     year={2019}
                     goalsCompletedOnDay={goalsCompletedOnDay}
                     selectedGoals={selectedGoals}
-                    newCompletedDays={newCompletedDays}
+                    completedDays={completedDays}
                     colorMap={colorMap}
                     handleDayCompleted={handleDayCompleted}
-                    handleDayRemoved={handleDayRemoved}
                     disabled={false}
                     handleNoteSelected={handleNoteSelected}
                 />
@@ -139,23 +122,7 @@ export default function Calendar({
 
         // fill out the last row with empty days
         for (let unusedDay = 0; unusedDay < 8 - dayOfWeek; unusedDay++) {
-            week.push(
-                <Day
-                    completedColor={null}
-                    day={null}
-                    month={null}
-                    year={null}
-                    goalsCompletedOnDay={null}
-                    selectedGoals={null}
-                    newCompletedDays={null}
-                    colorMap={null}
-                    handleDayCompleted={null}
-                    handleDayRemoved={null}
-                    curGoal={curGoal}
-                    disabled={true}
-                    handleNoteSelected={handleNoteSelected}
-                />
-            );
+            week.push(<Day disabled={true} />);
         }
 
         myMonth.push(week);
@@ -164,23 +131,7 @@ export default function Calendar({
         // Adds a blank row of disabled days so that the size stays the same.
         if (myMonth.length === 7) {
             for (let unusedDay = 0; unusedDay < 7; unusedDay++) {
-                week.push(
-                    <Day
-                        completedColor={null}
-                        day={null}
-                        month={null}
-                        year={null}
-                        goalsCompletedOnDay={null}
-                        selectedGoals={null}
-                        newCompletedDays={null}
-                        colorMap={null}
-                        handleDayCompleted={null}
-                        handleDayRemoved={null}
-                        curGoal={curGoal}
-                        disabled={true}
-                        handleNoteSelected={handleNoteSelected}
-                    />
-                );
+                week.push(<Day disabled={true} />);
             }
 
             myMonth.push(week);
@@ -201,7 +152,7 @@ export default function Calendar({
         return calendarYear;
     }
 
-    const calendarYear = getYear(newCompletedDays);
+    const calendarYear = getYear(completedDays);
 
     return (
         <Container style={animatedProps}>

@@ -1,22 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 import BarGraph from './BarGraph';
+import DonutGraph from './DonutGraph';
 
 import { animated, useSpring } from 'react-spring';
+import LegendGraph from './LegendGraph';
 
-export default function Analytics({}) {
+export default function Analytics({ goal, completedDays }) {
     const animatedProps = useSpring({ opacity: 1, from: { opacity: 0 } });
 
     return (
         <Container style={animatedProps}>
             <StackedRowsContainer>
                 <Row style={{ paddingTop: '2rem' }}>
-                    <BarGraph goal={null} completedDays={null} />
+                    <DonutGraph goal={goal} completedDays={completedDays} />
                     <BarGraph goal={null} completedDays={null} />
                 </Row>
                 <Row style={{ paddingBottom: '10rem' }}>
-                    <BarGraph goal={null} completedDays={null} />
-                    <BarGraph goal={null} completedDays={null} />
+                    <LegendGraph />
                 </Row>
             </StackedRowsContainer>
         </Container>
@@ -32,6 +33,10 @@ const Container = styled(animated.div)`
     height: 100%;
 
     overflow: hidden;
+
+    // TODO -- ADD DIFFERENT BACKGROUND COLOR
+
+    // background-color: #393f4d;
 `;
 
 const StackedRowsContainer = styled.div`

@@ -26,16 +26,16 @@ export default function LoggedIn() {
     // The list of the existing goals.
     const [existingGoals, setExistingGoals] = useState([]);
 
-    // The currently selected goal.
-    const [selected, setSelected] = useState('');
+    // The currently selectedGoal goal.
+    const [selectedGoal, setSelected] = useState('');
 
-    // Mapping of each goal to the days that are completed (selected).
+    // Mapping of each goal to the days that are completed (selectedGoal).
     // The old state of the mapping at the time of the app being loaded
     // const [oldCompletedDays, setOldCompletedDays] = useState({});
 
-    // Mapping of each goal to the days that are completed (selected).
+    // Mapping of each goal to the days that are completed (selectedGoal).
     // the new state of the mapping as the user makes new selections.
-    const [newCompletedDays, setNewCompletedDays] = useState({});
+    const [completedDays, setNewCompletedDays] = useState({});
 
     const [curMonth, setCurMonth] = useState(null);
 
@@ -56,7 +56,7 @@ export default function LoggedIn() {
         console.log('\n');
         console.log('===================== LOGGED IN STATE =========================');
         console.log('selectedGoals: ', selectedGoals);
-        console.log('newCompletedDays:  ', newCompletedDays);
+        console.log('completedDays:  ', completedDays);
         console.log('selectedDayForNotes: ', selectedDayForNotes);
         console.log('colorMap: ', colorMap);
         console.log('\n');
@@ -122,10 +122,10 @@ export default function LoggedIn() {
 
                 existingGoals.sort((a, b) => a.created - b.created);
 
-                // Set the initially selected goal
+                // Set the initially selectedGoal goal
 
-                const selected: [string] = [selectedGoals[0]];
-                setSelectedGoals(selected);
+                const selectedGoal: [string] = [selectedGoals[0]];
+                setSelectedGoals(selectedGoal);
 
                 setSelected(existingGoals[0]);
                 handleGoalSelected(existingGoals[0]);
@@ -215,7 +215,7 @@ export default function LoggedIn() {
     }
 
     /**
-     * Add newly selected goal to selectedGoalss state.
+     * Add newly selectedGoal goal to selectedGoalss state.
      * @param goal
      * @param goalToRemove
      */
@@ -263,7 +263,7 @@ export default function LoggedIn() {
         // Make firestore call to save completed date.
         addCompletedDay(auth.uid, completedDay);
 
-        const update: Object = JSON.parse(JSON.stringify(newCompletedDays));
+        const update: Object = JSON.parse(JSON.stringify(completedDays));
         update[goal] = update[goal] ? [...update[goal], { date: date, notes: '' }] : [{ date: date, notes: '' }];
 
         setNewCompletedDays(update);
@@ -278,7 +278,7 @@ export default function LoggedIn() {
         // Make firestore call to remove completed date.
         removeCompletedDay(auth.uid, goal, date);
 
-        const update: Object = JSON.parse(JSON.stringify(newCompletedDays));
+        const update: Object = JSON.parse(JSON.stringify(completedDays));
         update[goal] = update[goal].filter((curDate) => curDate.date !== date);
         setNewCompletedDays(update);
 
@@ -286,15 +286,15 @@ export default function LoggedIn() {
     }
 
     function updateSelected(goal: string) {
-        // batchUpdateCompletedDays(selected);
+        // batchUpdateCompletedDays(selectedGoal);
         if (GoalsList) setSelected(goal);
     }
 
     function handleNoteSelected(date: string, goal: string) {
         let notes = null;
 
-        if (newCompletedDays && newCompletedDays[goal]) {
-            const day = newCompletedDays[goal].find((e) => {
+        if (completedDays && completedDays[goal]) {
+            const day = completedDays[goal].find((e) => {
                 return e.date === date;
             });
 
@@ -313,9 +313,9 @@ export default function LoggedIn() {
     }
 
     async function handleNoteAdded(day: completedDay) {
-        // update newSelectedDays to update this selected day's notes property
+        // update newSelectedDays to update this selectedGoal day's notes property
 
-        const update: Object = JSON.parse(JSON.stringify(newCompletedDays));
+        const update: Object = JSON.parse(JSON.stringify(completedDays));
 
         let dateIndex = update[day.goal].findIndex((obj) => obj.date == day.date);
 
@@ -351,13 +351,13 @@ export default function LoggedIn() {
                 />
                 <CalendarContainer>
                     {showAnalytics ? (
-                        <Analytics />
+                        <Analytics goal={selectedGoal} completedDays={completedDays} />
                     ) : (
                         <Calendar
                             key='calendar1'
                             curMonth={curMonth}
-                            curGoal={selected}
-                            newCompletedDays={newCompletedDays}
+                            curGoal={selectedGoal}
+                            completedDays={completedDays}
                             colorMap={colorMap}
                             selectedGoals={selectedGoals}
                             handleDayCompleted={handleDayCompleted}
@@ -369,7 +369,7 @@ export default function LoggedIn() {
 
                 <Notes
                     selectedDayForNotes={selectedDayForNotes}
-                    newCompletedDays={newCompletedDays}
+                    completedDays={completedDays}
                     handleNoteAdded={handleNoteAdded}
                     handleDayRemoved={handleDayRemoved}
                 />
