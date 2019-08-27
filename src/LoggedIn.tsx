@@ -361,8 +361,8 @@ export default function LoggedIn() {
                             colorMap={colorMap}
                             selectedGoals={selectedGoals}
                             handleDayCompleted={handleDayCompleted}
-                            handleDayRemoved={handleDayRemoved}
                             handleNoteSelected={handleNoteSelected}
+                            selectedDayForNotes={selectedDayForNotes}
                         />
                     )}
                 </CalendarContainer>

@@ -37,8 +37,8 @@ export default function Calendar({
     colorMap,
     selectedGoals,
     handleDayCompleted,
-    handleDayRemoved,
-    handleNoteSelected
+    handleNoteSelected,
+    selectedDayForNotes
 }) {
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
@@ -115,6 +115,7 @@ export default function Calendar({
                     handleDayCompleted={handleDayCompleted}
                     disabled={false}
                     handleNoteSelected={handleNoteSelected}
+                    selectedDayForNotes={selectedDayForNotes}
                 />
             );
             dayOfWeek += 1;

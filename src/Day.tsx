@@ -14,6 +14,7 @@ interface Day {
     completedDays?;
     disabled?;
     handleNoteSelected?;
+    selectedDayForNotes?;
 }
 
 export default function Day({
@@ -28,13 +29,20 @@ export default function Day({
     handleDayCompleted,
     completedDays,
     disabled,
-    handleNoteSelected
+    handleNoteSelected,
+    selectedDayForNotes
 }: Day) {
     const [myDate, setMyDate] = useState('');
 
     const [isTodaysDate, setIsTodaysDate] = useState(false);
 
     const [doesDayHaveNote, setDayHasNote] = useState(false);
+
+    const [notesSelected, setNotesSelected] = useState(false);
+
+    useEffect(() => {
+        console.log('YOOO', notesSelected, myDate, selectedDayForNotes);
+    });
 
     useEffect(() => {
         if (completedDays && completedDays[curGoal]) {
@@ -56,6 +64,10 @@ export default function Day({
                 month.toString().padStart(2, '0') + '-' + day.toString().padStart(2, '0') + '-' + year.toString();
             setMyDate(date);
 
+            if (selectedDayForNotes) {
+                setNotesSelected(date == selectedDayForNotes.date);
+            }
+
             let today: any = new Date();
             let dd = String(today.getDate()).padStart(2, '0');
             let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -68,7 +80,7 @@ export default function Day({
                 setIsTodaysDate(false);
             }
         }
-    }, [month, day, year]);
+    }, [month, day, year, selectedDayForNotes]);
 
     /**
      * Determine how to color in each day depending on how many goals
@@ -102,12 +114,6 @@ export default function Day({
                                 }}
                             />
                         ) : null}
-                        {/* {doesDayHaveNote ? (
-                            <i
-                                className='glyphicon glyphicon-ok'
-                                style={{ color: 'white', marginRight: '.2rem', marginTop: '.5rem' }}
-                            />
-                        ) : null} */}
                     </MyDiv>
                     <MyDiv style={{ background: singleColor }}>
                         <Text style={{ color: 'white' }}>{disabled ? '0' : day} </Text>
@@ -158,10 +164,17 @@ export default function Day({
             );
         } else {
             const singleColor = disabled ? '#f1f1f1' : '#d8d8d8';
+
+            const divStyle = { background: singleColor };
+
             return (
                 <Fragment>
-                    <MyDiv style={{ background: singleColor }} />
-                    <MyDiv style={{ background: singleColor }}>
+                    <MyDiv
+                        style={{
+                            background: singleColor
+                        }}
+                    />
+                    <MyDiv style={divStyle}>
                         <Text>{disabled ? '0' : day} </Text>
                         {isTodaysDate ? (
                             <i
@@ -170,8 +183,8 @@ export default function Day({
                             />
                         ) : null}
                     </MyDiv>
-                    <MyDiv style={{ background: singleColor }} />
-                    <MyDiv style={{ background: singleColor }} />
+                    <MyDiv style={divStyle} />
+                    <MyDiv style={divStyle} />
                 </Fragment>
             );
         }
@@ -181,6 +194,9 @@ export default function Day({
 
     return (
         <Button
+            style={{
+                filter: notesSelected ? 'brightness(85%)' : 'brightness(100%)'
+            }}
             completedColor={completedColor}
             disabled={disabled}
             onClick={() => {
@@ -199,12 +215,6 @@ export default function Day({
                         if (!isDayCompleted) {
                             handleDayCompleted(myDate, goal);
                         }
-
-                        // if (isGoalSelected) {
-                        //     handleDayRemoved(myDate, goal);
-                        // } else {
-                        //     handleDayCompleted(myDate, goal);
-                        // }
                     }
                 }
             }}>
@@ -212,12 +222,6 @@ export default function Day({
         </Button>
     );
 }
-
-const EditContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-`;
 
 const Text = styled.div`
     z-index: 10;
