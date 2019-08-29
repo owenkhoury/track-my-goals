@@ -8,6 +8,8 @@ export default function DonutGraph({ goal, completedDays }) {
 
     const [donutData, setDonutData] = useState([]);
 
+    // TODO -- MENTION THAT ALL THIS BIS IS FOR THE CURRENT MONTH.
+
     useEffect(() => {
         const today = new Date();
         const curMonth = today.getMonth() + 1;
@@ -42,21 +44,6 @@ export default function DonutGraph({ goal, completedDays }) {
 
         console.log('COMPLETED: ', totalCompleted, totalDays - totalCompleted, totalDays);
     }, [goal]);
-
-    // const donutData = [
-    //     {
-    //         quantity: 60,
-    //         percentage: 60,
-    //         name: 'Done',
-    //         id: 1
-    //     },
-    //     {
-    //         quantity: 40,
-    //         percentage: 40,
-    //         name: 'Not Done',
-    //         id: 2
-    //     }
-    // ];
 
     const logMouseOver = () => console.log('Mouse Over');
 

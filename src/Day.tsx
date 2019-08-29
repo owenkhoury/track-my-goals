@@ -41,10 +41,6 @@ export default function Day({
     const [notesSelected, setNotesSelected] = useState(false);
 
     useEffect(() => {
-        console.log('YOOO', notesSelected, myDate, selectedDayForNotes);
-    });
-
-    useEffect(() => {
         if (completedDays && completedDays[curGoal]) {
             const day = completedDays[curGoal].find((e) => {
                 return e.date === myDate;
@@ -151,7 +147,7 @@ export default function Day({
             }
 
             while (display.length !== 4) {
-                display.push(<MyDiv style={{ background: '#d8d8d8' }} />);
+                display.push(<MyDiv style={{ background: '#97D4E8' }} />);
             }
 
             return (

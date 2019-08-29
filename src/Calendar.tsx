@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Day from './Day';
 
 import { animated, useSpring } from 'react-spring';
+import Day2 from './constants/Day2';
 
 export function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
@@ -68,7 +69,7 @@ export default function Calendar({
 
         // Add in blank days until the first day of the month.
         for (let unusedDay = 0; unusedDay < firstOfMonth; unusedDay++) {
-            week.push(<Day disabled={true} />);
+            week.push(<Day2 disabled={true} />);
         }
 
         dayOfWeek = firstOfMonth + 1;
@@ -102,7 +103,7 @@ export default function Calendar({
             });
 
             week.push(
-                <Day
+                <Day2
                     completedColor={colorMap ? colorMap[curGoal] : 'green'}
                     curGoal={curGoal}
                     day={i}
