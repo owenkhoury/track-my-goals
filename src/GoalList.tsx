@@ -70,27 +70,30 @@ export default function GoalsList({
         <GoalContainer>
             <InnerContainer>
                 <InputContainer>
-                    <GoalInput
-                        type='text'
-                        placeholder='Enter your next habit'
-                        onChange={(e) => setNewGoal(e.target.value)}
-                    />
-                    <AddGoalButton
-                        onClick={() => {
-                            if (newGoal.length > 0 && !goals.includes(newGoal)) {
-                                const goalColor = addToColorMap(newGoal);
-                                createGoal(auth.uid, newGoal, goalColor);
+                    <MyForm>
+                        <GoalInput
+                            type='text'
+                            placeholder='Enter your next habit'
+                            onChange={(e) => setNewGoal(e.target.value)}
+                        />
+                        <AddGoalButton
+                            type='reset'
+                            onClick={() => {
+                                if (newGoal.length > 0 && !goals.includes(newGoal)) {
+                                    const goalColor = addToColorMap(newGoal);
+                                    createGoal(auth.uid, newGoal, goalColor);
 
-                                if (goals.includes(newGoal)) {
-                                    updateSelected(newGoal);
+                                    if (goals.includes(newGoal)) {
+                                        updateSelected(newGoal);
+                                    }
+
+                                    setNewGoal('');
+                                    setGoals([...goals, newGoal]);
                                 }
-
-                                setNewGoal('');
-                                setGoals([...goals, newGoal]);
-                            }
-                        }}>
-                        ADD
-                    </AddGoalButton>
+                            }}>
+                            ADD
+                        </AddGoalButton>
+                    </MyForm>
                 </InputContainer>
                 <ListContainer windowHeight={windowDimensions.height}>
                     {goals
@@ -231,15 +234,6 @@ const GoalContainer = styled.div`
     border-right: 1.5px solid #d0d0d0;
 `;
 
-// const AppTitle = styled.div`
-//     color: white;
-//     font-size: 2rem;
-//     margin-top: 1rem;
-//     margin-bottom: 4rem;
-//     padding-right: 10rem;
-//     font-family: Montserrat, sans-serif;
-// `;
-
 const InputContainer = styled.div`
     /* display: flex;
     flex-direction: row; */
@@ -250,6 +244,11 @@ const InputContainer = styled.div`
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
     -ms-flex-direction: row;
+    flex-direction: row;
+`;
+
+const MyForm = styled.form`
+    display: flex;
     flex-direction: row;
 `;
 
@@ -284,6 +283,8 @@ const AddGoalButton = styled.button`
     /* padding: 1rem; */
     border: none;
     font-weight: bold;
+
+    height: 100%;
 
     &:hover {
         filter: brightness(85%);

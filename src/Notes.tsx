@@ -65,14 +65,10 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
                                 placeholder={note ? null : `Add Notes for ${goal} on ${date}`}
                                 windowHeight={windowDimensions.height}
                                 onChange={(e) => setNote(e.target.value)}
-                                value={note}
-                            />
-                            {/* <DeselectButton
-                                onClick={() => {
-                                    handleDayRemoved(date, goal);
-                                }}>
-                                Deselect Day
-                            </DeselectButton> */}
+                                value={note}>
+                                <button>Hello</button>
+                            </NotesInput>
+
                             <Remainder />
                         </Fragment>
                     </NewContainer>
@@ -130,6 +126,8 @@ const DeselectButton = styled.button`
 
     padding: 0;
     border: 0;
+
+    z-index: 10;
 
     &:hover {
         filter: brightness(85%);
