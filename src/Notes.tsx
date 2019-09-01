@@ -35,7 +35,7 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
                 <Container>
                     <NewContainer>
                         <Fragment>
-                            <SaveButton
+                            {/* <SaveButton
                                 onClick={async () => {
                                     if (goal && date && note.length) {
                                         const dayToUpdate: completedDay = {
@@ -51,7 +51,14 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
                                 {goal}
                                 <br />
                                 {date}
-                            </SaveButton>
+                            </SaveButton> */}
+
+                            <OtherDisplay>
+                                <br />
+                                {goal}
+                                <br />
+                                {date}
+                            </OtherDisplay>
 
                             <NotesInput
                                 spellCheck={false}
@@ -60,12 +67,12 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
                                 onChange={(e) => setNote(e.target.value)}
                                 value={note}
                             />
-                            <DeselectButton
+                            {/* <DeselectButton
                                 onClick={() => {
                                     handleDayRemoved(date, goal);
                                 }}>
                                 Deselect Day
-                            </DeselectButton>
+                            </DeselectButton> */}
                             <Remainder />
                         </Fragment>
                     </NewContainer>
@@ -154,12 +161,34 @@ const Container = styled.div`
     right: 0;
 `;
 
+const OtherDisplay = styled.div`
+    color: black;
+    width: 17rem;
+    background: #d8d8d8;
+    font-family: 'Gayathri', sans-serif;
+    height: 8rem;
+    padding-left: 0.5rem;
+    border: none;
+    padding-top: 3rem;
+    font-size: 1.5rem;
+
+    /* border-left: 1.5px solid #979797; */
+    background-color: #fdfd96;
+
+    background-attachment: local;
+    background-image: linear-gradient(to right, #fdfd96 10px, transparent 10px),
+        linear-gradient(to left, #fdfd96 10px, transparent 10px),
+        repeating-linear-gradient(#fdfd96, #fdfd96 30px, #ccc 30px, #ccc 31px, white 31px);
+    line-height: 31px;
+    padding: 8px 10px;
+`;
+
 const NotesInput = styled.textarea<{ windowHeight }>`
     color: black;
     width: 17rem;
     background: #d8d8d8;
     font-family: 'Gayathri', sans-serif;
-    height: ${(props) => (props.windowHeight ? `${props.windowHeight - 260}px` : '35rem')};
+    height: ${(props) => (props.windowHeight ? `${props.windowHeight}px` : '35rem')};
     padding-left: 0.5rem;
     border: none;
     padding-top: 3rem;

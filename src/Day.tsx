@@ -142,7 +142,6 @@ export default function Day2({
                     style={{
                         filter: notesSelected ? 'brightness(85%)' : 'brightness(100%)'
                     }}>
-                    >
                     <Container>
                         <DayNumber>{day}</DayNumber>
                         <Squares>{mutliSelectSquares}</Squares>
