@@ -54,6 +54,7 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
                             </SaveButton>
 
                             <NotesInput
+                                spellCheck={false}
                                 placeholder={note ? null : `Add Notes for ${goal} on ${date}`}
                                 windowHeight={windowDimensions.height}
                                 onChange={(e) => setNote(e.target.value)}
@@ -84,7 +85,7 @@ const Placeholder = styled.div<{ windowHeight }>`
     color: black;
     width: 17rem;
     background: #d8d8d8;
-    font-family: 'Avenir Next';
+    font-family: 'Gayathri', sans-serif;
     height: ${(props) => (props.windowHeight ? `${props.windowHeight}px` : '35rem')};
     border: none;
     padding-top: 3rem;
@@ -98,7 +99,7 @@ const SaveButton = styled.button`
     /* border: 3px solid black; */
     height: 8rem;
     background-color: #262228;
-    font-family: 'Avenir Next';
+    font-family: 'Gayathri', sans-serif;
     font-size: 1.3rem;
     color: white;
     padding: 0;
@@ -140,12 +141,12 @@ const NewContainer = styled.div`
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-    background-color: #062f4f;
+    background-color: #fdfd96;
 `;
 
 const Container = styled.div`
     width: 17rem;
-    background-color: #d8d8d8;
+    background-color: #fdfd96;
 
     color: #09868b;
     border-left: 1.5px solid #979797;
@@ -157,13 +158,21 @@ const NotesInput = styled.textarea<{ windowHeight }>`
     color: black;
     width: 17rem;
     background: #d8d8d8;
-    font-family: 'Avenir Next';
+    font-family: 'Gayathri', sans-serif;
     height: ${(props) => (props.windowHeight ? `${props.windowHeight - 260}px` : '35rem')};
     padding-left: 0.5rem;
     border: none;
     padding-top: 3rem;
+
     /* border-left: 1.5px solid #979797; */
-    background-color: #d8d8d8;
+    background-color: #fdfd96;
+
+    background-attachment: local;
+    background-image: linear-gradient(to right, #fdfd96 10px, transparent 10px),
+        linear-gradient(to left, #fdfd96 10px, transparent 10px),
+        repeating-linear-gradient(#fdfd96, #fdfd96 30px, #ccc 30px, #ccc 31px, white 31px);
+    line-height: 31px;
+    padding: 8px 10px;
 `;
 
 const Remainder = styled.div`
