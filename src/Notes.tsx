@@ -81,9 +81,9 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
 }
 
 const Placeholder = styled.div<{ windowHeight }>`
-    color: black;
+    color: white;
     width: 17rem;
-    background: #d8d8d8;
+    background: #222627;
     font-family: 'Gayathri', sans-serif;
     height: ${(props) => (props.windowHeight ? `${props.windowHeight}px` : '35rem')};
     border: none;
@@ -91,7 +91,7 @@ const Placeholder = styled.div<{ windowHeight }>`
     padding-right: 1rem;
     text-align: center;
     /* border-left: 1.5px solid #979797; */
-    background-color: #d8d8d8;
+    background-color: #222627;
 `;
 
 const SaveButton = styled.button`
@@ -150,7 +150,7 @@ const Container = styled.div`
     background-color: #fdfd96;
 
     color: #09868b;
-    border-left: 1.5px solid #979797;
+    border-left: 1.5px solid #47484a;
     position: absolute;
     right: 0;
 `;

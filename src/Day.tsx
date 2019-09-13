@@ -40,7 +40,7 @@ export default function Day2({
 
     const [notesSelected, setNotesSelected] = useState(false);
 
-    const [backgroundColor, setBackgroundColor] = useState('#d8d8d8');
+    const [backgroundColor, setBackgroundColor] = useState('#222627');
 
     const [isDaySelected, toggleDaySelected] = useState(false);
 
@@ -49,7 +49,7 @@ export default function Day2({
             setBackgroundColor(colorMap[goalsCompletedOnDay]);
             toggleDaySelected(true);
         } else {
-            setBackgroundColor('#d8d8d8');
+            setBackgroundColor('#222627');
         }
     }, [goalsCompletedOnDay]);
 
@@ -123,7 +123,7 @@ export default function Day2({
                         {doesDayHaveNote ? (
                             <i
                                 className='glyphicon glyphicon-edit'
-                                style={{ color: backgroundColor === '#d8d8d8' ? 'black' : 'white' }}
+                                style={{ color: backgroundColor === '#222627' ? 'black' : 'white' }}
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handleNoteSelected(myDate, curGoal);
@@ -193,7 +193,6 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     height: 6rem;
-    background-color: #d8d8d8;
 `;
 
 const MultiSelectSquare = styled.div<{ color }>`
@@ -214,7 +213,7 @@ const Button = styled.button<{ disabled }>`
     -webkit-text-fill-color: ${(props) => (props.disabled ? 'transparent' : 'none')};
     font-size: 1em;
     margin: 0.4375rem;
-    border: ${(props) => (props.disabled ? '2px solid #f1f1f1;' : '2px solid #6B7A8F')};
+    border: ${(props) => (props.disabled ? '2px solid #1c1e1f;' : '2px solid #6B7A8F')};
     border-radius: 3px;
     text-align: right;
 

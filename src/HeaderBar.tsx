@@ -61,7 +61,7 @@ export default function HeaderBar({ curMonth, updateCurMonth, toggleAnalytics })
 const AppTitle = styled.h1`
     font-size: 1.5rem;
     font-family: 'Montserrat', sans-serif;
-    color: #0d160a;
+    color: white;
     margin-top: 0.5rem;
     margin-left: 0.5rem;
 `;
@@ -80,6 +80,8 @@ const Header = styled.div`
     background-color: #d8d8d8;
     border-bottom: 2px solid #979797; */
 
+    color: white;
+
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -88,8 +90,8 @@ const Header = styled.div`
     -ms-flex-direction: row;
     flex-direction: row;
     height: 4.4rem;
-    background-color: #d8d8d8;
-    border-bottom: 2px solid #979797;
+    background-color: #222627;
+    border-bottom: 2px solid #47484a;
 `;
 
 const MonthAndLogoutContainer = styled.div`
@@ -97,7 +99,7 @@ const MonthAndLogoutContainer = styled.div`
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
-    background-color: #d8d8d8;
+    background-color: #222627;
 `;
 
 const VerticalBar = styled.div`
@@ -108,7 +110,7 @@ const VerticalBar = styled.div`
 
 const CurMonth = styled.div`
     font-size: 2.5rem;
-    color: #0d160a;
+    color: white;
     margin-left: 3rem;
     font-family: 'Montserrat', sans-serif;
     /* font-family: "Avenir Next" !important; */
@@ -129,12 +131,32 @@ const MonthButton = styled.button`
     display: inline-block;
     border-radius: 0.3rem;
 
-    background-color: #ededed;
-    border-color: #09868b;
-    color: #09868b;
+    background-color: #1d1f20;
+    border-color: #0cc6ce;
+    color: #80f2f7;
 
     &:hover {
-        background-color: #bcb9b9;
+        filter: brightness(75%);
+    }
+`;
+
+const Button = styled.button`
+    display: inline-block;
+
+    font-size: 1em;
+    margin: 1em;
+    padding: 0.25em 1em;
+    border: 2px solid;
+    border-radius: 3px;
+    display: inline-block;
+    border-radius: 0.3rem;
+
+    background-color: #1d1f20;
+    border-color: #0cc6ce;
+    color: #80f2f7;
+
+    &:hover {
+        filter: brightness(75%);
     }
 `;
 
@@ -152,27 +174,8 @@ const AnalyticsButton = styled.button<{ analyticsOn }>`
     border-color: ${(props) => (props.analyticsOn ? 'white' : '#CF2E38')};
     color: ${(props) => (props.analyticsOn ? 'white' : '#CF2E38')};
 
-    background-color: ${(props) => (props.analyticsOn ? '#CF2E38' : 'white')};
-    */ &:hover {
-        background-color: #bcb9b9;
-    }
-`;
-
-const Button = styled.button`
-    display: inline-block;
-
-    font-size: 1em;
-    margin: 1em;
-    padding: 0.25em 1em;
-    border: 2px solid;
-    border-radius: 3px;
-    display: inline-block;
-    border-radius: 0.3rem;
-
-    border-color: #09868b;
-    color: #09868b;
-
+    background-color: ${(props) => (props.analyticsOn ? '#CF2E38' : '#1d1f20')};
     &:hover {
-        background-color: #bcb9b9;
+        filter: brightness(75%);
     }
 `;

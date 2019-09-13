@@ -207,12 +207,14 @@ const GoalContainer = styled.div`
     align-items: center;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
-    // background-color: #393f4d // #6b7a8f; //#0d160a;
+    
     font-family: Helvetica;
     position: absolute;
     height: 100%;
     width: 25rem;
     border-right: 1.5px solid #d0d0d0; */
+
+    background-color: #1c1e1f;
 
     display: -webkit-box;
     display: -ms-flexbox;
@@ -231,7 +233,7 @@ const GoalContainer = styled.div`
     // position: absolute;
     height: 100%;
     width: 25rem;
-    border-right: 1.5px solid #d0d0d0;
+    border-right: 1.5px solid #47484a;
 `;
 
 const InputContainer = styled.div`
@@ -276,7 +278,7 @@ const ListContainer = styled.div<{ windowHeight }>`
 `;
 
 const AddGoalButton = styled.button`
-    background-color: #bcb9b9;
+    background-color: #2b2f31;
     display: inline-block;
     color: #faf8f8;
     font-size: 1em;
@@ -302,10 +304,12 @@ const DeleteIcon = styled.i`
 const GoalInput = styled.input`
     height: 3rem;
     width: 18rem;
-    color: black;
+    color: 9a968f;
     background: #d8d8d8;
     border: none;
     font-size: 1em;
+
+    background-color: #222627;
 
     padding-left: 0.5rem;
     /* border-radius: 0.3rem 0 0 0.3rem; */
@@ -338,10 +342,10 @@ const NewListRow = styled.div<ListRowProps>`
   border-radius: 0.3rem;
   border: 1px solid #565656;
   /* margin-top: 2rem; */
-  background-color: ${(props) => (props.toDelete ? 'red' : '#d8d8d8')}; 
+  background-color: ${(props) => (props.toDelete ? 'red' : '#222627')}; 
   filter: ${(props) => (props.selected ? 'brightness(65%)' : 'brightness(100%)')};
   padding-left: 0.5rem;
-  color: black;
+  color: white;
   margin-left: 0.5rem;
   font-family: "Avenir Next" !important;
 
@@ -367,7 +371,7 @@ const Circle = styled.span<{ color }>`
 `;
 
 const Goal = styled.div`
-    color: black;
+    color: white;
     font-size: 1rem;
     font-family: 'Avenir Next' !important;
     overflow: auto;
