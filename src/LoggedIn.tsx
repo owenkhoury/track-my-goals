@@ -123,16 +123,14 @@ export default function LoggedIn() {
                 existingGoals.sort((a, b) => a.created - b.created);
 
                 // Set the initially selectedGoal goal
-
                 const selectedGoal: [string] = [selectedGoals[0]];
                 setSelectedGoals(selectedGoal);
-
                 setSelected(existingGoals[0]);
-                handleGoalSelected(existingGoals[0]);
                 setExistingGoals(existingGoals);
                 setColorMap(existingColorMap);
-
                 setGoalCreationDateMap(createdDateMap);
+
+                handleGoalSelected(existingGoals[0]);
             });
     }
 
@@ -380,6 +378,7 @@ export default function LoggedIn() {
 
 const OverallContainer = styled(animated.div)`
     height: 100%;
+    background-color: #1c1e1f;
 `;
 
 const CalendarContainer = styled.div`

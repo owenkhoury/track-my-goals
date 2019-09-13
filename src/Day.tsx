@@ -42,11 +42,12 @@ export default function Day2({
 
     const [backgroundColor, setBackgroundColor] = useState('#d8d8d8');
 
-    useEffect(() => {
-        console.log('goalsCompletedOnDay: ', goalsCompletedOnDay);
+    const [isDaySelected, toggleDaySelected] = useState(false);
 
+    useEffect(() => {
         if (goalsCompletedOnDay && goalsCompletedOnDay.length === 1) {
             setBackgroundColor(colorMap[goalsCompletedOnDay]);
+            toggleDaySelected(true);
         } else {
             setBackgroundColor('#d8d8d8');
         }
@@ -112,7 +113,7 @@ export default function Day2({
                         filter: notesSelected ? 'brightness(85%)' : 'brightness(100%)'
                     }}>
                     <Container style={{ backgroundColor: `${backgroundColor}` }}>
-                        <DayNumber>{day}</DayNumber>
+                        <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
                         {isTodaysDate ? (
                             <i
                                 className='glyphicon glyphicon-time'
@@ -122,7 +123,7 @@ export default function Day2({
                         {doesDayHaveNote ? (
                             <i
                                 className='glyphicon glyphicon-edit'
-                                style={{ color: 'white' }}
+                                style={{ color: backgroundColor === '#d8d8d8' ? 'black' : 'white' }}
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handleNoteSelected(myDate, curGoal);

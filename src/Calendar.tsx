@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Day from './Day';
 
 import { animated, useSpring } from 'react-spring';
+import { MONTH_DAYS } from './constants/AppConstants';
 
 export function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
@@ -11,21 +12,6 @@ export function getWindowDimensions() {
         height
     };
 }
-
-export const monthDays = {
-    '01': 31,
-    '02': 28,
-    '03': 31,
-    '04': 30,
-    '05': 31,
-    '06': 30,
-    '07': 31,
-    '08': 31,
-    '09': 30,
-    '10': 31,
-    '11': 30,
-    '12': 31
-};
 
 /**
  * NOTES -- Re-renders on every goal selection
@@ -74,7 +60,7 @@ export default function Calendar({
         dayOfWeek = firstOfMonth + 1;
 
         // USING 35 SO THAT WE GET 5 WEEKS.
-        for (let i = 1; i <= monthDays[month]; i++) {
+        for (let i = 1; i <= MONTH_DAYS[month]; i++) {
             const date =
                 month.toString().padStart(2, '0') +
                 '-' +

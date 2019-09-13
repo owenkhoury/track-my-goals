@@ -35,7 +35,7 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
                 <Container>
                     <NewContainer>
                         <Fragment>
-                            {/* <SaveButton
+                            <SaveButton
                                 onClick={async () => {
                                     if (goal && date && note.length) {
                                         const dayToUpdate: completedDay = {
@@ -46,12 +46,8 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
                                         await handleNoteAdded(dayToUpdate);
                                     }
                                 }}>
-                                Save Note For
-                                <br />
-                                {goal}
-                                <br />
-                                {date}
-                            </SaveButton> */}
+                                Save Note
+                            </SaveButton>
 
                             <OtherDisplay>
                                 <br />
@@ -100,7 +96,7 @@ const Placeholder = styled.div<{ windowHeight }>`
 
 const SaveButton = styled.button`
     /* border: 3px solid black; */
-    height: 8rem;
+    height: 6rem;
     background-color: #262228;
     font-family: 'Gayathri', sans-serif;
     font-size: 1.3rem;

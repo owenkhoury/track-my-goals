@@ -14,7 +14,7 @@ export default function Analytics({ goal, completedDays }) {
             <StackedRowsContainer>
                 <Row style={{ paddingTop: '2rem' }}>
                     <DonutGraph goal={goal} completedDays={completedDays} />
-                    <BarGraph goal={null} completedDays={null} />
+                    <BarGraph goal={goal} completedDays={completedDays} />
                 </Row>
                 <Row style={{ paddingBottom: '10rem' }}>
                     <LegendGraph />

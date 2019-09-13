@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Donut } from 'britecharts-react';
 
-import { monthDays } from './Calendar';
-
 export default function DonutGraph({ goal, completedDays }) {
     const [daysCompletedThisMonth, setDaysCompletedThisMonth] = useState(null);
 
