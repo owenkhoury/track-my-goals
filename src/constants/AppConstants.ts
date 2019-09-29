@@ -1,6 +1,6 @@
 // TODO -- ADD MORE COLORS TO THIS LIST
 
-export const GOAL_COLORS = ['#902027', '#154B5D', '#CF2E38', '#A797E8', '#DC97E8', '#E8A097', '#D6DE6C'];
+export const GOAL_COLORS = ['#279020', '#902027', '#154B5D', '#22155D', '#892090', '#209089', '#908920', '#CF742E'];
 
 export interface completedDay {
     date: string;

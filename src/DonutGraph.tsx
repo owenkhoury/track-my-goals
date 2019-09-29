@@ -27,13 +27,14 @@ export default function DonutGraph({ goal, completedDays }) {
             {
                 quantity: totalCompleted,
                 percentage: ((totalCompleted / totalDays) * 100).toFixed(0),
-                name: 'Done',
+                name: 'Days Completed',
+                color: 'white',
                 id: 1
             },
             {
                 quantity: totalDays - totalCompleted,
                 percentage: (((totalDays - totalCompleted) / totalDays) * 100).toFixed(0),
-                name: 'Not Done',
+                name: 'Days Not completed',
                 id: 2
             }
         ];
@@ -49,8 +50,8 @@ export default function DonutGraph({ goal, completedDays }) {
         <Donut
             data={donutData}
             customMouseOver={logMouseOver}
-            externalRadius={100}
-            internalRadius={47}
+            externalRadius={150}
+            internalRadius={75}
             highlightSliceById={1}
         />
     );

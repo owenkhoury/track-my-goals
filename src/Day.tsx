@@ -40,7 +40,7 @@ export default function Day2({
 
     const [notesSelected, setNotesSelected] = useState(false);
 
-    const [backgroundColor, setBackgroundColor] = useState('#222627');
+    const [backgroundColor, setBackgroundColor] = useState('#464e50');
 
     const [isDaySelected, toggleDaySelected] = useState(false);
 
@@ -49,7 +49,7 @@ export default function Day2({
             setBackgroundColor(colorMap[goalsCompletedOnDay]);
             toggleDaySelected(true);
         } else {
-            setBackgroundColor('#222627');
+            setBackgroundColor('#464e50');
         }
     }, [goalsCompletedOnDay]);
 
@@ -123,7 +123,7 @@ export default function Day2({
                         {doesDayHaveNote ? (
                             <i
                                 className='glyphicon glyphicon-edit'
-                                style={{ color: backgroundColor === '#222627' ? 'black' : 'white' }}
+                                style={{ color: backgroundColor === '#464e50' ? 'black' : 'white' }}
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handleNoteSelected(myDate, curGoal);
@@ -143,8 +143,8 @@ export default function Day2({
                     style={{
                         filter: notesSelected ? 'brightness(85%)' : 'brightness(100%)'
                     }}>
-                    <Container>
-                        <DayNumber>{day}</DayNumber>
+                    <Container style={{ backgroundColor: '#464e50' }}>
+                        <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
                         <Squares>{mutliSelectSquares}</Squares>
                     </Container>
                 </Button>

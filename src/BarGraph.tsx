@@ -72,8 +72,8 @@ export default function BarGraph({ goal, completedDays }) {
     return (
         <Bar
             data={barData}
-            height={200}
-            width={300}
+            height={300}
+            width={450}
             isHorizontal={true}
             margin={{ left: 100 }}
             colorSchema={colors.colorSchemas.orange}

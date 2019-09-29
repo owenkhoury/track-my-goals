@@ -16,9 +16,9 @@ export default function Analytics({ goal, completedDays }) {
                     <DonutGraph goal={goal} completedDays={completedDays} />
                     <BarGraph goal={goal} completedDays={completedDays} />
                 </Row>
-                <Row style={{ paddingBottom: '10rem' }}>
+                {/* <Row style={{ paddingBottom: '10rem' }}>
                     <LegendGraph />
-                </Row>
+                </Row> */}
             </StackedRowsContainer>
         </Container>
     );
@@ -51,5 +51,6 @@ const Row = styled.div`
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
-    height: 50%;
+    height: 100%;
+    margin-bottom: 10rem;
 `;

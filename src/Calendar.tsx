@@ -23,6 +23,7 @@ export default function Calendar({
     colorMap,
     selectedGoals,
     handleDayCompleted,
+    handleDayRemoved,
     handleNoteSelected,
     selectedDayForNotes
 }) {
@@ -124,6 +125,31 @@ export default function Calendar({
             myMonth.push(week);
         }
 
+        week = [];
+
+        for (let i = 0; i < 6; i++) {
+            week.push(<Day disabled={true} />);
+        }
+
+        week.push(
+            selectedDayForNotes ? (
+                <DeselectButton
+                    onClick={() => {
+                        if (selectedGoals && selectedGoals.length === 1) {
+                            handleDayRemoved(selectedDayForNotes.date, selectedGoals[0]);
+                        }
+                    }}>
+                    Remove Day
+                </DeselectButton>
+            ) : (
+                <Day disabled={true} />
+            )
+        );
+
+        // week.push(<Day disabled={true} />);
+
+        myMonth.push(week);
+
         return myMonth;
     }
 
@@ -189,4 +215,18 @@ const DayOfWeek = styled.div`
     margin-bottom: 2rem;
     text-align: center;
     font-size: 1.15rem;
+`;
+
+const DeselectButton = styled.button`
+    background-color: #464e50;
+    width: 10rem;
+    height: 4rem;
+    margin-right: 4rem;
+    font-family: 'Avenir Next' !important;
+    color: white;
+    border-radius: 0.5rem;
+
+    &:hover {
+        filter: ${(props) => (props.disabled ? 'brightness(100%)' : 'brightness(85%)')};
+    }
 `;

@@ -97,7 +97,7 @@ const Placeholder = styled.div<{ windowHeight }>`
 const SaveButton = styled.button`
     /* border: 3px solid black; */
     height: 6rem;
-    background-color: #262228;
+    background-color: #464e50;
     font-family: 'Gayathri', sans-serif;
     font-size: 1.3rem;
     color: white;

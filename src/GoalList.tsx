@@ -122,9 +122,13 @@ export default function GoalsList({
                                                   if (goals.includes(goal)) {
                                                       if (selectedGoals) {
                                                           selectedGoals.forEach((element) => {
-                                                              (document.getElementById(
-                                                                  element
-                                                              ) as HTMLInputElement).checked = false;
+                                                              if (
+                                                                  document.getElementById(element) as HTMLInputElement
+                                                              ) {
+                                                                  (document.getElementById(
+                                                                      element
+                                                                  ) as HTMLInputElement).checked = false;
+                                                              }
                                                           });
                                                       }
 
@@ -309,7 +313,7 @@ const GoalInput = styled.input`
     border: none;
     font-size: 1em;
 
-    background-color: #222627;
+    background-color: #464e50;
 
     padding-left: 0.5rem;
     /* border-radius: 0.3rem 0 0 0.3rem; */
@@ -340,9 +344,9 @@ const NewListRow = styled.div<ListRowProps>`
   margin-bottom: 2rem;
   width: 19.5rem;
   border-radius: 0.3rem;
-  border: 1px solid #565656;
+  border: 1px solid #888888;
   /* margin-top: 2rem; */
-  background-color: ${(props) => (props.toDelete ? 'red' : '#222627')}; 
+  background-color: ${(props) => (props.toDelete ? 'red' : '#464e50')}; 
   filter: ${(props) => (props.selected ? 'brightness(65%)' : 'brightness(100%)')};
   padding-left: 0.5rem;
   color: white;
