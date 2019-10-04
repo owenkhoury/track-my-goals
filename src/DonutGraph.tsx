@@ -16,11 +16,16 @@ export default function DonutGraph({ goal, completedDays }) {
         let totalCompleted = 0;
 
         if (completedDays && completedDays[goal]) {
+            console.log('ENTERING FOR EACH LOOP DONUT');
+
             completedDays[goal].forEach((day) => {
-                if (+day.date.substring(1, 2) == curMonth) {
+                console.log(+day.date.substring(0, 2), curMonth);
+                if (+day.date.substring(0, 2) == curMonth) {
                     totalCompleted++;
                 }
             });
+
+            console.log('FINSISHED');
         }
 
         const newData = [

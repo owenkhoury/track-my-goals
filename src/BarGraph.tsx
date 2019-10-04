@@ -53,15 +53,17 @@ export default function BarGraph({ goal, completedDays }) {
             const range = getPreviousWeek(weeksAgo);
             let total = 0;
 
-            days.forEach((day) => {
-                // convert the date to a number
-                // let date = +day.date.replace(/-/g, '');
+            if (days) {
+                days.forEach((day) => {
+                    // convert the date to a number
+                    // let date = +day.date.replace(/-/g, '');
 
-                if (isDayInRange(day.date, range.firstDay, range.lastDay)) {
-                    console.log('================', day.date, range.firstDay, range.lastDay);
-                    total += 1;
-                }
-            });
+                    if (isDayInRange(day.date, range.firstDay, range.lastDay)) {
+                        console.log('================', day.date, range.firstDay, range.lastDay);
+                        total += 1;
+                    }
+                });
+            }
 
             return total;
         }
