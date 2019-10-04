@@ -25,7 +25,7 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
         if (selectedDayForNotes) {
             setGoal(selectedDayForNotes.goal);
             setDate(selectedDayForNotes.date);
-            setNote(selectedDayForNotes.notes);
+            setNote(selectedDayForNotes.notes ? selectedDayForNotes.notes : '');
         }
     }, [selectedDayForNotes, completedDays]);
 
@@ -37,7 +37,7 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
                         <Fragment>
                             <SaveButton
                                 onClick={async () => {
-                                    if (goal && date && note.length) {
+                                    if (goal && date && note && note.length) {
                                         const dayToUpdate: completedDay = {
                                             goal: goal,
                                             date: date,
