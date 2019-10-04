@@ -193,7 +193,7 @@ const DayNumber = styled.div`
 const Container = styled.div`
     display: flex;
     flex-direction: column;
-    height: 6rem;
+    height: 100%;
 `;
 
 const MultiSelectSquare = styled.div<{ color }>`
@@ -209,7 +209,7 @@ const Button = styled.button<{ disabled }>`
     font-family: 'Avenir Next' !important;
     padding: 0;
     display: inline-block;
-    height: 6rem;
+    height: ${(props) => (props.disabled ? '100%' : '6rem')};
     width: 6rem;
     -webkit-text-fill-color: ${(props) => (props.disabled ? 'transparent' : 'none')};
     font-size: 1em;
@@ -222,7 +222,16 @@ const Button = styled.button<{ disabled }>`
         filter: ${(props) => (props.disabled ? 'brightness(100%)' : 'brightness(85%)')};
     }
 
-    height: 100%;
+    // Size the square based on the width of the browser window.
+    @media only screen and (max-width: 1450px) {
+        height: ${(props) => (props.disabled ? '100%' : '5rem')};
+        width: 5rem;
+    }
+
+    @media only screen and (max-width: 1305px) {
+        height: ${(props) => (props.disabled ? '100%' : '3.8rem')};
+        width: 3.8rem;
+    }
 
     margin-top: 0.3rem;
 `;

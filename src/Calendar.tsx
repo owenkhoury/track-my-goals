@@ -127,10 +127,6 @@ export default function Calendar({
 
         week = [];
 
-        for (let i = 0; i < 6; i++) {
-            week.push(<Day disabled={true} />);
-        }
-
         week.push(
             selectedDayForNotes ? (
                 <DeselectButton
@@ -170,7 +166,11 @@ export default function Calendar({
     return (
         <Container style={animatedProps}>
             {calendarYear[curMonth]
-                ? calendarYear[curMonth].map((week) => {
+                ? calendarYear[curMonth].map((week, idx) => {
+                      if (idx === calendarYear[curMonth].length - 1) {
+                          return <DeselectWrapper>{week}</DeselectWrapper>;
+                      }
+
                       return <div id={week}>{week}</div>;
                   })
                 : null}
@@ -215,18 +215,43 @@ const DayOfWeek = styled.div`
     margin-bottom: 2rem;
     text-align: center;
     font-size: 1.15rem;
+
+    @media only screen and (max-width: 1450px) {
+        width: 5rem;
+    }
+
+    @media only screen and (max-width: 1305px) {
+        width: 3.8rem;
+    }
+`;
+
+const DeselectWrapper = styled.div`
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
 `;
 
 const DeselectButton = styled.button`
     background-color: #464e50;
     width: 10rem;
     height: 4rem;
-    margin-right: 4rem;
+    margin-right: 9rem;
     font-family: 'Avenir Next' !important;
     color: white;
     border-radius: 0.5rem;
 
     &:hover {
         filter: ${(props) => (props.disabled ? 'brightness(100%)' : 'brightness(85%)')};
+    }
+
+    @media only screen and (max-width: 1450px) {
+        width: 7.5rem;
+        height: 3rem;
+        margin-right: 2rem;
+    }
+
+    @media only screen and (max-width: 1305px) {
+        width: 3.8rem;
     }
 `;
