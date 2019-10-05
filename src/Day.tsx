@@ -1,5 +1,6 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import styled from 'styled-components';
+import MultiSelectSquare from './MultiSelectSquare';
 
 interface Day {
     completedColor?;
@@ -17,7 +18,7 @@ interface Day {
     selectedDayForNotes?;
 }
 
-export default function Day2({
+export default function Day({
     completedColor,
     curGoal, // shouldn't need this
     day,
@@ -94,9 +95,11 @@ export default function Day2({
     function createColorSquares() {
         const squares = [];
 
+        console.log('createColorSquares: ', goalsCompletedOnDay);
+
         if (goalsCompletedOnDay) {
             goalsCompletedOnDay.forEach((goal) => {
-                squares.push(<MultiSelectSquare color={colorMap[goal]} />);
+                squares.push(<MultiSelectSquare color={colorMap[goal]} goal={goal} />);
             });
         }
         return squares;
@@ -196,14 +199,14 @@ const Container = styled.div`
     height: 100%;
 `;
 
-const MultiSelectSquare = styled.div<{ color }>`
-    width: 1.5rem;
-    height: 1.5rem;
-    background-color: ${(props) => props.color};
-    border-radius: 2px;
-    border: 0.5px solid black;
-    margin: 0.1rem;
-`;
+// const MultiSelectSquare = styled.div<{ color }>`
+//     width: 1.5rem;
+//     height: 1.5rem;
+//     background-color: ${(props) => props.color};
+//     border-radius: 2px;
+//     border: 0.5px solid black;
+//     margin: 0.1rem;
+// `;
 
 const Button = styled.button<{ disabled }>`
     font-family: 'Avenir Next' !important;
