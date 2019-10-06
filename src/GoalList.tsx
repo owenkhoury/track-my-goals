@@ -74,7 +74,17 @@ export default function GoalsList({
                         <GoalInput
                             type='text'
                             placeholder='Enter your next habit'
-                            onChange={(e) => setNewGoal(e.target.value)}
+                            onChange={(e) => {
+                                setNewGoal(e.target.value);
+                            }}
+                            onSubmit={(e) => {
+                                return false;
+                            }}
+                            onKeyPress={(e) => {
+                                if (e.keyCode === 13 || e.key === 'Enter') {
+                                    e.preventDefault();
+                                }
+                            }}
                         />
                         <AddGoalButton
                             type='reset'
