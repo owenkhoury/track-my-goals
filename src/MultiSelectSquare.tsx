@@ -23,13 +23,22 @@ const Square = styled.div<{ color }>`
     border-radius: 2px;
     border: 0.5px solid black;
     margin: 0.1rem;
+
+    @media only screen and (max-width: 1450px) {
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+
+    @media only screen and (max-width: 1305px) {
+        width: 0.9rem;
+        height: 0.9rem;
+    }
 `;
 
 const DropDown = styled.div`
     position: relative;
     width: 4rem;
     height: 2.5rem;
-    z-index: 50;
     background-color: black;
     color: white;
     text-align: center;

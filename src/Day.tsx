@@ -199,15 +199,6 @@ const Container = styled.div`
     height: 100%;
 `;
 
-// const MultiSelectSquare = styled.div<{ color }>`
-//     width: 1.5rem;
-//     height: 1.5rem;
-//     background-color: ${(props) => props.color};
-//     border-radius: 2px;
-//     border: 0.5px solid black;
-//     margin: 0.1rem;
-// `;
-
 const Button = styled.button<{ disabled }>`
     font-family: 'Avenir Next' !important;
     padding: 0;
