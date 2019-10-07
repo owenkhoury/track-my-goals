@@ -202,9 +202,9 @@ const Button = styled.button<{ disabled; isNoteSelected; numGoals }>`
     border-radius: 3px;
     text-align: right;
 
-    filter: ${(props) => (props.isNoteSelected ? 'brightness(65%)' : 'brightness(100%)')};
+    filter: ${(props) => (props.isNoteSelected ? 'brightness(65%)' : 'none')};
     &:hover {
-        filter: ${(props) => (props.numGoals === 1 ? 'brightness(65%)' : 'brightness(100%)')};
+        filter: ${(props) => (props.numGoals === 1 ? 'brightness(65%)' : 'none')};
     }
 
     // Size the square based on the width of the browser window.
