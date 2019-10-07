@@ -36,7 +36,6 @@ const Square = styled.div<{ color }>`
 `;
 
 const DropDown = styled.div`
-    position: relative;
     width: 4rem;
     height: 2.5rem;
     background-color: black;
@@ -45,5 +44,5 @@ const DropDown = styled.div`
     vertical-align: middle;
     line-height: 2.5rem;
     margin-top: 1.7rem;
-    border-radius: 2.5px;
+    border-radius: 10px;
 `;

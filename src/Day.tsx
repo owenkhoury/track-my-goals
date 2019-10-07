@@ -109,12 +109,7 @@ export default function Day({
         // check if single select or multi-select.
         if (selectedGoals && selectedGoals.length === 1) {
             return (
-                <Button
-                    disabled={disabled}
-                    onClick={handleDayClicked}
-                    style={{
-                        filter: notesSelected ? 'brightness(85%)' : 'brightness(100%)'
-                    }}>
+                <Button disabled={disabled} onClick={handleDayClicked} isNoteSelected={notesSelected}>
                     <Container style={{ backgroundColor: `${backgroundColor}` }}>
                         <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
                         {isTodaysDate ? (
@@ -140,12 +135,7 @@ export default function Day({
             const mutliSelectSquares = createColorSquares();
 
             return (
-                <Button
-                    disabled={disabled}
-                    onClick={handleDayClicked}
-                    style={{
-                        filter: notesSelected ? 'brightness(85%)' : 'brightness(100%)'
-                    }}>
+                <Button disabled={disabled} onClick={handleDayClicked} isNoteSelected={notesSelected}>
                     <Container style={{ backgroundColor: '#464e50' }}>
                         <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
                         <Squares>{mutliSelectSquares}</Squares>
@@ -153,7 +143,7 @@ export default function Day({
                 </Button>
             );
         } else if (disabled) {
-            return <Button disabled={true} />;
+            return <Button disabled={true} isNoteSelected={false} />;
         }
     }
 
@@ -199,7 +189,7 @@ const Container = styled.div`
     height: 100%;
 `;
 
-const Button = styled.button<{ disabled }>`
+const Button = styled.button<{ disabled; isNoteSelected }>`
     font-family: 'Avenir Next' !important;
     padding: 0;
     display: inline-block;
@@ -212,8 +202,9 @@ const Button = styled.button<{ disabled }>`
     border-radius: 3px;
     text-align: right;
 
+    filter: ${(props) => (props.isNoteSelected ? 'brightness(65%)' : 'brightness(100%)')};
     &:hover {
-        filter: ${(props) => (props.disabled ? 'brightness(100%)' : 'brightness(85%)')};
+        filter: brightness(65%);
     }
 
     // Size the square based on the width of the browser window.

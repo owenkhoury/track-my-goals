@@ -205,6 +205,8 @@ const Container = styled(animated.div)`
     overflow: hidden;
 
     margin-top: 3rem;
+
+    position: relative;
 `;
 
 const DayOfWeek = styled.div`

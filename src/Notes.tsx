@@ -111,25 +111,6 @@ const SaveButton = styled.button`
     }
 `;
 
-const DeselectButton = styled.button`
-    height: 5rem;
-    background-color: #062f4f;
-
-    color: white;
-
-    font-family: 'Avenir Next';
-    font-size: 1.3rem;
-
-    padding: 0;
-    border: 0;
-
-    z-index: 10;
-
-    &:hover {
-        filter: brightness(85%);
-    }
-`;
-
 const NewContainer = styled.div`
     /* display: flex;
     flex-direction: column;

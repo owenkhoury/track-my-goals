@@ -355,14 +355,13 @@ const NewListRow = styled.div<ListRowProps>`
   width: 19.5rem;
   border-radius: 0.3rem;
   border: 1px solid #888888;
-  /* margin-top: 2rem; */
   background-color: ${(props) => (props.toDelete ? 'red' : '#464e50')}; 
-  filter: ${(props) => (props.selected ? 'brightness(65%)' : 'brightness(100%)')};
   padding-left: 0.5rem;
   color: white;
   margin-left: 0.5rem;
   font-family: "Avenir Next" !important;
 
+  filter: ${(props) => (props.selected ? 'brightness(65%)' : 'brightness(100%)')};
   &:hover {
     /* background-color: ${(props) => (props.colorMap && props.goal ? props.colorMap[props.goal] : '#d8d8d8')}; */
     filter: ${(props) => (props.selected ? 'brightness(65%)' : 'brightness(50%)')};
