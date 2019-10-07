@@ -109,7 +109,7 @@ export default function Day({
         // check if single select or multi-select.
         if (selectedGoals && selectedGoals.length === 1) {
             return (
-                <Button disabled={disabled} onClick={handleDayClicked} isNoteSelected={notesSelected}>
+                <Button disabled={disabled} onClick={handleDayClicked} isNoteSelected={notesSelected} numGoals={1}>
                     <Container style={{ backgroundColor: `${backgroundColor}` }}>
                         <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
                         {isTodaysDate ? (
@@ -135,7 +135,7 @@ export default function Day({
             const mutliSelectSquares = createColorSquares();
 
             return (
-                <Button disabled={disabled} onClick={handleDayClicked} isNoteSelected={notesSelected}>
+                <Button disabled={disabled} onClick={handleDayClicked} isNoteSelected={notesSelected} numGoals={2}>
                     <Container style={{ backgroundColor: '#464e50' }}>
                         <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
                         <Squares>{mutliSelectSquares}</Squares>
@@ -143,7 +143,7 @@ export default function Day({
                 </Button>
             );
         } else if (disabled) {
-            return <Button disabled={true} isNoteSelected={false} />;
+            return <Button disabled={true} isNoteSelected={false} numGoals={0} />;
         }
     }
 
@@ -189,7 +189,7 @@ const Container = styled.div`
     height: 100%;
 `;
 
-const Button = styled.button<{ disabled; isNoteSelected }>`
+const Button = styled.button<{ disabled; isNoteSelected; numGoals }>`
     font-family: 'Avenir Next' !important;
     padding: 0;
     display: inline-block;
@@ -204,7 +204,7 @@ const Button = styled.button<{ disabled; isNoteSelected }>`
 
     filter: ${(props) => (props.isNoteSelected ? 'brightness(65%)' : 'brightness(100%)')};
     &:hover {
-        filter: brightness(65%);
+        filter: ${(props) => (props.numGoals === 1 ? 'brightness(65%)' : 'brightness(100%)')};
     }
 
     // Size the square based on the width of the browser window.

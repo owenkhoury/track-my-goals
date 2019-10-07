@@ -36,7 +36,9 @@ const Square = styled.div<{ color }>`
 `;
 
 const DropDown = styled.div`
-    width: 4rem;
+    width: max-content;
+    padding-left: 1rem;
+    padding-right: 1rem;
     height: 2.5rem;
     background-color: black;
     color: white;
