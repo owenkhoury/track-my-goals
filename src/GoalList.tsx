@@ -327,6 +327,23 @@ const GoalInput = styled.input`
 
     padding-left: 0.5rem;
     /* border-radius: 0.3rem 0 0 0.3rem; */
+
+    ::-webkit-input-placeholder {
+        /* Chrome/Opera/Safari */
+        color: #f5f5f5;
+    }
+    ::-moz-placeholder {
+        /* Firefox 19+ */
+        color: #f5f5f5;
+    }
+    :-ms-input-placeholder {
+        /* IE 10+ */
+        color: #f5f5f5;
+    }
+    :-moz-placeholder {
+        /* Firefox 18- */
+        color: #f5f5f5;
+    }
 `;
 
 const DeleteButton = styled.button`
@@ -361,10 +378,10 @@ const NewListRow = styled.div<ListRowProps>`
   margin-left: 0.5rem;
   font-family: "Avenir Next" !important;
 
-  filter: ${(props) => (props.selected ? 'brightness(65%)' : 'brightness(100%)')};
+  filter: ${(props) => (props.selected ? 'brightness(100%)' : 'brightness(65%)')};
   &:hover {
     /* background-color: ${(props) => (props.colorMap && props.goal ? props.colorMap[props.goal] : '#d8d8d8')}; */
-    filter: ${(props) => (props.selected ? 'brightness(65%)' : 'brightness(50%)')};
+    filter: ${(props) => (props.selected ? 'brightness(100%)' : 'brightness(50%)')};
   }
 `;
 
