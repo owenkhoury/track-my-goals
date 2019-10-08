@@ -86,7 +86,7 @@ export default function GoalsList({
                     <MyForm>
                         <GoalInput
                             type='text'
-                            placeholder='Enter your next habit'
+                            placeholder='Enter your next habit ...'
                             onChange={(e) => {
                                 setNewGoal(e.target.value);
                             }}

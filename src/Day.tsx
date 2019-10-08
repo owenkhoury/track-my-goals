@@ -109,13 +109,22 @@ export default function Day({
         // check if single select or multi-select.
         if (selectedGoals && selectedGoals.length === 1) {
             return (
-                <Button disabled={disabled} onClick={handleDayClicked} isNoteSelected={notesSelected} numGoals={1}>
+                <Button
+                    disabled={disabled}
+                    onClick={handleDayClicked}
+                    isNoteSelected={notesSelected}
+                    numGoals={1}
+                    isCurrentDay={isTodaysDate}>
                     <Container style={{ backgroundColor: `${backgroundColor}` }}>
                         <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
                         {isTodaysDate ? (
                             <i
                                 className='glyphicon glyphicon-time'
-                                style={{ color: 'white', marginRight: '.2rem', marginTop: '.3rem' }}
+                                style={{
+                                    color: 'white',
+                                    marginRight: '.2rem',
+                                    marginTop: '.3rem'
+                                }}
                             />
                         ) : null}
                         {doesDayHaveNote ? (
@@ -135,7 +144,12 @@ export default function Day({
             const mutliSelectSquares = createColorSquares();
 
             return (
-                <Button disabled={disabled} onClick={handleDayClicked} isNoteSelected={notesSelected} numGoals={2}>
+                <Button
+                    disabled={disabled}
+                    onClick={handleDayClicked}
+                    isNoteSelected={notesSelected}
+                    numGoals={2}
+                    isCurrentDay={isTodaysDate}>
                     <Container style={{ backgroundColor: '#464e50' }}>
                         <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
                         <Squares>{mutliSelectSquares}</Squares>
@@ -143,7 +157,7 @@ export default function Day({
                 </Button>
             );
         } else if (disabled) {
-            return <Button disabled={true} isNoteSelected={false} numGoals={0} />;
+            return <Button disabled={true} isNoteSelected={false} numGoals={0} isCurrentDay={false} />;
         }
     }
 
@@ -189,7 +203,7 @@ const Container = styled.div`
     height: 100%;
 `;
 
-const Button = styled.button<{ disabled; isNoteSelected; numGoals }>`
+const Button = styled.button<{ disabled; isNoteSelected; numGoals; isCurrentDay }>`
     font-family: 'Avenir Next' !important;
     padding: 0;
     display: inline-block;
@@ -198,13 +212,14 @@ const Button = styled.button<{ disabled; isNoteSelected; numGoals }>`
     -webkit-text-fill-color: ${(props) => (props.disabled ? 'transparent' : 'none')};
     font-size: 1em;
     margin: 0.4375rem;
-    border: ${(props) => (props.disabled ? '2px solid #1c1e1f;' : '2px solid #6B7A8F')};
+    border: ${(props) =>
+        props.disabled ? '2px solid #1c1e1f;' : props.isCurrentDay ? '2px solid white' : '2px solid #6B7A8F'};
     border-radius: 3px;
     text-align: right;
 
-    filter: ${(props) => (props.isNoteSelected ? 'brightness(65%)' : 'none')};
+    filter: ${(props) => (props.isNoteSelected ? 'none' : 'brightness(75%)')};
     &:hover {
-        filter: ${(props) => (props.numGoals === 1 ? 'brightness(65%)' : 'none')};
+        filter: ${(props) => (props.numGoals === 1 ? 'none' : 'brightness(75%)')};
     }
 
     // Size the square based on the width of the browser window.
