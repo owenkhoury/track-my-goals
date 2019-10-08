@@ -17,7 +17,8 @@ export default function GoalsList({
     handleGoalSelected,
     handleGoalRemoved,
     selectedGoals,
-    creationDateMap
+    creationDateMap,
+    selectAllGoals
 }) {
     const { auth } = useAuth();
 
@@ -66,6 +67,18 @@ export default function GoalsList({
         setGoalsToDelete(update);
     }
 
+    /**
+     * When 'Select all' is clicked, set every goal's checkbox to be checked.
+     * @param goals
+     */
+    function checkAllCheckmarks(goals) {
+        goals.forEach((goal) => {
+            if (document.getElementById(goal) as HTMLInputElement) {
+                (document.getElementById(goal) as HTMLInputElement).checked = true;
+            }
+        });
+    }
+
     return (
         <GoalContainer>
             <InnerContainer>
@@ -105,6 +118,13 @@ export default function GoalsList({
                         </AddGoalButton>
                     </MyForm>
                 </InputContainer>
+                <SelectAll
+                    onClick={() => {
+                        selectAllGoals(goals);
+                        checkAllCheckmarks(goals);
+                    }}>
+                    Select All
+                </SelectAll>
                 <ListContainer windowHeight={windowDimensions.height}>
                     {goals
                         ? goals.map((goal, idx) => {
@@ -168,6 +188,7 @@ export default function GoalsList({
                                                           type='checkbox'
                                                           defaultChecked={idx === 0}
                                                           onClick={(e) => {
+                                                              //selectGoal(e, goal);
                                                               e.stopPropagation();
                                                               let checkbox = document.getElementById(
                                                                   goal
@@ -291,20 +312,27 @@ const ListContainer = styled.div<{ windowHeight }>`
     padding-left: 0.5rem;
 `;
 
-const AddGoalButton = styled.button`
-    background-color: #2b2f31;
-    display: inline-block;
-    color: #faf8f8;
-    font-size: 1em;
-    /* padding: 1rem; */
-    border: none;
-    font-weight: bold;
+const SelectAll = styled.button`
+    margin-top: 1rem;
+    width: 8rem;
 
-    height: 100%;
+    background-color: #464e50;
+    border-color: #0cc6ce;
+    color: #80f2f7;
+
+    border: 2px solid;
+    font-size: 1em;
+
+    filter: brightness(75%);
 
     &:hover {
-        filter: brightness(85%);
+        filter: brightness(50%);
     }
+`;
+
+const DeleteButton = styled.button`
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
 `;
 
 const DeleteIcon = styled.i`
@@ -316,15 +344,13 @@ const DeleteIcon = styled.i`
 `;
 
 const GoalInput = styled.input`
+    border: 2px solid;
+
     height: 3rem;
     width: 18rem;
-    color: 9a968f;
-    background: #d8d8d8;
-    border: none;
+    color: #9a968f;
     font-size: 1em;
-
     background-color: #464e50;
-
     padding-left: 0.5rem;
     /* border-radius: 0.3rem 0 0 0.3rem; */
 
@@ -346,9 +372,20 @@ const GoalInput = styled.input`
     }
 `;
 
-const DeleteButton = styled.button`
-    background-color: rgba(0, 0, 0, 0);
-    border: none;
+const AddGoalButton = styled.button`
+    background-color: #2b2f31;
+    display: inline-block;
+
+    font-size: 1em;
+    /* padding: 1rem; */
+
+    font-weight: bold;
+
+    height: 100%;
+
+    &:hover {
+        filter: brightness(85%);
+    }
 `;
 
 interface ListRowProps {

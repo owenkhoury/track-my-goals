@@ -212,8 +212,12 @@ export default function LoggedIn() {
         setColorMap(updatedMap);
     }
 
+    function selectAllGoals(goals) {
+        setSelectedGoals(goals);
+    }
+
     /**
-     * Add newly selectedGoal goal to selectedGoalss state.
+     * Update the selected goals state, removing previously selected and adding newly selected goals.
      * @param goal
      * @param goalToRemove
      */
@@ -346,6 +350,7 @@ export default function LoggedIn() {
                     handleGoalRemoved={handleGoalRemoved}
                     selectedGoals={selectedGoals}
                     creationDateMap={goalCreationDateMap}
+                    selectAllGoals={selectAllGoals}
                 />
                 <CalendarContainer>
                     {showAnalytics ? (
