@@ -114,7 +114,8 @@ export default function Day({
                     onClick={handleDayClicked}
                     isNoteSelected={notesSelected}
                     numGoals={1}
-                    isCurrentDay={isTodaysDate}>
+                    isCurrentDay={isTodaysDate}
+                    isMultiSelect={selectedGoals.length > 1}>
                     <Container style={{ backgroundColor: `${backgroundColor}` }}>
                         <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
                         {isTodaysDate ? (
@@ -149,7 +150,8 @@ export default function Day({
                     onClick={handleDayClicked}
                     isNoteSelected={notesSelected}
                     numGoals={2}
-                    isCurrentDay={isTodaysDate}>
+                    isCurrentDay={isTodaysDate}
+                    isMultiSelect={selectedGoals.length > 1}>
                     <Container style={{ backgroundColor: '#464e50' }}>
                         <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
                         <Squares>{mutliSelectSquares}</Squares>
@@ -157,7 +159,15 @@ export default function Day({
                 </Button>
             );
         } else if (disabled) {
-            return <Button disabled={true} isNoteSelected={false} numGoals={0} isCurrentDay={false} />;
+            return (
+                <Button
+                    disabled={true}
+                    isNoteSelected={false}
+                    numGoals={0}
+                    isCurrentDay={false}
+                    isMultiSelect={false}
+                />
+            );
         }
     }
 
@@ -203,7 +213,7 @@ const Container = styled.div`
     height: 100%;
 `;
 
-const Button = styled.button<{ disabled; isNoteSelected; numGoals; isCurrentDay }>`
+const Button = styled.button<{ disabled; isNoteSelected; numGoals; isCurrentDay; isMultiSelect }>`
     font-family: 'Avenir Next' !important;
     padding: 0;
     display: inline-block;
@@ -212,12 +222,11 @@ const Button = styled.button<{ disabled; isNoteSelected; numGoals; isCurrentDay 
     -webkit-text-fill-color: ${(props) => (props.disabled ? 'transparent' : 'none')};
     font-size: 1em;
     margin: 0.4375rem;
-    border: ${(props) =>
-        props.disabled ? '2px solid #1c1e1f;' : props.isCurrentDay ? '2px solid white' : '2px solid #6B7A8F'};
+    border: ${(props) => (props.disabled ? 'none;' : props.isCurrentDay ? '2px solid white' : '2px solid #6B7A8F')};
     border-radius: 3px;
     text-align: right;
 
-    filter: ${(props) => (props.isNoteSelected ? 'none' : 'brightness(75%)')};
+    filter: ${(props) => (props.isNoteSelected || props.isMultiSelect ? 'none' : 'brightness(75%)')};
     &:hover {
         filter: ${(props) => (props.numGoals === 1 ? 'none' : 'brightness(75%)')};
     }

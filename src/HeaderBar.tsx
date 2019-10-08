@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import styled from 'styled-components';
 import { logout } from './utils';
 
@@ -20,8 +20,11 @@ const monthName = {
 export default function HeaderBar({ curMonth, updateCurMonth, toggleAnalytics }) {
     const [analyticsSelected, toggleAnalyticsSelected] = useState(false);
 
+    const [calendarSelected, toggleCalendarSelected] = useState(true);
+
     function clickedAnalytics() {
         toggleAnalyticsSelected(!analyticsSelected);
+        toggleCalendarSelected(!calendarSelected);
         toggleAnalytics();
     }
 
@@ -49,9 +52,15 @@ export default function HeaderBar({ curMonth, updateCurMonth, toggleAnalytics })
                         Next
                     </MonthButton>
                 </MonthContainer>
-                <AnalyticsButton onClick={clickedAnalytics} analyticsOn={analyticsSelected}>
-                    Analytics
-                </AnalyticsButton>
+                <div>
+                    <CalendarButton onClick={clickedAnalytics} calendarOn={calendarSelected}>
+                        Calendar
+                    </CalendarButton>
+                    <AnalyticsButton onClick={clickedAnalytics} analyticsOn={analyticsSelected}>
+                        Analytics
+                    </AnalyticsButton>
+                </div>
+
                 <Button onClick={logout}>Logout</Button>
             </MonthAndLogoutContainer>
         </Header>
@@ -155,6 +164,26 @@ const Button = styled.button`
     border-color: #0cc6ce;
     color: #80f2f7;
 
+    &:hover {
+        filter: brightness(75%);
+    }
+`;
+
+const CalendarButton = styled.button<{ calendarOn }>`
+    display: inline-block;
+
+    font-size: 1em;
+    margin: 1em;
+    padding: 0.25em 1em;
+    border: 2px solid;
+    border-radius: 3px;
+    display: inline-block;
+    border-radius: 0.3rem;
+
+    border-color: ${(props) => (props.calendarOn ? 'white' : '#0cc6ce')};
+    color: ${(props) => (props.calendarOn ? 'white' : '#80f2f7')};
+
+    background-color: ${(props) => (props.calendarOn ? '#0cc6ce' : '#1d1f20')};
     &:hover {
         filter: brightness(75%);
     }
