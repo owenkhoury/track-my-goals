@@ -216,6 +216,8 @@ const DayOfWeek = styled.div`
     text-align: center;
     font-size: 1.15rem;
 
+    color: white;
+
     @media only screen and (max-width: 1450px) {
         width: 5rem;
     }
