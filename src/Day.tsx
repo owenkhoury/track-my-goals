@@ -218,7 +218,7 @@ const Button = styled.button<{ disabled; isNoteSelected; numGoals; isCurrentDay;
 
     filter: ${(props) => (props.isNoteSelected || props.isMultiSelect ? 'none' : 'brightness(75%)')};
     &:hover {
-        filter: ${(props) => (props.numGoals === 1 ? 'none' : 'brightness(75%)')};
+        filter: ${(props) => (props.numGoals === 1 || props.isMultiSelect ? 'none' : 'brightness(75%)')};
     }
 
     // Size the square based on the width of the browser window.
