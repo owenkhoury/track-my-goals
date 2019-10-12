@@ -118,16 +118,6 @@ export default function Day({
                     isMultiSelect={selectedGoals.length > 1}>
                     <Container style={{ backgroundColor: `${backgroundColor}` }}>
                         <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
-                        {isTodaysDate ? (
-                            <i
-                                className='glyphicon glyphicon-time'
-                                style={{
-                                    color: 'white',
-                                    marginRight: '.2rem',
-                                    marginTop: '.3rem'
-                                }}
-                            />
-                        ) : null}
                         {doesDayHaveNote ? (
                             <i
                                 className='glyphicon glyphicon-edit'

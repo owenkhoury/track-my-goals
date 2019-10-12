@@ -180,10 +180,10 @@ const CalendarButton = styled.button<{ calendarOn }>`
     display: inline-block;
     border-radius: 0.3rem;
 
-    border-color: ${(props) => (props.calendarOn ? 'white' : '#0cc6ce')};
-    color: ${(props) => (props.calendarOn ? 'white' : '#80f2f7')};
+    border-color: ${(props) => (props.calendarOn ? 'white' : '#086186')};
+    color: ${(props) => (props.calendarOn ? 'white' : '#086186')};
 
-    background-color: ${(props) => (props.calendarOn ? '#0cc6ce' : '#1d1f20')};
+    background-color: ${(props) => (props.calendarOn ? '#086186' : '#1d1f20')};
     &:hover {
         filter: brightness(75%);
     }
