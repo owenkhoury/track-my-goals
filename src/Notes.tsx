@@ -2,9 +2,9 @@ import React, { useState, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
 import { completedDay } from './constants/AppConstants';
 import { getWindowDimensions } from './Calendar';
-import { useSpring, animated } from 'react-spring';
+import { useSpring } from 'react-spring';
 
-export default function Notes({ selectedDayForNotes, completedDays, handleNoteAdded, handleDayRemoved }) {
+export default function Notes({ selectedDayForNotes, completedDays, handleNoteAdded }) {
     const [goal, setGoal] = useState(null);
 
     const [date, setDate] = useState(null);

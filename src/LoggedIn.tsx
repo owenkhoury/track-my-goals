@@ -321,8 +321,6 @@ export default function LoggedIn() {
 
         let dateIndex = update[day.goal].findIndex((obj) => obj.date == day.date);
 
-        console.log('handleNoteAdded: ', dateIndex, day.date, update[day.goal]);
-
         if (dateIndex != null && dateIndex != undefined) {
             update[day.goal][dateIndex].notes = day.notes;
             setNewCompletedDays(update);
@@ -370,12 +368,10 @@ export default function LoggedIn() {
                         />
                     )}
                 </CalendarContainer>
-
                 <Notes
                     selectedDayForNotes={selectedDayForNotes}
                     completedDays={completedDays}
                     handleNoteAdded={handleNoteAdded}
-                    handleDayRemoved={handleDayRemoved}
                 />
             </InnerRowContainer>
         </OverallContainer>

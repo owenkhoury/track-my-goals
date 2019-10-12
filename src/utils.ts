@@ -49,8 +49,6 @@ export async function createGoal(uid, goal, color) {
 }
 
 export async function addCompletedDay(uid, completedDay: completedDay) {
-    console.log('addCompletedDay', uid, completedDay);
-
     return db
         .collection('completed')
         .doc(uid)

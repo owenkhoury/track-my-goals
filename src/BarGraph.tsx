@@ -18,9 +18,6 @@ export default function BarGraph({ goal, completedDays }) {
         const startArray = startDate.split('-');
         const endArray = endDate.split('-');
 
-        console.log('HERE HERE HERE: ', date, startDate, endDate);
-        console.log('HERE HERE HERE: ', +dateArray[1], +startArray[1], +endArray[1]);
-
         // Check case for weeks that fit completely in current week.
         return (
             +dateArray[0] === +startArray[0] &&
@@ -59,7 +56,6 @@ export default function BarGraph({ goal, completedDays }) {
                     // let date = +day.date.replace(/-/g, '');
 
                     if (isDayInRange(day.date, range.firstDay, range.lastDay)) {
-                        console.log('================', day.date, range.firstDay, range.lastDay);
                         total += 1;
                     }
                 });

@@ -14,18 +14,12 @@ export default function DonutGraph({ goal, completedDays }) {
         const totalDays = new Date(2019, curMonth, 0).getDate();
 
         let totalCompleted = 0;
-
         if (completedDays && completedDays[goal]) {
-            console.log('ENTERING FOR EACH LOOP DONUT');
-
             completedDays[goal].forEach((day) => {
-                console.log(+day.date.substring(0, 2), curMonth);
                 if (+day.date.substring(0, 2) == curMonth) {
                     totalCompleted++;
                 }
             });
-
-            console.log('FINSISHED');
         }
 
         const newData = [
@@ -45,8 +39,6 @@ export default function DonutGraph({ goal, completedDays }) {
         ];
 
         setDonutData(newData);
-
-        console.log('COMPLETED: ', totalCompleted, totalDays - totalCompleted, totalDays);
     }, [goal]);
 
     const logMouseOver = () => console.log('Mouse Over');

@@ -95,8 +95,6 @@ export default function Day({
     function createColorSquares() {
         const squares = [];
 
-        console.log('createColorSquares: ', goalsCompletedOnDay);
-
         if (goalsCompletedOnDay) {
             goalsCompletedOnDay.forEach((goal) => {
                 squares.push(<MultiSelectSquare color={colorMap[goal]} goal={goal} />);
