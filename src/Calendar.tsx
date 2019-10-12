@@ -238,8 +238,12 @@ const DeselectButton = styled.button`
     height: 4rem;
     margin-right: 9rem;
     font-family: 'Avenir Next' !important;
-    color: white;
-    border-radius: 0.5rem;
+    // color: white;
+    // border-radius: 0.5rem;
+
+    border-color: #0cc6ce;
+    color: #80f2f7;
+    border-radius: 0.1rem;
 
     &:hover {
         filter: ${(props) => (props.disabled ? 'brightness(100%)' : 'brightness(85%)')};
