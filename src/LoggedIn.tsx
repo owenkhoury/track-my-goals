@@ -60,22 +60,6 @@ export default function LoggedIn() {
         console.log('\n');
     });
 
-    /**
-     * Save completed days for last viewed goal, before the app window closes or the page is refreshed.
-     */
-    const useWindowUnloadEffect = (handler, callOnCleanup) => {
-        const prevHandler = useRef(null);
-        useEffect(() => {
-            if (prevHandler.current) removeHandler(handler.current); // remove the the current event listener, if one exists
-            prevHandler.current = handler;
-            addHandler(handler);
-            return () => {
-                if (callOnCleanup) handler();
-                removeHandler(handler);
-            };
-        }, [handler]);
-    };
-
     // Load the current month onto the screen.
     useEffect(() => {
         const today = new Date();
