@@ -10,13 +10,15 @@ import Notes from './Notes';
 import { addCompletedDay, removeCompletedDay, updateNotesForCompletedDay } from './utils';
 
 import { useSpring, animated } from 'react-spring';
-import BarGraph from './BarGraph';
 import Analytics from './Analytics';
+import WelcomeModal from './WelcomeModal';
 
 // TODO -- I'M NOT CLEARING OUT MY LOCAL TRACK OF COMPLETED DAYS WHEN A GOAL GETS DELETED.
 
 export default function LoggedIn() {
     const { auth } = useAuth();
+
+    const [isFirstTimeUser, setFirstTimeUserOff] = useState(true);
 
     const [selectedGoals, setSelectedGoals] = useState([]);
 
@@ -28,10 +30,6 @@ export default function LoggedIn() {
 
     // The currently selectedGoal goal.
     const [selectedGoal, setSelected] = useState('');
-
-    // Mapping of each goal to the days that are completed (selectedGoal).
-    // The old state of the mapping at the time of the app being loaded
-    // const [oldCompletedDays, setOldCompletedDays] = useState({});
 
     // Mapping of each goal to the days that are completed (selectedGoal).
     // the new state of the mapping as the user makes new selections.
@@ -337,6 +335,7 @@ export default function LoggedIn() {
                 updateCurMonth={updateCurMonth}
                 toggleAnalytics={() => setShowAnalytics(!showAnalytics)}
             />
+            <WelcomeModal />
             <InnerRowContainer>
                 <GoalsList
                     existingGoals={existingGoals}

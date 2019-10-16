@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { Bar } from 'britecharts-react';
 import colors from './colors';
