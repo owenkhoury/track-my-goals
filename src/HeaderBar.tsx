@@ -30,7 +30,7 @@ export default function HeaderBar({ curMonth, updateCurMonth, toggleAnalytics })
 
     return (
         <Header>
-            <AppTitle>HabitTracker</AppTitle>
+            <AppTitle>Track-My-Goals</AppTitle>
             <VerticalBar />
             <MonthAndLogoutContainer>
                 <MonthContainer>
@@ -68,11 +68,12 @@ export default function HeaderBar({ curMonth, updateCurMonth, toggleAnalytics })
 }
 
 const AppTitle = styled.h1`
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-family: 'Montserrat', sans-serif;
-    color: white;
+    color: #d8d8d8;
     margin-top: 0.5rem;
     margin-left: 0.5rem;
+    width: 18rem;
 `;
 
 const MonthContainer = styled.div`
@@ -114,7 +115,7 @@ const MonthAndLogoutContainer = styled.div`
 const VerticalBar = styled.div`
     border-left: 0rem dotted black; // TODO -- DECIDE IF I WANT THIS BAR HERE
     height: 4.5rem;
-    margin-left: 13.7rem;
+    margin-left: 7.7rem;
 `;
 
 const CurMonth = styled.div`
