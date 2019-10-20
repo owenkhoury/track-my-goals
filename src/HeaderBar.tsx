@@ -30,7 +30,7 @@ export default function HeaderBar({ curMonth, updateCurMonth, toggleAnalytics })
 
     return (
         <Header>
-            <AppTitle>HabitTracker</AppTitle>
+            {/* <AppTitle>HabitTracker</AppTitle> */}
             <VerticalBar />
             <MonthAndLogoutContainer>
                 <MonthContainer>
@@ -114,7 +114,7 @@ const MonthAndLogoutContainer = styled.div`
 const VerticalBar = styled.div`
     border-left: 0rem dotted black; // TODO -- DECIDE IF I WANT THIS BAR HERE
     height: 4.5rem;
-    margin-left: 13.7rem;
+    // margin-left: 1rem;
 `;
 
 const CurMonth = styled.div`

@@ -82,11 +82,12 @@ export default function GoalsList({
     return (
         <GoalContainer>
             <InnerContainer>
+                <GoalsTitle>My Goals</GoalsTitle>
                 <InputContainer>
                     <MyForm>
                         <GoalInput
                             type='text'
-                            placeholder='Enter your next habit ...'
+                            placeholder='Enter your next goal ...'
                             onChange={(e) => {
                                 setNewGoal(e.target.value);
                             }}
@@ -228,12 +229,19 @@ export default function GoalsList({
     );
 }
 
+const GoalsTitle = styled.div`
+    margin-bottom: 2rem;
+    font-family: 'Avenir Next';
+    font-size: 1.5rem;
+    color: white;
+`;
+
 const InnerContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
 
-    margin-top: 3rem;
+    margin-top: 1rem;
 `;
 
 const GoalContainer = styled.div`
@@ -306,7 +314,7 @@ const ListContainer = styled.div<{ windowHeight }>`
     direction: rtl;
     flex-direction: column;
     align-items: center;
-    height: ${(props) => (props.windowHeight ? `${props.windowHeight - 330}px` : '35rem')};
+    height: ${(props) => (props.windowHeight ? `${props.windowHeight - 230}px` : '35rem')};
     overflow-y: scroll;
     margin-top: 2rem;
     padding-left: 0.5rem;

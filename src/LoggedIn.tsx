@@ -344,14 +344,7 @@ export default function LoggedIn() {
 
     return (
         <OverallContainer style={animatedProps}>
-            {/* {isFirstTimeUser ? <WelcomeModal /> : null} */}
-            <HeaderBar
-                curMonth={curMonth}
-                updateCurMonth={updateCurMonth}
-                toggleAnalytics={() => setShowAnalytics(!showAnalytics)}
-            />
-
-            <InnerRowContainer>
+            <HorizontalContainer>
                 <GoalsList
                     existingGoals={existingGoals}
                     colorMap={colorMap}
@@ -364,33 +357,48 @@ export default function LoggedIn() {
                     creationDateMap={goalCreationDateMap}
                     selectAllGoals={selectAllGoals}
                 />
-                <CalendarContainer>
-                    {showAnalytics ? (
-                        <Analytics goal={selectedGoal} completedDays={completedDays} />
-                    ) : (
-                        <Calendar
-                            key='calendar1'
-                            curMonth={curMonth}
-                            curGoal={selectedGoal}
-                            completedDays={completedDays}
-                            colorMap={colorMap}
-                            selectedGoals={selectedGoals}
-                            handleDayCompleted={handleDayCompleted}
-                            handleDayRemoved={handleDayRemoved}
-                            handleNoteSelected={handleNoteSelected}
+                <div>
+                    <HeaderBar
+                        curMonth={curMonth}
+                        updateCurMonth={updateCurMonth}
+                        toggleAnalytics={() => setShowAnalytics(!showAnalytics)}
+                    />
+
+                    <InnerRowContainer>
+                        <CalendarContainer>
+                            {showAnalytics ? (
+                                <Analytics goal={selectedGoal} completedDays={completedDays} />
+                            ) : (
+                                <Calendar
+                                    key='calendar1'
+                                    curMonth={curMonth}
+                                    curGoal={selectedGoal}
+                                    completedDays={completedDays}
+                                    colorMap={colorMap}
+                                    selectedGoals={selectedGoals}
+                                    handleDayCompleted={handleDayCompleted}
+                                    handleDayRemoved={handleDayRemoved}
+                                    handleNoteSelected={handleNoteSelected}
+                                    selectedDayForNotes={selectedDayForNotes}
+                                />
+                            )}
+                        </CalendarContainer>
+                        <Notes
                             selectedDayForNotes={selectedDayForNotes}
+                            completedDays={completedDays}
+                            handleNoteAdded={handleNoteAdded}
                         />
-                    )}
-                </CalendarContainer>
-                <Notes
-                    selectedDayForNotes={selectedDayForNotes}
-                    completedDays={completedDays}
-                    handleNoteAdded={handleNoteAdded}
-                />
-            </InnerRowContainer>
+                    </InnerRowContainer>
+                </div>
+            </HorizontalContainer>
         </OverallContainer>
     );
 }
+
+const HorizontalContainer = styled.div`
+    display: flex;
+    height: 100%;
+`;
 
 const OverallContainer = styled(animated.div)`
     height: 100%;

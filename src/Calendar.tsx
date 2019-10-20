@@ -187,6 +187,8 @@ const Container = styled(animated.div)`
     margin-top: 1rem;
     overflow: hidden; */
 
+    margin-left: 3rem;
+
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
