@@ -17,6 +17,8 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
 
     const props = useSpring({ opacity: 0, from: { opacity: showSuccess } });
 
+    const [noteAtStart, setNoteAtStart] = useState('');
+
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
     useEffect(() => {
@@ -28,6 +30,7 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
             setGoal(selectedDayForNotes.goal);
             setDate(selectedDayForNotes.date);
             setNote(selectedDayForNotes.notes ? selectedDayForNotes.notes : '');
+            setNoteAtStart(selectedDayForNotes.notes ? selectedDayForNotes.notes : '');
         }
     }, [selectedDayForNotes, completedDays]);
 
@@ -95,6 +98,7 @@ export default function Notes({ selectedDayForNotes, completedDays, handleNoteAd
                                 displaySuccessfulSave()
                             ) : (
                                 <SaveButton
+                                    style={{ filter: note != noteAtStart ? 'brightness(95%)' : 'brightness(75%)' }}
                                     onClick={async () => {
                                         if (goal && date && note && note.length) {
                                             const dayToUpdate: completedDay = {
@@ -181,7 +185,7 @@ const SaveButton = styled.button`
     color: black;
 
     &:hover {
-        filter: brightness(75%);
+        filter: brightness(75%) !important;
     }
 `;
 
