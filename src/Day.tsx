@@ -117,7 +117,7 @@ export default function Day({
                     <Container style={{ backgroundColor: `${backgroundColor}` }}>
                         <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
                         {doesDayHaveNote ? (
-                            <i
+                            <EditIcon
                                 className='glyphicon glyphicon-edit'
                                 style={{ color: backgroundColor === '#464e50' ? 'black' : 'white' }}
                                 onClick={(e) => {
@@ -197,8 +197,14 @@ const DayNumber = styled.div`
 
 const Container = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row-reverse;
     height: 100%;
+    justify-content: space-between;
+`;
+
+const EditIcon = styled.i`
+    margin-left: 0.5rem;
+    margin-top: 0.5rem;
 `;
 
 const Button = styled.button<{ disabled; isNoteSelected; numGoals; isCurrentDay; isMultiSelect }>`
