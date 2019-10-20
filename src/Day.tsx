@@ -140,10 +140,10 @@ export default function Day({
                     numGoals={2}
                     isCurrentDay={isTodaysDate}
                     isMultiSelect={selectedGoals.length > 1}>
-                    <Container style={{ backgroundColor: '#464e50' }}>
+                    <MultiSquareContainer style={{ backgroundColor: '#464e50' }}>
                         <DayNumber style={{ color: 'white' }}>{day}</DayNumber>
                         <Squares>{mutliSelectSquares}</Squares>
-                    </Container>
+                    </MultiSquareContainer>
                 </Button>
             );
         } else if (disabled) {
@@ -200,6 +200,12 @@ const Container = styled.div`
     flex-direction: row-reverse;
     height: 100%;
     justify-content: space-between;
+`;
+
+const MultiSquareContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 `;
 
 const EditIcon = styled.i`
