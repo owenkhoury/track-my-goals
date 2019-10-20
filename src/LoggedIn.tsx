@@ -7,7 +7,7 @@ import { db } from './fire';
 import HeaderBar from './HeaderBar';
 import { GOAL_COLORS, completedDay } from './constants/AppConstants';
 import Notes from './Notes';
-import { addCompletedDay, removeCompletedDay, updateNotesForCompletedDay } from './utils';
+import { addCompletedDay, removeCompletedDay, updateNotesForCompletedDay, addNotFirstTimeUser } from './utils';
 
 import { useSpring, animated } from 'react-spring';
 import Analytics from './Analytics';
@@ -18,7 +18,7 @@ import WelcomeModal from './WelcomeModal';
 export default function LoggedIn() {
     const { auth } = useAuth();
 
-    const [isFirstTimeUser, setFirstTimeUserOff] = useState(true);
+    const [isFirstTimeUser, setFirstTimeUser] = useState(true);
 
     const [selectedGoals, setSelectedGoals] = useState([]);
 
@@ -68,9 +68,27 @@ export default function LoggedIn() {
 
     // Load goals and completed days on component mount (only once).
     useEffect(() => {
+        fetchIsFirtTimeUser();
         fetchGoals();
         fetchCompletedDays();
     }, []);
+
+    /**
+     * Display the green checkmark for 2 seconds before switching back to teh save button.
+     */
+    useEffect(() => {
+        if (isFirstTimeUser) {
+            let counter = 2;
+            let intervalId = setInterval(() => {
+                counter = counter - 1;
+                if (counter === 0) {
+                    setFirstTimeUser(false);
+                    addNotFirstTimeUser(auth.uid);
+                    clearInterval(intervalId);
+                }
+            }, 1000);
+        }
+    }, [isFirstTimeUser]);
 
     async function updateCurMonth(month: number) {
         setCurMonth(month);
@@ -78,6 +96,18 @@ export default function LoggedIn() {
 
     function timeConverter(date: Date) {
         return date.toISOString().substring(0, 10);
+    }
+
+    function fetchIsFirtTimeUser() {
+        db.collection('notFirstTimeUser')
+            .doc(auth.uid)
+            .get()
+            .then((doc) => {
+                if (doc.exists) {
+                    console.log('fetchIsFirtTimeUser ', doc.exists);
+                    setFirstTimeUser(false);
+                }
+            });
     }
 
     /**
@@ -314,12 +344,13 @@ export default function LoggedIn() {
 
     return (
         <OverallContainer style={animatedProps}>
+            {/* {isFirstTimeUser ? <WelcomeModal /> : null} */}
             <HeaderBar
                 curMonth={curMonth}
                 updateCurMonth={updateCurMonth}
                 toggleAnalytics={() => setShowAnalytics(!showAnalytics)}
             />
-            <WelcomeModal />
+
             <InnerRowContainer>
                 <GoalsList
                     existingGoals={existingGoals}

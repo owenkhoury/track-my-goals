@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import { Donut } from 'britecharts-react';
 
 export default function DonutGraph({ goal, completedDays }) {
-    const [daysCompletedThisMonth, setDaysCompletedThisMonth] = useState(null);
-
     const [donutData, setDonutData] = useState([]);
-
-    // TODO -- MENTION THAT ALL THIS BIS IS FOR THE CURRENT MONTH.
 
     useEffect(() => {
         const today = new Date();
         const curMonth = today.getMonth() + 1;
+        const dayOfMonth = today.getDate();
         const totalDays = new Date(2019, curMonth, 0).getDate();
 
         let totalCompleted = 0;
         if (completedDays && completedDays[goal]) {
             completedDays[goal].forEach((day) => {
-                if (+day.date.substring(0, 2) == curMonth) {
+                const isDayInMonth: boolean = +day.date.substring(0, 2) === curMonth;
+                const isDayInPast: boolean = +day.date.substring(3, 5) <= dayOfMonth;
+
+                if (day.date && isDayInMonth && isDayInPast) {
                     totalCompleted++;
+
+                    console.log('donut graph: ', +day.date.substring(3, 5), dayOfMonth);
                 }
             });
         }
@@ -25,15 +28,15 @@ export default function DonutGraph({ goal, completedDays }) {
         const newData = [
             {
                 quantity: totalCompleted,
-                percentage: ((totalCompleted / totalDays) * 100).toFixed(0),
-                name: 'Days Completed',
+                percentage: ((totalCompleted / dayOfMonth) * 100).toFixed(0),
+                name: 'Completed',
                 color: 'white',
                 id: 1
             },
             {
-                quantity: totalDays - totalCompleted,
-                percentage: (((totalDays - totalCompleted) / totalDays) * 100).toFixed(0),
-                name: 'Days Not completed',
+                quantity: dayOfMonth - totalCompleted,
+                percentage: (((dayOfMonth - totalCompleted) / dayOfMonth) * 100).toFixed(0),
+                name: 'Missed',
                 id: 2
             }
         ];
@@ -44,12 +47,28 @@ export default function DonutGraph({ goal, completedDays }) {
     const logMouseOver = () => console.log('Mouse Over');
 
     return (
-        <Donut
-            data={donutData}
-            customMouseOver={logMouseOver}
-            externalRadius={150}
-            internalRadius={75}
-            highlightSliceById={1}
-        />
+        <Container>
+            <Title>Progress so far this month</Title>
+            <Donut
+                data={donutData}
+                customMouseOver={logMouseOver}
+                externalRadius={150}
+                internalRadius={75}
+                highlightSliceById={1}
+            />
+        </Container>
     );
 }
+
+export const Title = styled.div`
+    margin-bottom: 3rem;
+    font-size: 1.5rem;
+    font-family: 'Avenir Next';
+    color: white;
+`;
+
+export const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;

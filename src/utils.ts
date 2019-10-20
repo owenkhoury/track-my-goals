@@ -107,6 +107,11 @@ export async function removeCompletedDay(uid, goal, date) {
     });
 }
 
+export async function addNotFirstTimeUser(uid) {
+    console.log('addNotFirstTimeUser', uid);
+    db.collection('notFirstTimeUser').add({ uid });
+}
+
 export async function signup({ email, password }) {
     try {
         const { user } = await auth().createUserWithEmailAndPassword(email, password);

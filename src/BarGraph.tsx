@@ -1,7 +1,7 @@
 import React from 'react';
-
 import { Bar } from 'britecharts-react';
 import colors from './colors';
+import { Container, Title } from './DonutGraph';
 
 export default function BarGraph({ goal, completedDays }) {
     const barData = [
@@ -68,13 +68,9 @@ export default function BarGraph({ goal, completedDays }) {
     }
 
     return (
-        <Bar
-            data={barData}
-            height={300}
-            width={450}
-            isHorizontal={true}
-            margin={{ left: 100 }}
-            colorSchema={colors.colorSchemas.orange}
-        />
+        <Container>
+            <Title>Progress Last 4 Weeks</Title>
+            <Bar data={barData} height={300} width={450} isHorizontal={true} margin={{ left: 100 }} />
+        </Container>
     );
 }
