@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Day from './Day';
 
 import { animated, useSpring } from 'react-spring';
-import { MONTH_DAYS } from './constants/AppConstants';
+import { MONTH_DAYS, MONTHS } from './constants/AppConstants';
 
 export function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
@@ -55,13 +55,13 @@ export default function Calendar({
         let firstOfMonth: any = month.toString().padStart(2, '0') + '-01-2019';
         firstOfMonth = new Date(firstOfMonth).getDay();
 
-        // Add in a row for the days of the week
-        for (let day = 0; day < 7; day++) {
-            week.push(<DayOfWeek>{DaysOfWeek[day]}</DayOfWeek>);
-        }
+        // // Add in a row for the days of the week
+        // for (let day = 0; day < 7; day++) {
+        //     week.push(<DayOfWeek>{DaysOfWeek[day]}</DayOfWeek>);
+        // }
 
-        myMonth.push(week);
-        week = [];
+        // myMonth.push(week);
+        // week = [];
 
         // Add in blank days until the first day of the month.
         for (let unusedDay = 0; unusedDay < firstOfMonth; unusedDay++) {
@@ -152,7 +152,6 @@ export default function Calendar({
                     if (idx === myMonth.length - 1) {
                         return <DeselectWrapper>{week}</DeselectWrapper>;
                     }
-
                     return <div>{week}</div>;
                 })}
             </Container>
@@ -173,7 +172,14 @@ export default function Calendar({
 
     const calendarYear = getYear(completedDays);
 
-    return <Container style={animatedProps}>{calendarYear[curMonth] ? calendarYear[curMonth] : null}</Container>;
+    return (
+        <Container style={animatedProps}>
+            {calendarYear[0]}
+            {calendarYear[1]}
+            {calendarYear[2]}
+            {calendarYear[3]}
+        </Container>
+    );
 }
 
 const Container = styled(animated.div)`
@@ -189,30 +195,9 @@ const Container = styled(animated.div)`
     overflow: hidden;
 
     margin-top: 3rem;
-`;
 
-const Temp = styled.div`
-    display: flex;
-`;
-
-const DayOfWeek = styled.div`
-    display: inline-block;
-    width: 6rem;
-    height: 1rem;
-    margin: 0.4375rem;
-    margin-bottom: 2rem;
-    text-align: center;
-    font-size: 1.15rem;
-
-    color: white;
-
-    @media only screen and (max-width: 1450px) {
-        width: 5rem;
-    }
-
-    @media only screen and (max-width: 1305px) {
-        width: 3.8rem;
-    }
+    height: 50rem;
+    overflow-y: scroll;
 `;
 
 const DeselectWrapper = styled.div`
