@@ -179,9 +179,7 @@ export default function Day({
         }
     }
 
-    const display = getColorDisplay();
-
-    return <Fragment>{display}</Fragment>;
+    return <Fragment>{getColorDisplay()}</Fragment>;
 }
 
 const Squares = styled.div`

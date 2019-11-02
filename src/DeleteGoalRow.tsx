@@ -36,7 +36,7 @@ const NewListRow = styled.div`
     border-radius: 0.3rem;
     border: 1px solid #565656;
 
-    background-color: #ff3a22;
+    background-color: #b30000;
 
     padding-left: 0.5rem;
     color: white;

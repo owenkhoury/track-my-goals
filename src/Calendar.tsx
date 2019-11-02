@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import styled from 'styled-components';
 import Day from './Day';
 
@@ -33,15 +33,25 @@ export default function Calendar({
 
     const DaysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
+    function getDate(month: number, day: number) {
+        return (
+            month.toString().padStart(2, '0') +
+            '-' +
+            day
+                .toString()
+                .toString()
+                .padStart(2, '0') +
+            '-' +
+            '2019'
+        );
+    }
+
     function getMonth(month, completedDays) {
-        const myMonth = [[]];
+        const myMonth = [];
         let dayOfWeek = 1;
         let week = [];
 
-        // Dynamically adjust the number of rows in the calendar as the window resizes.
-        // const daysPerRow = Math.floor(windowDimensions.width / 180);
         const daysPerRow = 7;
-
         let firstOfMonth: any = month.toString().padStart(2, '0') + '-01-2019';
         firstOfMonth = new Date(firstOfMonth).getDay();
 
@@ -62,15 +72,7 @@ export default function Calendar({
 
         // USING 35 SO THAT WE GET 5 WEEKS.
         for (let i = 1; i <= MONTH_DAYS[month]; i++) {
-            const date =
-                month.toString().padStart(2, '0') +
-                '-' +
-                i
-                    .toString()
-                    .toString()
-                    .padStart(2, '0') +
-                '-' +
-                '2019';
+            const date = getDate(month, i);
 
             if (dayOfWeek === daysPerRow + 1) {
                 myMonth.push(week);
@@ -142,11 +144,19 @@ export default function Calendar({
             )
         );
 
-        // week.push(<Day disabled={true} />);
-
         myMonth.push(week);
 
-        return myMonth;
+        return (
+            <Container>
+                {myMonth.map((week, idx) => {
+                    if (idx === myMonth.length - 1) {
+                        return <DeselectWrapper>{week}</DeselectWrapper>;
+                    }
+
+                    return <div>{week}</div>;
+                })}
+            </Container>
+        );
     }
 
     function getYear(completedDays) {
@@ -163,48 +173,26 @@ export default function Calendar({
 
     const calendarYear = getYear(completedDays);
 
-    return (
-        <Container style={animatedProps}>
-            {calendarYear[curMonth]
-                ? calendarYear[curMonth].map((week, idx) => {
-                      if (idx === calendarYear[curMonth].length - 1) {
-                          return <DeselectWrapper>{week}</DeselectWrapper>;
-                      }
-
-                      return <div id={week}>{week}</div>;
-                  })
-                : null}
-        </Container>
-    );
+    return <Container style={animatedProps}>{calendarYear[curMonth] ? calendarYear[curMonth] : null}</Container>;
 }
 
 const Container = styled(animated.div)`
-    /* display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-left: 22rem;
-    margin-top: 1rem;
-    overflow: hidden; */
-
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
+
     flex-direction: column;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
+
     align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
+
     justify-content: center;
-    /* margin-left: 22rem; */
+
     margin-top: 1rem;
     overflow: hidden;
 
     margin-top: 3rem;
+`;
+
+const Temp = styled.div`
+    display: flex;
 `;
 
 const DayOfWeek = styled.div`
@@ -240,9 +228,8 @@ const DeselectButton = styled.button`
     height: 4rem;
     margin-right: 9rem;
     font-family: 'Avenir Next' !important;
-    // color: white;
-    // border-radius: 0.5rem;
 
+    background-color: #1d1f20;
     border-color: #0cc6ce;
     color: #80f2f7;
     border-radius: 0.1rem;

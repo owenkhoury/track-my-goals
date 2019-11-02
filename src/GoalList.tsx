@@ -245,50 +245,24 @@ const InnerContainer = styled.div`
 `;
 
 const GoalContainer = styled.div`
-    /* display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    
-    font-family: Helvetica;
-    position: absolute;
-    height: 100%;
-    width: 25rem;
-    border-right: 1.5px solid #d0d0d0; */
-
     background-color: #1c1e1f;
-
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
-
     font-family: Helvetica;
-    // position: absolute;
     height: 100%;
     width: 25rem;
     border-right: 1.5px solid #47484a;
 `;
 
 const InputContainer = styled.div`
-    /* display: flex;
-    flex-direction: row; */
-
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
     flex-direction: row;
 `;
 
@@ -302,14 +276,8 @@ const ListContainer = styled.div<{ windowHeight }>`
     display: -ms-flexbox;
     display: flex;
     direction: rtl;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
-
     display: flex;
     direction: rtl;
     flex-direction: column;
@@ -324,7 +292,7 @@ const SelectAll = styled.button`
     margin-top: 1rem;
     width: 8rem;
 
-    background-color: #464e50;
+    background-color: #1d1f20;
     border-color: #0cc6ce;
     color: #80f2f7;
 
