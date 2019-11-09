@@ -1,9 +1,9 @@
 import React, { useState, Fragment } from 'react';
 import styled from 'styled-components';
-import Day from './Day';
 
 import { animated, useSpring } from 'react-spring';
-import { MONTH_DAYS, MONTHS } from './constants/AppConstants';
+import { MONTH_DAYS } from '../constants/AppConstants';
+import Day from '../Day';
 
 export function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
@@ -16,7 +16,7 @@ export function getWindowDimensions() {
 /**
  * NOTES -- Re-renders on every goal selection
  */
-export default function Calendar({
+export default function CalendarContainer({
     curMonth,
     curGoal,
     completedDays,
@@ -30,8 +30,6 @@ export default function Calendar({
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
     const animatedProps = useSpring({ opacity: 1, from: { opacity: 0 } });
-
-    const DaysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
     function getDate(month: number, day: number) {
         return (
@@ -55,13 +53,13 @@ export default function Calendar({
         let firstOfMonth: any = month.toString().padStart(2, '0') + '-01-2019';
         firstOfMonth = new Date(firstOfMonth).getDay();
 
-        // Add in a row for the days of the week
-        for (let day = 0; day < 7; day++) {
-            week.push(<DayOfWeek>{DaysOfWeek[day]}</DayOfWeek>);
-        }
+        // // Add in a row for the days of the week
+        // for (let day = 0; day < 7; day++) {
+        //     week.push(<DayOfWeek>{DaysOfWeek[day]}</DayOfWeek>);
+        // }
 
-        myMonth.push(week);
-        week = [];
+        // myMonth.push(week);
+        // week = [];
 
         // Add in blank days until the first day of the month.
         for (let unusedDay = 0; unusedDay < firstOfMonth; unusedDay++) {
