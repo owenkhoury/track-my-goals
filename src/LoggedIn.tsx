@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, Fragment } from 'react';
 import styled from 'styled-components';
 import useAuth from './useAuth';
 import GoalsList from './GoalList';
-import Calendar from './Calendar';
+import Calendar from './Calendar/Calendar';
 import { db } from './fire';
 import HeaderBar from './HeaderBar';
 import { GOAL_COLORS, completedDay } from './constants/AppConstants';
@@ -12,6 +12,7 @@ import { addCompletedDay, removeCompletedDay, updateNotesForCompletedDay, addNot
 import { useSpring, animated } from 'react-spring';
 import Analytics from './Analytics';
 import WelcomeModal from './WelcomeModal';
+import CalendarContainer from './Calendar/CalendarContainer';
 
 // TODO -- I'M NOT CLEARING OUT MY LOCAL TRACK OF COMPLETED DAYS WHEN A GOAL GETS DELETED.
 
@@ -213,8 +214,6 @@ export default function LoggedIn() {
     function removeFromColorMap(goal: string) {
         const updatedMap = colorMap;
 
-        console.log('remove from color map: ');
-
         Object.keys(updatedMap).forEach((key) => {
             console.log(key, goal);
             if (key == goal) {
@@ -234,8 +233,6 @@ export default function LoggedIn() {
      * @param goalToRemove
      */
     function handleGoalSelected(goal: string, goalsToRemove?: string[]) {
-        console.log('handleGoalSelected', goal, goalsToRemove);
-
         if (!(selectedGoals.includes(goal) && selectedGoals.length === 1)) {
             let updateSelected = selectedGoals.includes(goal) ? [...selectedGoals] : [...selectedGoals, goal];
 
@@ -364,12 +361,12 @@ export default function LoggedIn() {
                     creationDateMap={goalCreationDateMap}
                     selectAllGoals={selectAllGoals}
                 />
-                <CalendarContainer>
+                <CalendarContainerTemp>
                     {showAnalytics ? (
                         <Analytics goal={selectedGoal} completedDays={completedDays} />
                     ) : (
-                        <Calendar
-                            key='calendar1'
+                        <CalendarContainer
+                            key='CalendarContainer1'
                             curMonth={curMonth}
                             curGoal={selectedGoal}
                             completedDays={completedDays}
@@ -381,7 +378,7 @@ export default function LoggedIn() {
                             selectedDayForNotes={selectedDayForNotes}
                         />
                     )}
-                </CalendarContainer>
+                </CalendarContainerTemp>
                 <Notes
                     selectedDayForNotes={selectedDayForNotes}
                     completedDays={completedDays}
@@ -397,7 +394,7 @@ const OverallContainer = styled(animated.div)`
     background-color: #1c1e1f;
 `;
 
-const CalendarContainer = styled.div`
+const CalendarContainerTemp = styled.div`
     -webkit-box-flex: 1;
     -ms-flex: 1;
 

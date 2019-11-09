@@ -1,17 +1,9 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import styled from 'styled-components';
-import Day from './Day';
 
 import { animated, useSpring } from 'react-spring';
-import { MONTH_DAYS } from './constants/AppConstants';
-
-export function getWindowDimensions() {
-    const { innerWidth: width, innerHeight: height } = window;
-    return {
-        width,
-        height
-    };
-}
+import Day from '../Day';
+import { MONTH_DAYS } from '../constants/AppConstants';
 
 /**
  * NOTES -- Re-renders on every goal selection
@@ -27,11 +19,13 @@ export default function Calendar({
     handleNoteSelected,
     selectedDayForNotes
 }) {
-    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
-
     const animatedProps = useSpring({ opacity: 1, from: { opacity: 0 } });
 
     const DaysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
+    useEffect(() => {
+        console.log('CALENDAR');
+    });
 
     function getDate(month: number, day: number) {
         return (
@@ -47,6 +41,8 @@ export default function Calendar({
     }
 
     function getMonth(month, completedDays) {
+        console.log('getMonth ', month);
+
         const myMonth = [];
         let dayOfWeek = 1;
         let week = [];
@@ -69,6 +65,8 @@ export default function Calendar({
         }
 
         dayOfWeek = firstOfMonth + 1;
+
+        console.log('BEFORE INSIDE FOR LOOP', MONTH_DAYS, month, MONTH_DAYS[month]);
 
         // USING 35 SO THAT WE GET 5 WEEKS.
         for (let i = 1; i <= MONTH_DAYS[month]; i++) {
@@ -110,6 +108,8 @@ export default function Calendar({
             dayOfWeek += 1;
         }
 
+        console.log('update: ', myMonth);
+
         // fill out the last row with empty days
         for (let unusedDay = 0; unusedDay < 8 - dayOfWeek; unusedDay++) {
             week.push(<Day disabled={true} />);
@@ -127,72 +127,28 @@ export default function Calendar({
             myMonth.push(week);
         }
 
-        week = [];
-
-        week.push(
-            selectedDayForNotes ? (
-                <DeselectButton
-                    onClick={() => {
-                        if (selectedGoals && selectedGoals.length === 1) {
-                            handleDayRemoved(selectedDayForNotes.date, selectedGoals[0]);
-                        }
-                    }}>
-                    Remove Day
-                </DeselectButton>
-            ) : (
-                <Day disabled={true} />
-            )
-        );
-
         myMonth.push(week);
 
         return (
             <Container>
                 {myMonth.map((week, idx) => {
-                    if (idx === myMonth.length - 1) {
-                        return <DeselectWrapper>{week}</DeselectWrapper>;
-                    }
-
                     return <div>{week}</div>;
                 })}
             </Container>
         );
     }
 
-    function getYear(completedDays) {
-        const calendarYear = {};
-        for (let i = 1; i <= 12; i++) {
-            let monthNum = i.toString();
-            monthNum = monthNum.length === 1 ? '0' + monthNum : monthNum;
-
-            const month = getMonth(monthNum, completedDays);
-            calendarYear[i] = month;
-        }
-        return calendarYear;
-    }
-
-    const calendarYear = getYear(completedDays);
-
-    return <Container style={animatedProps}>{calendarYear[curMonth] ? calendarYear[curMonth] : null}</Container>;
+    return <Container style={animatedProps}>{curMonth ? getMonth(curMonth, completedDays) : null}</Container>;
 }
 
 const Container = styled(animated.div)`
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
-
     justify-content: center;
-
     margin-top: 1rem;
     overflow: hidden;
-
     margin-top: 3rem;
-`;
-
-const Temp = styled.div`
-    display: flex;
 `;
 
 const DayOfWeek = styled.div`
@@ -215,36 +171,36 @@ const DayOfWeek = styled.div`
     }
 `;
 
-const DeselectWrapper = styled.div`
-    width: 100%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-`;
+// const DeselectWrapper = styled.div`
+//     width: 100%;
+//     display: flex;
+//     align-items: flex-end;
+//     justify-content: flex-end;
+// `;
 
-const DeselectButton = styled.button`
-    background-color: #464e50;
-    width: 10rem;
-    height: 4rem;
-    margin-right: 9rem;
-    font-family: 'Avenir Next' !important;
+// const DeselectButton = styled.button`
+//     background-color: #464e50;
+//     width: 10rem;
+//     height: 4rem;
+//     margin-right: 9rem;
+//     font-family: 'Avenir Next' !important;
 
-    background-color: #1d1f20;
-    border-color: #0cc6ce;
-    color: #80f2f7;
-    border-radius: 0.1rem;
+//     background-color: #1d1f20;
+//     border-color: #0cc6ce;
+//     color: #80f2f7;
+//     border-radius: 0.1rem;
 
-    &:hover {
-        filter: ${(props) => (props.disabled ? 'brightness(100%)' : 'brightness(85%)')};
-    }
+//     &:hover {
+//         filter: ${(props) => (props.disabled ? 'brightness(100%)' : 'brightness(85%)')};
+//     }
 
-    @media only screen and (max-width: 1450px) {
-        width: 7.5rem;
-        height: 3rem;
-        margin-right: 2rem;
-    }
+//     @media only screen and (max-width: 1450px) {
+//         width: 7.5rem;
+//         height: 3rem;
+//         margin-right: 2rem;
+//     }
 
-    @media only screen and (max-width: 1305px) {
-        width: 3.8rem;
-    }
-`;
+//     @media only screen and (max-width: 1305px) {
+//         width: 3.8rem;
+//     }
+// `;
