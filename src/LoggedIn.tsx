@@ -383,6 +383,7 @@ export default function LoggedIn() {
                     )}
                 </CalendarContainer>
                 <Notes
+                    handleDayRemoved={handleDayRemoved}
                     selectedDayForNotes={selectedDayForNotes}
                     completedDays={completedDays}
                     handleNoteAdded={handleNoteAdded}

@@ -30,11 +30,9 @@ export default function HeaderBar({ curMonth, updateCurMonth, toggleAnalytics })
 
     return (
         <Header>
-            <AppTitle>Track-My-Goals</AppTitle>
-            <VerticalBar />
             <MonthAndLogoutContainer>
                 <MonthContainer>
-                    <CurMonth>{monthName[curMonth] + ' 2019'}</CurMonth>
+                    <CurMonth>{monthName[curMonth] + ' 2021'}</CurMonth>
                     <MonthButton
                         onClick={() => {
                             if (curMonth != 1) {
@@ -67,15 +65,6 @@ export default function HeaderBar({ curMonth, updateCurMonth, toggleAnalytics })
     );
 }
 
-const AppTitle = styled.h1`
-    font-size: 1.1rem;
-    font-family: 'Montserrat', sans-serif;
-    color: #d8d8d8;
-    margin-top: 0.5rem;
-    margin-left: 0.5rem;
-    width: 18rem;
-`;
-
 const MonthContainer = styled.div`
     display: flex;
     flex-direction: row;
@@ -84,12 +73,6 @@ const MonthContainer = styled.div`
 `;
 
 const Header = styled.div`
-    /* display: flex;
-    flex-direction: row;
-    height: 4.4rem;
-    background-color: #d8d8d8;
-    border-bottom: 2px solid #979797; */
-
     color: white;
 
     display: -webkit-box;
@@ -110,12 +93,6 @@ const MonthAndLogoutContainer = styled.div`
     justify-content: space-between;
     width: 100%;
     background-color: #222627;
-`;
-
-const VerticalBar = styled.div`
-    border-left: 0rem dotted black; // TODO -- DECIDE IF I WANT THIS BAR HERE
-    height: 4.5rem;
-    margin-left: 7.7rem;
 `;
 
 const CurMonth = styled.div`

@@ -34,16 +34,7 @@ export default function Calendar({
     const DaysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
     function getDate(month: number, day: number) {
-        return (
-            month.toString().padStart(2, '0') +
-            '-' +
-            day
-                .toString()
-                .toString()
-                .padStart(2, '0') +
-            '-' +
-            '2019'
-        );
+        return month.toString().padStart(2, '0') + '-' + day.toString().toString().padStart(2, '0') + '-' + '2021';
     }
 
     function getMonth(month, completedDays) {
@@ -52,7 +43,7 @@ export default function Calendar({
         let week = [];
 
         const daysPerRow = 7;
-        let firstOfMonth: any = month.toString().padStart(2, '0') + '-01-2019';
+        let firstOfMonth: any = month.toString().padStart(2, '0') + '-01-2021';
         firstOfMonth = new Date(firstOfMonth).getDay();
 
         // Add in a row for the days of the week
@@ -96,7 +87,7 @@ export default function Calendar({
                     curGoal={curGoal}
                     day={i}
                     month={parseInt(month)}
-                    year={2019}
+                    year={2021}
                     goalsCompletedOnDay={goalsCompletedOnDay}
                     selectedGoals={selectedGoals}
                     completedDays={completedDays}
@@ -128,21 +119,6 @@ export default function Calendar({
         }
 
         week = [];
-
-        week.push(
-            selectedDayForNotes ? (
-                <DeselectButton
-                    onClick={() => {
-                        if (selectedGoals && selectedGoals.length === 1) {
-                            handleDayRemoved(selectedDayForNotes.date, selectedGoals[0]);
-                        }
-                    }}>
-                    Remove Day
-                </DeselectButton>
-            ) : (
-                <Day disabled={true} />
-            )
-        );
 
         myMonth.push(week);
 

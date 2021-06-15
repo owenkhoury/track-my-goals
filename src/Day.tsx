@@ -84,6 +84,7 @@ export default function Day({
             let yyyy = today.getFullYear();
             today = mm + '-' + dd + '-' + yyyy;
 
+            console.log('here: ', date, today);
             if (date == today) {
                 setIsTodaysDate(true);
             } else {
@@ -220,8 +221,8 @@ const Button = styled.button<{ disabled; isNoteSelected; numGoals; isCurrentDay;
     -webkit-text-fill-color: ${(props) => (props.disabled ? 'transparent' : 'none')};
     font-size: 1em;
     margin: 0.4375rem;
-    border: ${(props) => (props.disabled ? 'none;' : props.isCurrentDay ? '2px solid white' : '2px solid #6B7A8F')};
-    border-radius: 3px;
+    border: ${(props) => (props.disabled ? 'none;' : props.isCurrentDay ? '3.2px solid #edf5e1' : '3.2px solid white')};
+    border-radius: 8px;
     text-align: right;
 
     filter: ${(props) => (props.isNoteSelected || props.isMultiSelect ? 'none' : 'brightness(75%)')};

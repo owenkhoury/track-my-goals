@@ -87,7 +87,6 @@ export default function GoalsList({
     return (
         <GoalContainer>
             <InnerContainer>
-                <AppTitle>My Goals</AppTitle>
                 <InputContainer>
                     <MyForm>
                         <GoalInput
@@ -192,10 +191,11 @@ const GoalContainer = styled.div`
     align-items: center;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
+    padding-top: 1rem;
     font-family: Helvetica;
     height: 100%;
     width: 25rem;
-    border-right: 1.5px solid #47484a;
+    // border-right: 1.5px solid #47484a;
 `;
 
 const InputContainer = styled.div`

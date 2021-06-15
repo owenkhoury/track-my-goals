@@ -9,7 +9,7 @@ export default function DonutGraph({ goal, completedDays }) {
         const today = new Date();
         const curMonth = today.getMonth() + 1;
         const dayOfMonth = today.getDate();
-        const totalDays = new Date(2019, curMonth, 0).getDate();
+        const totalDays = new Date(2021, curMonth, 0).getDate();
 
         let totalCompleted = 0;
         if (completedDays && completedDays[goal]) {
