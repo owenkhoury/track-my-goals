@@ -63,7 +63,7 @@ export default function DonutGraph({ goal, completedDays }) {
 export const Title = styled.div`
     margin-bottom: 3rem;
     font-size: 1.5rem;
-    font-family: 'Avenir Next';
+    font-family: 'Space Mono';
     color: white;
 `;
 

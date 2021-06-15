@@ -41,5 +41,5 @@ const NewListRow = styled.div`
     padding-left: 0.5rem;
     color: white;
     margin-left: 0.5rem;
-    font-family: 'Avenir Next' !important;
+    font-family: 'Space Mono' !important;
 `;

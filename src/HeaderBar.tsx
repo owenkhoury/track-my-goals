@@ -85,6 +85,7 @@ const Header = styled.div`
     height: 4.4rem;
     background-color: #222627;
     border-bottom: 2px solid #47484a;
+    font-family: 'Space Mono', sans-serif;
 `;
 
 const MonthAndLogoutContainer = styled.div`
@@ -99,8 +100,8 @@ const CurMonth = styled.div`
     font-size: 2.5rem;
     color: white;
     margin-left: 3rem;
-    font-family: 'Montserrat', sans-serif;
-    /* font-family: "Avenir Next" !important; */
+    font-family: 'Space Mono', sans-serif;
+    /* font-family: "Space Mono" !important; */
     margin-right: 1rem;
     padding-left: 1rem;
     margin-left: 3rem;

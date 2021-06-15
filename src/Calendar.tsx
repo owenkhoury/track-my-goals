@@ -203,7 +203,7 @@ const DeselectButton = styled.button`
     width: 10rem;
     height: 4rem;
     margin-right: 9rem;
-    font-family: 'Avenir Next' !important;
+    font-family: 'Space Mono' !important;
 
     background-color: #1d1f20;
     border-color: #0cc6ce;

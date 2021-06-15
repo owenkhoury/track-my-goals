@@ -213,7 +213,7 @@ const EditIcon = styled.i`
 `;
 
 const Button = styled.button<{ disabled; isNoteSelected; numGoals; isCurrentDay; isMultiSelect }>`
-    font-family: 'Avenir Next' !important;
+    font-family: 'Space Mono' !important;
     padding: 0;
     display: inline-block;
     height: ${(props) => (props.disabled ? '100%' : '6rem')};

@@ -160,14 +160,14 @@ const Login = styled.div`
 const Heading = styled.h1`
     color: black;
     font-size: 1.64rem;
-    font-family: 'Avenir Next' !important;
+    font-family: 'Space Mono' !important;
 `;
 
 const CreateAccount = styled.h1`
     color: '#A9A9A9';
     font-size: 1rem;
     margin-top: 1rem;
-    font-family: 'Avenir Next' !important;
+    font-family: 'Space Mono' !important;
 `;
 
 const LoginInput = styled.input<{ focus; isLogin }>`
@@ -179,7 +179,7 @@ const LoginInput = styled.input<{ focus; isLogin }>`
 
     padding-left: 1rem;
     border-radius: ${(props) => (props.isLogin ? '0.3rem' : '0rem')};
-    font-family: 'Avenir Next' !important;
+    font-family: 'Space Mono' !important;
 
     background-color: ${(props) => (props.focus ? '#e5e5e5' : 'transparent')};
     border-bottom: ${(props) => (props.focus ? '3px solid transparent' : '2px solid black')};
@@ -196,12 +196,12 @@ const LoginButton = styled.button`
 
     padding-left: 1rem;
     border-radius: 0.3rem;
-    font-family: 'Avenir Next' !important;
+    font-family: 'Space Mono' !important;
 `;
 
 const ErrorMessage = styled.h1`
     margin-top: 1.5rem;
     color: #cf2e38;
     font-size: 1rem;
-    font-family: 'Avenir Next' !important;
+    font-family: 'Space Mono' !important;
 `;

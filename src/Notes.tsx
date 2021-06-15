@@ -153,7 +153,7 @@ const Placeholder = styled.div<{ windowHeight }>`
     color: white;
     width: 17rem;
     background: #222627;
-    font-family: 'Avenir Next';
+    font-family: 'Space Mono';
     height: ${(props) => (props.windowHeight ? `${props.windowHeight}px` : '35rem')};
     border: none;
     padding-top: 3rem;

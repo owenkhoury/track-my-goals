@@ -170,7 +170,7 @@ export default function GoalsList({
 const AppTitle = styled.div`
     color: white;
     margin-bottom: 1rem;
-    font-family: 'Avenir Next';
+    font-family: 'Space Mono';
     font-size: 1.5rem;
 `;
 
@@ -192,7 +192,7 @@ const GoalContainer = styled.div`
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     padding-top: 1rem;
-    font-family: Helvetica;
+    font-family: 'Space Mono';
     height: 100%;
     width: 25rem;
     // border-right: 1.5px solid #47484a;

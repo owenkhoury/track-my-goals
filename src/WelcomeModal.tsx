@@ -12,7 +12,7 @@ const Modal = styled.div`
     text-align: center;
     vertical-align: middle;
     line-height: 20rem;
-    font-family: 'Avenir Next';
+    font-family: 'Space Mono';
     font-size: 2rem;
     color: #b2b2b2;
 `;

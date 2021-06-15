@@ -89,29 +89,29 @@ interface ListRowProps {
 }
 
 const ListRow = styled.div<ListRowProps>`
-  display: flex;
-  direction: ltr;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  vertical-align: middle;
-  line-height: 2.5rem;
-  height: 4.2rem;
-  margin-bottom: 1rem;
-  width: 19.5rem;
-  border-radius: 0.3rem;
-  border: 1px solid #888888;
-  background-color: ${(props) => (props.toDelete ? 'red' : '#464e50')}; 
-  padding-left: 0.5rem;
-  color: white;
-  margin-left: 0.5rem;
-  font-family: "Avenir Next" !important;
+    display: flex;
+    direction: ltr;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    vertical-align: middle;
+    line-height: 2.5rem;
+    height: 4.2rem;
+    margin-bottom: 1rem;
+    width: 19.5rem;
+    border-radius: 0.3rem;
+    border: 1px solid #888888;
+    background-color: ${(props) => (props.toDelete ? 'red' : '#464e50')};
+    padding-left: 0.5rem;
+    color: white;
+    margin-left: 0.5rem;
+    font-family: 'Space Mono' !important;
 
-  filter: ${(props) => (props.selected ? 'brightness(100%)' : 'brightness(65%)')};
-  &:hover {
-    /* background-color: ${(props) => (props.colorMap && props.goal ? props.colorMap[props.goal] : '#d8d8d8')}; */
-    filter: ${(props) => (props.selected ? 'brightness(100%)' : 'brightness(50%)')};
-  }
+    filter: ${(props) => (props.selected ? 'brightness(100%)' : 'brightness(65%)')};
+    &:hover {
+        /* background-color: ${(props) => (props.colorMap && props.goal ? props.colorMap[props.goal] : '#d8d8d8')}; */
+        filter: ${(props) => (props.selected ? 'brightness(100%)' : 'brightness(50%)')};
+    }
 `;
 
 const DeleteButton = styled.button`
@@ -145,7 +145,7 @@ const Circle = styled.span<{ color }>`
 const Goal = styled.div`
     color: white;
     font-size: 1rem;
-    font-family: 'Avenir Next' !important;
+    font-family: 'Space Mono' !important;
     overflow: auto;
     height: 29px;
     margin-bottom: 0;
@@ -156,7 +156,7 @@ const Goal = styled.div`
 const StartDate = styled.div`
     color: '#A9A9A9';
     font-size: 0.6rem;
-    font-family: 'Avenir Next' !important;
+    font-family: 'Space Mono' !important;
     overflow-y: hidden; // hide vertical
     overflow-x: hidden;
     height: 25px;
