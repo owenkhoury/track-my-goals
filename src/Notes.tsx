@@ -230,18 +230,22 @@ const Container = styled.div`
     border-left: 1.5px solid #47484a;
     position: absolute;
     right: 0;
+
+    font-family: 'Space Mono', sans-serif;
 `;
 
 const OtherDisplay = styled.div`
     color: black;
     width: 17rem;
     background: #d8d8d8;
-    font-family: 'Gayathri', sans-serif;
+
     height: 8rem;
     padding-left: 0.5rem;
     border: none;
     padding-top: 3rem;
     font-size: 1.5rem;
+
+    font-family: 'Gayathri', sans-serif;
 
     /* border-left: 1.5px solid #979797; */
     background-color: #fdfd96;
@@ -258,11 +262,12 @@ const NotesInput = styled.textarea<{ windowHeight }>`
     color: black;
     width: 17rem;
     background: #d8d8d8;
-    font-family: 'Gayathri', sans-serif;
     height: ${(props) => (props.windowHeight ? `${props.windowHeight}px` : '35rem')};
     padding-left: 0.5rem;
     border: none;
     padding-top: 3rem;
+
+    font-family: 'Gayathri', sans-serif;
 
     /* border-left: 1.5px solid #979797; */
     background-color: #fdfd96;

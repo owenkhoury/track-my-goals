@@ -17,10 +17,10 @@ export default function DonutGraph({ goal, completedDays }) {
                 const isDayInMonth: boolean = +day.date.substring(0, 2) === curMonth;
                 const isDayInPast: boolean = +day.date.substring(3, 5) <= dayOfMonth;
 
+                // todo --> check the year also
+
                 if (day.date && isDayInMonth && isDayInPast) {
                     totalCompleted++;
-
-                    console.log('donut graph: ', +day.date.substring(3, 5), dayOfMonth);
                 }
             });
         }

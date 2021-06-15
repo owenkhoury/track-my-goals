@@ -91,7 +91,7 @@ export default function GoalsList({
                     <MyForm>
                         <GoalInput
                             type='text'
-                            placeholder='Enter your next goal ...'
+                            placeholder='Enter your goal HERE'
                             onChange={(e) => {
                                 setNewGoal(e.target.value);
                             }}

@@ -5,7 +5,7 @@ import { Container, Title } from './DonutGraph';
 
 export default function BarGraph({ goal, completedDays }) {
     const barData = [
-        { name: 'This week', value: numDaysCompletedInPrevWeek(0) },
+        { name: 'Last 7 days', value: numDaysCompletedInPrevWeek(0) },
         { name: '1 week ago', value: numDaysCompletedInPrevWeek(1) },
         { name: '2 weeks ago', value: numDaysCompletedInPrevWeek(2) },
         { name: '3 weeks ago', value: numDaysCompletedInPrevWeek(3) }
@@ -70,7 +70,7 @@ export default function BarGraph({ goal, completedDays }) {
     return (
         <Container>
             <Title>Progress Last 4 Weeks</Title>
-            <Bar data={barData} height={300} width={450} isHorizontal={true} margin={{ left: 100 }} />
+            <Bar data={barData} height={300} width={400} isHorizontal={true} margin={{ left: 100 }} />
         </Container>
     );
 }
