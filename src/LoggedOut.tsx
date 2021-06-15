@@ -31,7 +31,7 @@ export default function LoggedOut() {
             await login(loginEmailRef.current.value, loginPasswordRef.current.value);
         } catch (error) {
             setLoading(false);
-            setError(error);
+            setError(error.message);
         }
     };
 
@@ -45,7 +45,7 @@ export default function LoggedOut() {
             });
         } catch (error) {
             setLoading(false);
-            setError(error);
+            setError(error.message);
         }
     };
 
@@ -124,7 +124,7 @@ export default function LoggedOut() {
                 }}
             />
             <LoginButton onClick={handleSignup}>Create Account</LoginButton>
-            {error ? <ErrorMessage>Invalid username or password</ErrorMessage> : null}
+            {error ? <ErrorMessage>{error}</ErrorMessage> : null}
         </Signup>
     );
 }
